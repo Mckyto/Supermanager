@@ -1,44 +1,73 @@
 # SuperManager 26/27 — Ediția Supremă (v10.37)
 
-Joc de management fotbalistic pentru Liga 1 (sezonul 2026/27), construit ca **o singură pagină HTML autonomă**: React 18 + Tailwind, tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) este inline. Nu face **nicio cerere externă** — merge complet offline, direct din `file://` sau servit static.
+Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
 ```
-public/index.html   ← tot jocul (single-file build)
-server.js           ← server static minimal, zero dependențe
+public/
+  index.html            ← tot jocul (single-file build, ~5.2 MB)
+  manifest.webmanifest  ← instalare pe telefon (PWA)
+  sw.js                 ← cache offline (network-first pentru HTML)
+  icons/                ← set complet de iconițe
+server.js               ← server static minimal, fără dependențe
+tools/
+  dom-harness.js        ← mediu jsdom (WebAudio/canvas/fullscreen stub-uite)
+  smoke-test.js         ← testele automate (`npm test`)
+  build-icons.sh        ← regenerează iconițele din assets/icon-source.png
 ```
 
 ## Rulare
 
 ```bash
-npm start            # http://localhost:3000  (PORT=8080 npm start pentru alt port)
+npm start          # http://localhost:3000   (PORT=8080 npm start pentru alt port)
 ```
 
-sau, fără Node:
+Fără Node: `npm run serve:python`, sau deschide direct `public/index.html`. Atenție însă: pe `file://` unele browsere blochează `localStorage`/`IndexedDB`, deci salvările carierei nu persistă — folosește serverul.
+
+## Testare
 
 ```bash
-npm run serve:python # python3 -m http.server 3000 --directory public
+npm test           # ≈20s — boot, carieră nouă, toate secțiunile, un meci live, salvarea
+npm run test:quick # ≈8s  — fără meci
 ```
 
-Merge și deschizând `public/index.html` direct în browser (fără server), dar unele browsere blochează `localStorage` pe `file://`, deci salvările pot să nu persiste — recomandat serverul.
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică 23 de puncte din fluxul principal:
 
-## Ce conține jocul
+- aplicația bootează și randează ecranul de titlu, fără erori în consolă;
+- onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
+- toate cele 7 secțiuni (Centru Comandă, Lot, Clasament, Cupe, Mercato, Academie, Viață) se randează;
+- meciul live pornește, ceasul avansează, pauza de la 45' apare și repriza a doua reia jocul;
+- cariera se salvează în `localStorage` (~420 KB) și în IndexedDB.
 
-- **16 cluburi din Liga 1** (FCSB, Rapid, Dinamo, CFR, Universitatea Craiova, Farul etc.) plus cluburile europene din cupe.
-- **Carieră completă**: alegerea clubului, a personajului de manager (Legend / Tactician / Charmer / Hardliner) și a dificultății (Normal / Realistic / Hardcore).
-- **7 secțiuni principale**: Panou (dashboard), Lot, Liga / clasament, Competiții, Transferuri, Club, Viață.
-- **Meci live** cu motor de simulare pe faze (șuturi, cornere, cartonașe, VAR, penalty-uri, schimbări, instrucțiuni tactice), comentariu și scene audio generate cu WebAudio.
-- **Tactici**: formație, stil de joc, roluri individuale, planuri de antrenament, moralitate & coeziune vestiar.
-- **Transferuri și negocieri**: piață internă + externă, împrumuturi, agenți, oferte, contracte, salarii, buget.
-- **Sisteme de viață**: patron, consiliu, presă (conferințe cu variante de răspuns), suporteri/ultras, relații personale, viață personală.
-- **Cupe**: Liga Campionilor / Europa / Conference, Cupa României, Supercupa, echipa națională.
-- **Salvare**: 5 sloturi + autosave, în `localStorage` (`supermanager-26-27-autosave`), cu import/export de carieră portabilă.
+Rulează automat în CI la fiecare pull request. Grafica 3D, sunetul și interacțiunea reală cu degetul nu pot fi acoperite în jsdom — pentru ele e nevoie de un browser.
 
-## Note tehnice
+## Instalare pe telefon
 
-- **Build**: bundle Vite single-file (React 18 în modul producție, Tailwind compilat). Codul e minificat — nu există sursă separată în acest repo, `public/index.html` este artefactul.
-- **Fullscreen / immersive**: dacă rulează într-un WebView Android cu `window.AndroidBridge.toggleImmersive()`, butonul de fullscreen apelează puntea nativă; altfel folosește Fullscreen API.
-- **Curățenie aplicată la import**: am eliminat scriptul injectat de Cloudflare (`__CF$cv$params` + iframe de challenge) pe care pagina îl căpătase la salvarea din browser. În rest, fișierul e neschimbat.
+Deschide adresa în Chrome/Safari → *Add to Home Screen*. Jocul pornește fullscreen (fără bara de browser), iar după prima încărcare merge și offline, datorită service worker-ului.
+
+În WebView-ul Android, butonul de ecran complet folosește `window.AndroidBridge.toggleImmersive()` dacă e disponibil, altfel Fullscreen API.
 
 ## Deploy
 
-Orice hosting static merge (GitHub Pages, Netlify, Vercel, Cloudflare Pages, un bucket S3). Publică `public/` — un singur fișier, fără build step.
+Gata pregătit pentru **GitHub Pages** (`.github/workflows/deploy-pages.yml`): la fiecare push pe `main`, rulează testele rapide și publică `public/`.
+
+Ca să funcționeze: *Settings → Pages → Source: GitHub Actions*, apoi rulează workflow-ul *Deploy pe GitHub Pages*. Site-ul apare la `https://<user>.github.io/Supermanager/`.
+
+Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): se publică directorul `public/`, fără build step.
+
+## Ce conține jocul
+
+- **16 cluburi din SuperLiga** (FCSB, Rapid, Dinamo, CFR, Universitatea Craiova, Farul etc.) plus cluburile europene din cupe.
+- **Carieră completă**: alegerea clubului, a arhetipului de manager (Fost Internațional, Obsedat Tactic, Strateg Monden, Mână de Fier) și a dificultății (Normal / Realist / Hardcore).
+- **7 secțiuni**: Centru Comandă, Lot & Tabla XI, Clasament & Etape, Cupe & Europa, Mercato & Scouting, Academie & Club, Viață & Relații.
+- **Meci live** cu motor de simulare pe faze (șuturi, cornere, cartonașe, VAR, penalty-uri, accidentări), comentariu, xG, vizualizare 2D tactică și 3D (WebGL), viteză 1x–8x, indicații tactice din bancă și discurs la pauză.
+- **Tactici**: formație, linie, lățime, pase, pressing, roluri individuale, planuri de antrenament, moral și coeziune.
+- **Transferuri și negocieri**: piață internă și externă, împrumuturi, agenți, oferte, contracte, salarii, buget.
+- **Sisteme în afara terenului**: patron și consiliu, presă cu conferințe, peluză/ultras, viață personală și relații.
+- **Salvare**: 5 sloturi + autosave în `localStorage` (`supermanager_26_27_pro2d_v2`) și IndexedDB (`supermanager-26-27-autosave`), cu import/export de carieră portabilă.
+
+## Note tehnice
+
+- Bundle-ul este **minificat** (Vite single-file): `public/index.html` este artefactul, nu sursa. Modificările făcute direct în el sunt limitate intenționat la `<head>` (meta/iconițe/manifest) și la înregistrarea service worker-ului de la final — codul jocului e neatins.
+- Scriptul și iframe-ul injectate de Cloudflare Challenge (`__CF$cv$params`, `/cdn-cgi/challenge-platform/…`) la salvarea paginii din browser au fost eliminate.
+- `server.js` servește HTML-ul, `sw.js` și manifestul cu `no-cache`, restul cu cache lung; are ETag, MIME corect, doar GET/HEAD și protecție la path traversal.
+- La o versiune nouă de joc, crește `CACHE_VERSION` din `public/sw.js` ca să se invalideze cache-ul offline.

@@ -78,14 +78,18 @@ async function sendFile(req, res, filePath) {
     return res.end();
   }
 
-  const isHtml = path.extname(filePath).toLowerCase() === '.html';
+  const ext = path.extname(filePath).toLowerCase();
+  const base = path.basename(filePath).toLowerCase();
+  // HTML-ul și service worker-ul se revalidează mereu (ca să nu rămână jocul
+  // blocat pe o versiune veche); restul se poate cache-ui agresiv.
+  const mustRevalidate = ext === '.html' || base === 'sw.js' || ext === '.webmanifest';
   res.writeHead(200, {
-    'Content-Type': MIME[path.extname(filePath).toLowerCase()] || 'application/octet-stream',
+    'Content-Type': MIME[ext] || 'application/octet-stream',
     'Content-Length': stat.size,
     ETag: etag,
-    // HTML-ul se revalidează mereu; restul se poate cache-ui agresiv.
-    'Cache-Control': isHtml ? 'no-cache' : 'public, max-age=86400',
+    'Cache-Control': mustRevalidate ? 'no-cache' : 'public, max-age=86400',
     'X-Content-Type-Options': 'nosniff',
+    ...(base === 'sw.js' ? { 'Service-Worker-Allowed': '/' } : {}),
   });
 
   if (req.method === 'HEAD') return res.end();
