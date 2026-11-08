@@ -127,6 +127,45 @@ async function scenarioMatch() {
   check('fără erori în timpul meciului', app.errors.length === before, app.errors[before]);
 }
 
+async function scenarioAccessibility() {
+  console.log('\n6. Accesibilitate');
+  const { document, window } = app;
+
+  // fontul minim: clasele utilitare mici nu mai coboară sub 12px
+  const probe = document.createElement('span');
+  probe.className = 'text-[10px]';
+  document.body.appendChild(probe);
+  const small = parseFloat(window.getComputedStyle(probe).fontSize) || 0;
+  probe.className = 'text-[9px]';
+  const smallest = parseFloat(window.getComputedStyle(probe).fontSize) || 0;
+  probe.remove();
+  check('niciun text sub 12px', small >= 12 && smallest >= 12, `${smallest}px / ${small}px`);
+
+  const buttons = [...document.querySelectorAll('button')];
+  const accName = (b) => (b.getAttribute('aria-label') || (b.textContent || '').trim() || b.getAttribute('title') || '');
+  check(
+    'fiecare buton are nume accesibil',
+    buttons.length > 0 && buttons.every(accName),
+    `${buttons.filter((b) => !accName(b)).length} fără nume din ${buttons.length}`
+  );
+  check(
+    'butoanele doar cu iconiță au aria-label',
+    buttons.filter((b) => !(b.textContent || '').trim()).every((b) => b.getAttribute('aria-label')),
+    'lipsă aria-label'
+  );
+
+  const images = [...document.querySelectorAll('img')];
+  check(
+    'fiecare imagine are atribut alt',
+    images.length > 0 && images.every((i) => i.hasAttribute('alt')),
+    `${images.filter((i) => !i.hasAttribute('alt')).length} fără alt din ${images.length}`
+  );
+
+  const css = [...document.querySelectorAll('style')].map((s) => s.textContent || '').join('\n');
+  check('mișcarea redusă e respectată (prefers-reduced-motion)', /prefers-reduced-motion/.test(css));
+  check('limba documentului e română', document.documentElement.lang === 'ro', document.documentElement.lang);
+}
+
 async function scenarioPersistence() {
   console.log('\n5. Salvare');
   const storage = app.window.localStorage;
@@ -149,6 +188,7 @@ async function scenarioPersistence() {
     await scenarioTabs();
     if (!SKIP_MATCH) await scenarioMatch();
     await scenarioPersistence();
+    await scenarioAccessibility();
   } catch (err) {
     fail('testul a rulat fără excepții', String(err && err.message));
   } finally {

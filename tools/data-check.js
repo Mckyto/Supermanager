@@ -134,6 +134,21 @@ check(
 );
 check('carierele vechi sunt migrate la pornire', html.includes('sm2627_career_slot_";let _raw=localStorage.getItem(gv)'));
 
+// 9. Accesibilitate
+check(
+  'clasele de font mici sunt ridicate la minimum 12px',
+  html.includes('.text-\\[8px\\],.text-\\[9px\\],.text-\\[10px\\],.text-\\[11px\\]{font-size:12px')
+);
+check('stratul de accesibilitate (aria-label pentru iconițe) e prezent', html.includes('id="sm-a11y-js"'));
+check('mișcarea redusă e respectată', html.includes('prefers-reduced-motion:reduce'));
+
+// 10. Offline: nicio resursă externă (fonturi, CDN, imagini)
+const resurseExterne = [
+  ...html.matchAll(/(?:src|href)=["'](https?:\/\/[^"']+)/g),
+  ...html.matchAll(/url\(\s*["']?(https?:\/\/[^)"']+)/g),
+].map((m) => m[1]);
+check('nicio resursă încărcată de pe alt domeniu', resurseExterne.length === 0, resurseExterne.slice(0, 3).join(', '));
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
