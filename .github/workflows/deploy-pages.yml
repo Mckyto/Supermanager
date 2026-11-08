@@ -41,3 +41,22 @@ jobs:
 
       - id: deployment
         uses: actions/deploy-pages@v5
+
+      # Gardă: dacă site-ul publicat nu răspunde cu jocul, workflow-ul pică
+      # (altfel un 404 pe Pages trece neobservat).
+      - name: Verifică site-ul publicat
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5; do
+            code=$(curl -sS -o /tmp/index.html -w "%{http_code}" "$PAGE_URL" || echo 000)
+            if [ "$code" = "200" ] && grep -qi "SUPERMANAGER 26/27" /tmp/index.html; then
+              echo "OK: $PAGE_URL răspunde cu jocul ($(wc -c < /tmp/index.html) biți)."
+              exit 0
+            fi
+            echo "Încercarea $i: HTTP $code — reîncerc în 10s…"
+            sleep 10
+          done
+          echo "::error::Site-ul publicat nu servește jocul (HTTP $code)."
+          exit 1
