@@ -107,18 +107,56 @@ async function scenarioMatch() {
     `${startMinute}' → ${laterMinute}'`
   );
 
-  // pauza de la 45' are nevoie de o decizie ca să continue
-  let halftime = false;
-  for (let i = 0; i < 20 && !halftime; i += 1) {
+  // meciul trebuie să curgă fără popup-uri de decizie
+  const DECIZII = /Corecții Tactice pe Tablă|Dialog 1-la-1|Analiza Secundului|Pericol de Eliminare|Ultimele 15 Minute|Gestionare Efort|Protejarea Avantajului/;
+  let decizieInMeci = null;
+  let halftimeText = null;
+  for (let i = 0; i < 20 && !halftimeText; i += 1) {
     await app.sleep(1000);
-    if (/Vestiar la Pauză/.test(app.text())) halftime = true;
+    const t = app.text();
+    if (!decizieInMeci && DECIZII.test(t)) decizieInMeci = (t.match(DECIZII) || [])[0];
+    if (/Vestiar la Pauză/.test(t)) halftimeText = t;
   }
-  check('pauza de la 45\' apare', halftime);
-  if (halftime) {
+  check('pauza de la 45\' apare', !!halftimeText);
+  check('nicio decizie în timpul meciului', !decizieInMeci, decizieInMeci || 'curat');
+  check('pauza nu cere decizii', !!halftimeText && !DECIZII.test(halftimeText));
+  if (halftimeText) {
     if (app.click(/Începe Repriza a Doua/)) {
       await app.sleep(2500);
       const afterResume = liveMinute();
       check('repriza a doua reia jocul', afterResume === null || afterResume >= 45, `${afterResume}'`);
+
+      // până la fluierul final, ca să verificăm reacția jucătorului
+      let finalText = null;
+      for (let i = 0; i < 60 && !finalText; i += 1) {
+        await app.sleep(400);
+        const t = app.text();
+        if (!decizieInMeci && DECIZII.test(t)) decizieInMeci = (t.match(DECIZII) || [])[0];
+        if (/Fluier Final/.test(t)) finalText = t;
+      }
+      check('meciul ajunge la fluierul final', !!finalText);
+      if (finalText) {
+        app.click(/Continuă în Carieră/);
+        await app.sleep(2500);
+        const reaction = (app.text().match(/🗣️[^]{0,220}/) || [])[0] || '';
+        check('după meci apare reacția unui jucător', /🗣️/.test(reaction), reaction.slice(0, 60));
+        // scorul e scris în chiar textul reacției: „după FCSB 1-0 CSI:”
+        const score = reaction.match(/după\s+(\S+)\s+(\d+)\s*-\s*(\d+)\s+(\S+?):/);
+        if (score) {
+          const [home, away] = [Number(score[2]), Number(score[3])];
+          const userIsHome = /^FCSB$/i.test(score[1]);
+          const mine = userIsHome ? home : away;
+          const theirs = userIsHome ? away : home;
+          const expected = mine === theirs ? 'Un punct luat' : mine > theirs ? 'Am dat totul pentru culori' : 'Ne asumăm înfrângerea';
+          check(
+            'reacția se potrivește cu rezultatul',
+            reaction.includes(expected),
+            `${score[1]} ${home}-${away} → ${expected}`
+          );
+        } else {
+          fail('scorul apare în reacție', reaction.slice(0, 80));
+        }
+      }
     } else {
       fail('butonul „Începe Repriza a Doua" există');
     }

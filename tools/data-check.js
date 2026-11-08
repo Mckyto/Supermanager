@@ -149,6 +149,15 @@ const resurseExterne = [
 ].map((m) => m[1]);
 check('nicio resursă încărcată de pe alt domeniu', resurseExterne.length === 0, resurseExterne.slice(0, 3).join(', '));
 
+// 11. Text și flux de meci
+check('nu mai apare greșeala „kamere”', !/kamere/i.test(html) && html.includes('camerele noastre'));
+check(
+  'meciul nu mai întrerupe jocul cu decizii',
+  html.includes('_triggerTouchlineDilemma(e,t,n,s,l={}){return null}')
+);
+check('pauza nu mai cere corecții tactice sau dialog 1-la-1', !html.includes('Corecții Tactice pe Tablă') && !html.includes('Dialog 1-la-1 la Pauză'));
+check('reacția jucătorului din știri e generată din rezultat', html.includes('Ee.unshift({id:`react-${fe}`'));
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
