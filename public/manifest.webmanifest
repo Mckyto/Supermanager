@@ -1,0 +1,35 @@
+{
+  "name": "SuperManager 26/27 — Ediția Supremă",
+  "short_name": "SuperManager",
+  "description": "Joc de management fotbalistic: preia banca tehnică a unui club din SuperLiga, construiește un lot, negociază transferuri și du lupta pentru titlu.",
+  "lang": "ro",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "any",
+  "background_color": "#060913",
+  "theme_color": "#070b12",
+  "categories": ["games", "sports", "entertainment"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

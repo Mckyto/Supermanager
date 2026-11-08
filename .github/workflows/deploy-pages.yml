@@ -1,0 +1,62 @@
+name: Deploy pe GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Publică public/ pe Pages
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - name: Test rapid înainte de publicare
+        run: npm run test:quick
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: public
+
+      - id: deployment
+        uses: actions/deploy-pages@v5
+
+      # Gardă: dacă site-ul publicat nu răspunde cu jocul, workflow-ul pică
+      # (altfel un 404 pe Pages trece neobservat).
+      - name: Verifică site-ul publicat
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5; do
+            code=$(curl -sS -o /tmp/index.html -w "%{http_code}" "$PAGE_URL" || echo 000)
+            if [ "$code" = "200" ] && grep -qi "SUPERMANAGER 26/27" /tmp/index.html; then
+              echo "OK: $PAGE_URL răspunde cu jocul ($(wc -c < /tmp/index.html) biți)."
+              exit 0
+            fi
+            echo "Încercarea $i: HTTP $code — reîncerc în 10s…"
+            sleep 10
+          done
+          echo "::error::Site-ul publicat nu servește jocul (HTTP $code)."
+          exit 1
