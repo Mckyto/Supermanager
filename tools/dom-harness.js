@@ -153,7 +153,7 @@ function installBrowserStubs(window) {
  * Pornește aplicația într-un DOM și întoarce unelte pentru scenarii.
  * @returns {Promise<{window, document, errors, text(), buttons(), click(), labels(), sleep(), close()}>}
  */
-async function launch({ bootTimeout = 20000 } = {}) {
+async function launch({ bootTimeout = 20000, seed = null } = {}) {
   const html = fs.readFileSync(HTML_FILE, 'utf8');
   const errors = [];
   const virtualConsole = new VirtualConsole();
@@ -172,7 +172,11 @@ async function launch({ bootTimeout = 20000 } = {}) {
     pretendToBeVisual: true,
     url: 'http://localhost:3000/',
     virtualConsole,
-    beforeParse: installBrowserStubs,
+    beforeParse: (window) => {
+      installBrowserStubs(window);
+      // Seed util pentru testele de storage: pornim aplicația cu o salvare deja existentă.
+      if (seed) for (const [key, value] of Object.entries(seed)) window.localStorage.setItem(key, value);
+    },
   });
 
   const { window } = dom;

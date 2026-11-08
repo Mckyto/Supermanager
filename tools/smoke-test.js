@@ -107,24 +107,105 @@ async function scenarioMatch() {
     `${startMinute}' → ${laterMinute}'`
   );
 
-  // pauza de la 45' are nevoie de o decizie ca să continue
-  let halftime = false;
-  for (let i = 0; i < 20 && !halftime; i += 1) {
+  // meciul trebuie să curgă fără popup-uri de decizie
+  const DECIZII = /Corecții Tactice pe Tablă|Dialog 1-la-1|Analiza Secundului|Pericol de Eliminare|Ultimele 15 Minute|Gestionare Efort|Protejarea Avantajului/;
+  let decizieInMeci = null;
+  let halftimeText = null;
+  for (let i = 0; i < 20 && !halftimeText; i += 1) {
     await app.sleep(1000);
-    if (/Vestiar la Pauză/.test(app.text())) halftime = true;
+    const t = app.text();
+    if (!decizieInMeci && DECIZII.test(t)) decizieInMeci = (t.match(DECIZII) || [])[0];
+    if (/Vestiar la Pauză/.test(t)) halftimeText = t;
   }
-  check('pauza de la 45\' apare', halftime);
-  if (halftime) {
+  check('pauza de la 45\' apare', !!halftimeText);
+  check('nicio decizie în timpul meciului', !decizieInMeci, decizieInMeci || 'curat');
+  check('pauza nu cere decizii', !!halftimeText && !DECIZII.test(halftimeText));
+  if (halftimeText) {
     if (app.click(/Începe Repriza a Doua/)) {
       await app.sleep(2500);
       const afterResume = liveMinute();
       check('repriza a doua reia jocul', afterResume === null || afterResume >= 45, `${afterResume}'`);
+
+      // până la fluierul final, ca să verificăm reacția jucătorului
+      let finalText = null;
+      for (let i = 0; i < 60 && !finalText; i += 1) {
+        await app.sleep(400);
+        const t = app.text();
+        if (!decizieInMeci && DECIZII.test(t)) decizieInMeci = (t.match(DECIZII) || [])[0];
+        if (/Fluier Final/.test(t)) finalText = t;
+      }
+      check('meciul ajunge la fluierul final', !!finalText);
+      if (finalText) {
+        app.click(/Continuă în Carieră/);
+        await app.sleep(2500);
+        const reaction = (app.text().match(/🗣️[^]{0,220}/) || [])[0] || '';
+        check('după meci apare reacția unui jucător', /🗣️/.test(reaction), reaction.slice(0, 60));
+        // scorul e scris în chiar textul reacției: „după FCSB 1-0 CSI:”
+        const score = reaction.match(/după\s+(\S+)\s+(\d+)\s*-\s*(\d+)\s+(\S+?):/);
+        if (score) {
+          const [home, away] = [Number(score[2]), Number(score[3])];
+          const userIsHome = /^FCSB$/i.test(score[1]);
+          const mine = userIsHome ? home : away;
+          const theirs = userIsHome ? away : home;
+          const expected = mine === theirs
+            ? /Un punct luat|Am controlat jocul|Echilibru pe tabelă/
+            : mine > theirs
+            ? /Am dat totul pentru culori|Așa arată o echipă|Vestiarul e sudat/
+            : /Ne asumăm înfrângerea|Am greșit în momentele-cheie|Durere mare în vestiar/;
+          check(
+            'reacția se potrivește cu rezultatul',
+            expected.test(reaction),
+            `${score[1]} ${home}-${away} → ${expected.source.slice(0, 40)}`
+          );
+        } else {
+          fail('scorul apare în reacție', reaction.slice(0, 80));
+        }
+      }
     } else {
       fail('butonul „Începe Repriza a Doua" există');
     }
   }
 
   check('fără erori în timpul meciului', app.errors.length === before, app.errors[before]);
+}
+
+async function scenarioAccessibility() {
+  console.log('\n6. Accesibilitate');
+  const { document, window } = app;
+
+  // fontul minim: clasele utilitare mici nu mai coboară sub 12px
+  const probe = document.createElement('span');
+  probe.className = 'text-[10px]';
+  document.body.appendChild(probe);
+  const small = parseFloat(window.getComputedStyle(probe).fontSize) || 0;
+  probe.className = 'text-[9px]';
+  const smallest = parseFloat(window.getComputedStyle(probe).fontSize) || 0;
+  probe.remove();
+  check('niciun text sub 12px', small >= 12 && smallest >= 12, `${smallest}px / ${small}px`);
+
+  const buttons = [...document.querySelectorAll('button')];
+  const accName = (b) => (b.getAttribute('aria-label') || (b.textContent || '').trim() || b.getAttribute('title') || '');
+  check(
+    'fiecare buton are nume accesibil',
+    buttons.length > 0 && buttons.every(accName),
+    `${buttons.filter((b) => !accName(b)).length} fără nume din ${buttons.length}`
+  );
+  check(
+    'butoanele doar cu iconiță au aria-label',
+    buttons.filter((b) => !(b.textContent || '').trim()).every((b) => b.getAttribute('aria-label')),
+    'lipsă aria-label'
+  );
+
+  const images = [...document.querySelectorAll('img')];
+  check(
+    'fiecare imagine are atribut alt',
+    images.length > 0 && images.every((i) => i.hasAttribute('alt')),
+    `${images.filter((i) => !i.hasAttribute('alt')).length} fără alt din ${images.length}`
+  );
+
+  const css = [...document.querySelectorAll('style')].map((s) => s.textContent || '').join('\n');
+  check('mișcarea redusă e respectată (prefers-reduced-motion)', /prefers-reduced-motion/.test(css));
+  check('limba documentului e română', document.documentElement.lang === 'ro', document.documentElement.lang);
 }
 
 async function scenarioPersistence() {
@@ -149,6 +230,7 @@ async function scenarioPersistence() {
     await scenarioTabs();
     if (!SKIP_MATCH) await scenarioMatch();
     await scenarioPersistence();
+    await scenarioAccessibility();
   } catch (err) {
     fail('testul a rulat fără excepții', String(err && err.message));
   } finally {
