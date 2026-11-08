@@ -28,14 +28,14 @@ Fără Node: `npm run serve:python`, sau deschide direct `public/index.html`. At
 ## Testare
 
 ```bash
-npm test           # ≈30s — integritate date + storage + economie + boot, carieră nouă, toate secțiunile, un meci live, salvarea, accesibilitatea
+npm test           # ≈35s — integritate date + storage + economie + boot, carieră nouă, toate secțiunile, un meci live, salvarea, accesibilitatea
 npm run test:data  # ≈0.2s — doar verificările de date
 npm run test:storage # ≈6s — autosalvarea și migrarea din cheia veche
 npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (39 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (45 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
 Testele încarcă bundle-ul real într-un DOM jsdom și verifică 34 de puncte din fluxul principal:
 
@@ -105,3 +105,11 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Valoarea ofertei depinde de valoare ȘI de performanță.** Taxa de transfer = valoarea de piață × multiplicator de fereastră × (1 + forma din ultimul meci + goluri/pase în meciul respectiv + randamentul pe sezon + corecție de vârstă). Un jucător cu notă mare și goluri primește cu până la ~45% peste valoarea de piață; unul în formă slabă, sub ea. Pragul de declanșare a scăzut de la nota 8.1 la 7.6 (sau un gol/pasă decisivă), ca ofertele să apară constant, dar tot pe merit.
 - **Mai puțină repetitivitate.** Reacțiile de după meci și mesajele patronului au acum câte trei variante de text pe fiecare rezultat (victorie/egal/înfrângere), alese aleator — nu mai vezi aceeași frază etapă după etapă.
 - **Deciziile au rămas, dar fereastra lor nu mai ocupă ecranul.** Panoul de decizie (`nh`) e acum un card compact de maximum 2xl lățime și 72% din înălțime, ancorat jos, cu o bandă de imagine de 96–112px în loc de 256–320px, pe fundal semitransparent — poți vedea clubul din spate în timp ce decizi.
+
+## Reparații aplicate în v10.37.5 (noiembrie 2026)
+
+- **Jucătorul singur șutează, nu mai întoarce mingea.** Ordinea deciziilor purtătorului de minge a fost rescrisă: șutul se evaluează acum **înaintea** centrării (până acum centrarea putea fura ocazia, cu o rată de până la ~48%/secundă la sub 16 m), iar centrarea e stinsă la 35% când jucătorul are spațiu.
+- **Multiplicator de ocazie clară.** Dacă cel mai apropiat adversar de câmp e la peste 3 m și jucătorul e la sub 36 m de poartă, șansa de șut crește de 1,8× (33–36 m), 2,4× (26–33 m), 3× (18–26 m) și 3,6× (sub 18 m), iar apetitul de pasă scade la 35%. Unghiurile foarte strâmte nu mai blochează 80% din șuturi când ești singur (doar 58%).
+- **Fără pasă înapoi în treimea ofensivă.** În ultimii 38 m, `_findBestPassTarget` respinge orice coleg care nu e cu cel puțin 0,8 m mai aproape de poartă — dacă nu există variantă în față, jucătorul continuă acțiunea (dribling/șut) în loc să returneze la mijlocași.
+- **Pasa de panică (watchdog) nu mai merge în spate.** Când mingea stă prea mult la un jucător, mecanismul de degajare alegea un coleg la întâmplare din primii trei; acum preferă numai colegi aflați în fața purtătorului.
+- **Măsurat pe 4+4 meciuri simulate:** pasele din treimea ofensivă au scăzut de la 20 la 6, cele înapoi de la 4 la 1, iar șuturile au crescut de la 42 la 46. `data-check` are 6 verificări noi care blochează regresii (ordinea șut/centrare, multiplicatorul, filtrul de pasă înapoi, watchdog-ul).
