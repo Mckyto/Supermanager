@@ -12,6 +12,7 @@ server.js               ← server static minimal, fără dependențe
 tools/
   dom-harness.js        ← mediu jsdom (WebAudio/canvas/fullscreen stub-uite)
   smoke-test.js         ← testele automate (`npm test`)
+  storage-test.js       ← autosalvare + migrarea carierelor vechi
   build-icons.sh        ← regenerează iconițele din assets/icon-source.png
 ```
 
@@ -26,12 +27,13 @@ Fără Node: `npm run serve:python`, sau deschide direct `public/index.html`. At
 ## Testare
 
 ```bash
-npm test           # ≈20s — integritate date + boot, carieră nouă, toate secțiunile, un meci live, salvarea
+npm test           # ≈25s — integritate date + storage + boot, carieră nouă, toate secțiunile, un meci live, salvarea
 npm run test:data  # ≈0.2s — doar verificările de date
+npm run test:storage # ≈6s — autosalvarea și migrarea din cheia veche
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (14 verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom.
+`tools/data-check.js` validează datele din bundle (18 verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) și autosalvarea scrie într-o singură cheie `localStorage`.
 
 Testele încarcă bundle-ul real într-un DOM jsdom și verifică 23 de puncte din fluxul principal:
 
@@ -75,3 +77,8 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - `server.js` servește HTML-ul, `sw.js` și manifestul cu `no-cache`, restul cu cache lung; are ETag, MIME corect, doar GET/HEAD și protecție la path traversal.
 - La o versiune nouă de joc, crește `CACHE_VERSION` din `public/sw.js` ca să se invalideze cache-ul offline.
 - **Antrenorii și arenele** sunt date reale pentru sezonul 2026/27, verificate în noiembrie 2026 (Wikipedia — *SuperLiga României 2026-2027*, GSP). Cluburile europene folosesc cele mai recente informații disponibile. Regula U21 respectă definiția jocului („cel mult 21 de ani").
+
+## Reparații aplicate în v10.37.1 (noiembrie 2026)
+
+- **Motor live sub-calibrat.** Pasul de simulare (`_stepSubtick`) împărțea încă o dată la viteza de joc, așa că la 8x ceasul avansa de 8 ori mai repede decât fotbalul: un meci întreg producea ~2.8 șuturi și 0 goluri. Acum pasul avansează cu ceasul; măsurat pe 45 de minute × 6 rulări la 1x și 8x: **≈10 șuturi și ≈2 goluri pe meci**, cu rezultate identice la orice viteză (simularea instantanee dă 2.88 goluri/meci).
+- **Salvare dublată.** Fiecare autosalvare scria aceeași carieră (~420 KB) în două chei `localStorage`, riscând să umple cota de 5 MB. Acum se scrie doar în `sm2627_career_slot_N`; carierele vechi, salvate doar sub `supermanager_26_27_pro2d_v2`, sunt migrate automat la prima pornire și cheia veche e ștearsă (`npm run test:storage`).

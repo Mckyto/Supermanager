@@ -115,6 +115,25 @@ check('bundle-ul are un set de imagini', assetKeys.size > 500, `${assetKeys.size
 // 6. Meta / accesibilitate
 check('viewport-ul permite zoom', !/user-scalable=no/.test(html) && !/maximum-scale=1/.test(html));
 
+// 7. Motor live: pasul de simulare trebuie să avanseze cu ceasul meciului
+// (înainte se împărțea încă o dată la viteza de joc, așa că la 8x se jucau
+// de 8 ori mai puține faze fotbalistice pe minut — meciuri fără șuturi).
+check(
+  'motorul live nu mai împarte pasul de simulare la viteza de joc',
+  html.includes('_stepSubtick(e){const t=e;') && !html.includes('t=e/Math.max(.5,this._curSpeedMult||1)')
+);
+check(
+  'portarul folosește același pas de simulare ca restul echipei',
+  !html.includes('te=n/Math.max(.5,this._curSpeedMult||1)')
+);
+
+// 8. Salvarea carierei: o singură cheie localStorage
+check(
+  'autosalvarea nu mai scrie în dublu în localStorage',
+  !html.includes('setItem("supermanager_26_27_pro2d_v2",s)') && html.includes('setItem(`sm2627_career_slot_${e}`,s)')
+);
+check('carierele vechi sunt migrate la pornire', html.includes('sm2627_career_slot_";let _raw=localStorage.getItem(gv)'));
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
