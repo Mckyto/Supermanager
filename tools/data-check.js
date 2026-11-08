@@ -204,6 +204,28 @@ check(
 );
 check('mesajele patronului au variante multiple', html.includes('f==="WIN"?[`') && html.includes('Math.random()*3'));
 
+// 17. Finalizare: jucătorul singur șutează, nu întoarce mingea
+check(
+  'șutul e evaluat înaintea centrării (ocazia nu mai e furată)',
+  html.indexOf('_startShotWindup(e,s,l,m+p)') > 0 &&
+    html.indexOf('_startShotWindup(e,s,l,m+p)') < html.indexOf('forcedKind:"WING_CROSS"')
+);
+check(
+  'ocazia clară primește multiplicator de șut',
+  html.includes('_clear=e.pos!=="GK"&&_out>=3&&c<=36') &&
+    html.includes('_boost=_clear?c<18?3.6:c<26?3:c<33?2.4:1.8:1')
+);
+check('centrarea e stinsă când jucătorul e singur', html.includes('Math.random()<n*_crossRate*(_clear?.35:1)'));
+check('apetitul de pasă scade în ocazia clară', html.includes('Q=_clear?.35:'));
+check(
+  'în treimea ofensivă nu se mai pasează înapoi',
+  html.includes('this._findBestPassTarget(e,t,S,B,c<=38)') && html.includes('if(nb?F<.8:s&&F<-4.5)continue;')
+);
+check(
+  'pasa de panică (watchdog) alege doar adversari în față',
+  html.includes('_fw=l.filter(k=>(k.x-s.x)*_dir>1.5),_pool=_fw.length?_fw:l')
+);
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
