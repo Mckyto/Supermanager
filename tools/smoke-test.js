@@ -147,11 +147,15 @@ async function scenarioMatch() {
           const userIsHome = /^FCSB$/i.test(score[1]);
           const mine = userIsHome ? home : away;
           const theirs = userIsHome ? away : home;
-          const expected = mine === theirs ? 'Un punct luat' : mine > theirs ? 'Am dat totul pentru culori' : 'Ne asumăm înfrângerea';
+          const expected = mine === theirs
+            ? /Un punct luat|Am controlat jocul|Echilibru pe tabelă/
+            : mine > theirs
+            ? /Am dat totul pentru culori|Așa arată o echipă|Vestiarul e sudat/
+            : /Ne asumăm înfrângerea|Am greșit în momentele-cheie|Durere mare în vestiar/;
           check(
             'reacția se potrivește cu rezultatul',
-            reaction.includes(expected),
-            `${score[1]} ${home}-${away} → ${expected}`
+            expected.test(reaction),
+            `${score[1]} ${home}-${away} → ${expected.source.slice(0, 40)}`
           );
         } else {
           fail('scorul apare în reacție', reaction.slice(0, 80));

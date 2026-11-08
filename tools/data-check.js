@@ -158,6 +158,52 @@ check(
 check('pauza nu mai cere corecții tactice sau dialog 1-la-1', !html.includes('Corecții Tactice pe Tablă') && !html.includes('Dialog 1-la-1 la Pauză'));
 check('reacția jucătorului din știri e generată din rezultat', html.includes('Ee.unshift({id:`react-${fe}`'));
 
+// 12. Telefonul lui Mister: oferte, nemulțumiri, consecințe pentru ignorare
+check('ofertele de transfer ajung ca mesaj în telefon', html.includes('msg-offer-${n}-${o.id}') && html.includes('kind:"transfer_offer"'));
+check('nemulțumirile jucătorilor ajung ca mesaj în telefon', html.includes('msg-unhappy-${n}-${q.id}') && html.includes('kind:"unhappy"'));
+check('oferta se poate accepta/refuza direct din telefon', html.includes('case"off_accept"') && html.includes('"accepted_pending":k.id==="off_decline"?"declined"'));
+check('răspunsul la nemulțumire aplică moral jucătorului', html.includes('case"cmp_promise"') && html.includes('case"cmp_warn"') && html.includes('case"cmp_ignore"'));
+check(
+  'mesajele ignorate produc consecințe reale (patron/vestiar/galerie)',
+  html.includes('Ai ignorat ${_ign.length} mesaj') &&
+    html.includes('boardConfidence:ke((Je.boardConfidence??64)-_brd,0,100)') &&
+    html.includes('lockerCohesion:ke((Je.lockerCohesion??64)-_coh,10,100)') &&
+    html.includes('fanSupport:ke((Je.fanSupport??65)-_fan,10,100)')
+);
+check('mesajele ignorate sunt marcate expirate', html.includes('expired:!0,outcomeTone:"negative"'));
+
+// 13. Oferta e corelată cu valoarea ȘI cu performanța (meci + sezon)
+check(
+  'taxa ofertei crește cu nota din meci, golurile și randamentul sezonului',
+  html.includes('_mf=Math.max(0,Math.min(.2,(u-7)*.06))') &&
+    html.includes('_gf=Math.min(.15,f*.06+m*.04)') &&
+    html.includes('_sf=Math.min(.2,((_sg+_sa)/_ap)*.45)') &&
+    html.includes('S*(d?1.08:1.32)*(1+_mf+_gf+_sf+_af)')
+);
+check('ofertele apar la performanță bună, nu doar la nota 8.1', html.includes('if(u<7.6&&f<1&&m<1||(a.ovr||0)<67)return null'));
+
+// 14. Fără război psihologic / spionaj
+check(
+  'războiul psihologic și spionajul au fost eliminate complet',
+  !html.includes('Război Psihologic') && !html.includes('Trimite scouter-spion') && !html.includes('function JA(')
+);
+
+// 15. Ferestre de decizie compacte (nu pe tot ecranul)
+check(
+  'fereastra de decizie e un panou compact, nu full-screen',
+  html.includes('max-w-2xl rounded-2xl overflow-hidden') &&
+    html.includes('max-h-[72vh]') &&
+    !html.includes('max-w-4xl rounded-3xl overflow-hidden border-2')
+);
+check('invitația la decizie nu mai e o bandă uriașă de imagine', html.includes('relative h-24 sm:h-28 w-full overflow-hidden'));
+
+// 16. Mai puțină repetitivitate: texte cu variante alese aleator
+check(
+  'reacțiile de după meci au variante multiple',
+  html.includes('_win=[') && html.includes('_draw=[') && html.includes('_loss=[') && html.includes('_pool=Mt?_win:$t?_draw:_loss')
+);
+check('mesajele patronului au variante multiple', html.includes('f==="WIN"?[`') && html.includes('Math.random()*3'));
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
