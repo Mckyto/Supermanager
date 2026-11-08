@@ -1,0 +1,15 @@
+{
+  "name": "supermanager",
+  "version": "10.37.0",
+  "private": true,
+  "description": "SuperManager 26/27 — Ediția Supremă: joc de management fotbalistic, build single-file (React) servit static.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve:python": "python3 -m http.server 3000 --bind 0.0.0.0 --directory public"
+  }
+}
