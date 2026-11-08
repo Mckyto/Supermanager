@@ -26,9 +26,12 @@ Fără Node: `npm run serve:python`, sau deschide direct `public/index.html`. At
 ## Testare
 
 ```bash
-npm test           # ≈20s — boot, carieră nouă, toate secțiunile, un meci live, salvarea
+npm test           # ≈20s — integritate date + boot, carieră nouă, toate secțiunile, un meci live, salvarea
+npm run test:data  # ≈0.2s — doar verificările de date
 npm run test:quick # ≈8s  — fără meci
 ```
+
+`tools/data-check.js` validează datele din bundle (14 verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom.
 
 Testele încarcă bundle-ul real într-un DOM jsdom și verifică 23 de puncte din fluxul principal:
 
@@ -71,3 +74,4 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - Scriptul și iframe-ul injectate de Cloudflare Challenge (`__CF$cv$params`, `/cdn-cgi/challenge-platform/…`) la salvarea paginii din browser au fost eliminate.
 - `server.js` servește HTML-ul, `sw.js` și manifestul cu `no-cache`, restul cu cache lung; are ETag, MIME corect, doar GET/HEAD și protecție la path traversal.
 - La o versiune nouă de joc, crește `CACHE_VERSION` din `public/sw.js` ca să se invalideze cache-ul offline.
+- **Antrenorii și arenele** sunt date reale pentru sezonul 2026/27, verificate în noiembrie 2026 (Wikipedia — *SuperLiga României 2026-2027*, GSP). Cluburile europene folosesc cele mai recente informații disponibile. Regula U21 respectă definiția jocului („cel mult 21 de ani").
