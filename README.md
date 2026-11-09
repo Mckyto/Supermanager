@@ -35,7 +35,7 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (45 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (50 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
 Testele încarcă bundle-ul real într-un DOM jsdom și verifică 34 de puncte din fluxul principal:
 
@@ -113,3 +113,10 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Fără pasă înapoi în treimea ofensivă.** În ultimii 38 m, `_findBestPassTarget` respinge orice coleg care nu e cu cel puțin 0,8 m mai aproape de poartă — dacă nu există variantă în față, jucătorul continuă acțiunea (dribling/șut) în loc să returneze la mijlocași.
 - **Pasa de panică (watchdog) nu mai merge în spate.** Când mingea stă prea mult la un jucător, mecanismul de degajare alegea un coleg la întâmplare din primii trei; acum preferă numai colegi aflați în fața purtătorului.
 - **Măsurat pe 4+4 meciuri simulate:** pasele din treimea ofensivă au scăzut de la 20 la 6, cele înapoi de la 4 la 1, iar șuturile au crescut de la 42 la 46. `data-check` are 6 verificări noi care blochează regresii (ordinea șut/centrare, multiplicatorul, filtrul de pasă înapoi, watchdog-ul).
+
+## Reparații aplicate în v10.37.6 (noiembrie 2026)
+
+- **Simularea nu mai intră în spirala de lag.** Bucla de fizică rula până la **36 de substeps pe cadru** (`min(36, ceil(s/.008))`): dacă un cadru dura mult, motorul adăuga muncă exact când era mai încet. Acum pasul e fix (8 ms) și se plafonează **timpul simulat pe cadru la 128 ms** (max 16 substeps) — când dispozitivul nu ține ritmul, meciul înaintează puțin mai încet în loc să sacadeze. Fizica rămâne identică (același pas), deci rezultatele meciurilor nu se schimbă: măsurat pe 3+3 meciuri, șuturi 42 → 44, goluri 2 → 2.
+- **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
+- **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
+- Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
