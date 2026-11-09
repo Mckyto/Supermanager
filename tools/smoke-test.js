@@ -353,11 +353,18 @@ async function scenarioPhone() {
     } catch { return null; }
   };
   const before = app.errors.length;
+  // avansează o etapă cu simularea rapidă (nu bulk), ca mesajele neansweruite să învețească
+  if (app.click(/Simulare Rapidă Etapă/)) {
+    await app.sleep(1500);
+    if (app.click(/Continuă|Închide|OK/)) await app.sleep(800);
+  }
   const career = read();
   const messages = (career && career.phoneMessages) || [];
   const expired = messages.filter((m) => m.expired && m.taxPaid > 0);
   const scolds = messages.filter((m) => m.scolding);
   check('mesajul ignorat e taxat în bani', expired.length > 0, `${expired.length} taxate, ex. ${expired[0] ? expired[0].taxPaid : 0} €`);
+  const entryMsg = messages.filter((m) => (m.roundGenerated || 1) === 1);
+  check('mesajele din etapa 1 nu sunt niciodată taxate', entryMsg.every((m) => !m.expired), `${entryMsg.length} mesaje de început`);
   check('expeditorul te ceartă după ignorare', scolds.length > 0, (scolds[0] && scolds[0].senderName) || '');
   check('taxa e reținută pe expeditor', Object.keys((career && career.ignoreStrikes) || {}).length > 0);
   const ph = app.window.__smPhone;
@@ -655,6 +662,49 @@ async function scenarioConflict() {
   check('după 2 etape fără îmbunătățire urmează escaladarea', escalated === true && early === false);
 }
 
+async function scenarioFixes() {
+  console.log('\n4e. Reparații v10.40.0 (golaveraj, mesaje, patron)');
+  const { window } = app;
+  const fx = window.__smFix;
+  check('funcțiile de reparație sunt expuse', !!fx && !!fx.stats && !!fx.phoneStale && !!fx.captainPick && !!fx.patronDemand);
+  if (!fx) return;
+
+  const home = fx.stats({ matches: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 }, true, false, true, 2, 1);
+  const away = fx.stats({ matches: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 }, true, false, false, 2, 1);
+  check('golaverajul numără ambele echipe (acasă 2-1)', home.gf === 2 && home.ga === 1 && home.matches === 1, `${home.gf}:${home.ga}`);
+  check('golaverajul se inversează în deplasare (2-1 adversar)', away.gf === 1 && away.ga === 2, `${away.gf}:${away.ga}`);
+  const lost = fx.stats({ matches: 3, w: 1, d: 1, l: 1, gf: 4, ga: 3 }, false, false, true, 0, 1);
+  check('înfrângerea 0-1 se acumulează corect', lost.matches === 4 && lost.l === 2 && lost.gf === 4 && lost.ga === 4, `${lost.gf}:${lost.ga}, ${lost.matches} meciuri`);
+
+  check('mesajul din etapa 1 nu expiră niciodată', fx.phoneStale({ roundGenerated: 1 }, 10) === false);
+  check('mesajul din etapa 3 expiră în etapa 4, nu înainte', fx.phoneStale({ roundGenerated: 3 }, 3) === false && fx.phoneStale({ roundGenerated: 3 }, 4) === true);
+  check('mesajele deja răspunse sau expirate nu se taxează', fx.phoneStale({ roundGenerated: 1, replied: true }, 9) === false && fx.phoneStale({ roundGenerated: 1, expired: true }, 9) === false);
+
+  const bench = [
+    { id: 'b1', name: 'Rezerva 1', pos: 'CM', minutesThisSeason: 0, morale: 60, ovr: 75, value: 900000, fitness: 95 },
+    { id: 'b2', name: 'Rezerva 2', pos: 'ST', minutesThisSeason: 35, morale: 70, ovr: 74, value: 800000, fitness: 95 },
+    { id: 'b3', name: 'Rezerva 3', pos: 'CB', minutesThisSeason: 200, morale: 80, ovr: 78, value: 950000, fitness: 95 },
+  ];
+  const starters = [{ id: 's1', pos: 'GK' }, { id: 's2', pos: 'CB' }];
+  const club = { id: 'c1', name: 'FCSB', players: [...bench, { id: 's1', name: 'Portar', pos: 'GK', ovr: 80, value: 100, fitness: 95 }, { id: 's2', name: 'Fundaș', pos: 'CB', ovr: 80, value: 100, fitness: 95 }] };
+  const career = { userClubId: 'c1', lineupIds: { starters: ['s1', 's2'], bench: ['b1', 'b2', 'b3'], roles: {} }, careerStats: { matches: 2 }, boardConfidence: 70 };
+
+  const pick = fx.captainPick(career, club);
+  check('căpitanul alege o rezervă care chiar a jucat', !!pick && pick.id === 'b2', pick ? `${pick.name}, ${pick.minutesThisSeason} min` : 'niciunul');
+  const noBench = fx.captainPick(career, { ...club, players: club.players.map((p) => (['b2', 'b3'].includes(p.id) ? { ...p, minutesThisSeason: 0 } : p)) });
+  check('fără rezerve cu minute, mesajul devine neutru', noBench === null);
+
+  const demand = fx.patronDemand(club, ['s1', 's2'], 4, career);
+  check('patronul cere un jucător apt, nu pe cel cu minute multe', !!demand && demand.playerId !== 'b3', demand ? demand.playerName : 'niciunul');
+  const injured = { ...club, players: club.players.map((p) => (p.id === 'b1' ? { ...p, injuredWeeks: 3 } : p)) };
+  const demand2 = fx.patronDemand(injured, ['s1', 's2'], 4, career);
+  check('patronul nu cere un jucător accidentat', !demand2 || demand2.playerId !== 'b1', demand2 ? demand2.playerName : 'niciunul');
+  const noMatches = fx.patronDemand(club, ['s1', 's2'], 4, { ...career, careerStats: { matches: 0 } });
+  check('fără niciun meci jucat, patronul nu cere nimic', noMatches === null);
+  const repeated = fx.patronDemand(club, ['s1', 's2'], 5, { ...career, patronDemandLastId: 'b2', patronDemandLastRound: 4 });
+  check('patronul nu repetă aceeași cerere în etapele următoare', !repeated || repeated.playerId !== 'b2', repeated ? repeated.playerName : 'niciunul');
+}
+
 async function scenarioPersistence() {
   console.log('\n8. Salvare');
   const storage = app.window.localStorage;
@@ -679,6 +729,7 @@ async function scenarioPersistence() {
     await scenarioProfile();
     await scenarioCupSim();
     await scenarioConflict();
+    await scenarioFixes();
     if (!SKIP_MATCH) await scenarioMatch();
     if (!SKIP_MATCH) {
       await scenarioPhone();

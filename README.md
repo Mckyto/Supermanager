@@ -37,7 +37,7 @@ npm run test:quick # ≈8s  — fără meci
 
 `tools/data-check.js` validează datele din bundle (79 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **124 de puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **138 de puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -124,6 +124,14 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.40.0 (noiembrie 2026) — mesajele încetează să mai mintă
+
+- **Golaverajul număra doar golurile tale.** `careerStats` primea doar marcatorii echipei tale, așa că un 0-1 apărea ca „0-0” în profil. Acum socoteala primește ambele rezultate — un 0-1 se vede corect ca `gf 0, ga 1`, iar în deplasare un 2-1 al adversarului devine `1:2`.
+- **Mesajul căpitanului folosește minutele reale.** `_smCaptainPick()` alege rezerva care **chiar a intrat pe teren** (cele mai puține minute, dar peste zero) și pune cifrele ei în text. Dacă nimeni de pe bancă nu are minute, mesajul devine neutru — nu mai spune „e cam abătut” despre un jucător cu 0 minute jucate.
+- **Patronul cere doar jucători apți, cu puține minute, și nu repetă cererea.** Cererea de titularizare (`xA`) trece prin `_smFitPlayer` (accidentați/suspendați excluși), cere **cel puțin un meci jucat** în carieră, vizează jucători cu **sub 180 de minute** și cel mult o titularizare, iar același jucător nu mai e cerut **6 etape**. Înainte de primul meci jucat patronul nu cere nimic.
+- **Fereastra de expirare a mesajelor s-a mutat la o etapă, iar etapa de intrare e protejată.** Un mesaj generat în etapa N expiră abia când intri în etapa N+1 („Expiră la Etapa N+1”), deci ai o etapă întreagă să răspunzi. Mesajele generate în **etapa 1** (momentul intrării în carieră) nu expiră niciodată — telefonul le arată cu „🕊️ Mesaj de început de sezon — fără termen, nu te taxează”.
+- **Testat:** smoke test-ul a crescut de la 124 la **138 de verificări** — golaveraj corect acasă/deplasare, înfrângere 0-1 acumulată, mesajul din etapa 1 niciodată taxat, expirarea mutată la o etapă, căpitanul care alege o rezervă cu minute reale (și varianta neutră), patronul care cere doar jucători apți/fără minute/nereluat 6 etape. `data-check` rămâne la 79, storage 7, economy 6.
 
 ## Modificări în v10.39.0 (noiembrie 2026) — socoteala jucătorului nemulțumit
 
