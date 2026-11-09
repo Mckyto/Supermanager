@@ -263,6 +263,53 @@ check(
   html.includes('Q=d==="high"?18:12') && html.includes('new Qn(.118,Q,14)')
 );
 
+// 20. Progresia facilităților costă și durează (v10.37.8)
+check(
+  'costul de modernizare crește exponențial (×2, ×6, ×16)',
+  html.includes('const _SM_FAC_MUL=[2,6,16]') &&
+    html.includes('_smFacBase(e)*r*(_SM_FAC_LIGA[n]??1)*i/1e3)*1e3') &&
+    !html.includes('Math.round(ce.baseCost*gt)')
+);
+check(
+  'facilitățile au mentenanță lunară de 2% din investiție',
+  html.includes('_SM_FAC_UPKEEP=.02') &&
+    html.includes('_smFacUpkeep(H.facilities)') &&
+    html.includes('Re.budget+=Ba-Ta-_upk')
+);
+check(
+  'upgrade-ul nu mai e instant: deschide un șantier cu recepție peste 7 etape',
+  html.includes('readyRound:_r,startedRound:N.currentRound||1,overrun:_p.overrun,delay:_p.delay') &&
+    html.includes('..._smFacTickState(H,fe+1,Ee)')
+);
+check('upgrade-ul nu mai dă +3 suporteri gratuit', !html.includes('fanSupport:ke(N.fanSupport+3,10,100)'));
+check('un singur șantier poate fi deschis simultan', html.includes('Ai deja un șantier deschis'));
+check(
+  'nivelurile 3 și 4 cer performanță în ligă (top 6 / top 3)',
+  html.includes('Nivelul 3 cere acces în playoff (top 6)') &&
+    html.includes('Nivelul 4 cere loc de cupe europene (top 3)') &&
+    html.includes('_smFacGate(d,_L+1)')
+);
+check(
+  'șantierele au risc: 12% depășire de buget, 8% întârziere',
+  html.includes('i<.12') && html.includes('i<.2') && html.includes('Risc de șantier: 12% depășire +15%, 8% întârziere +3 etape.')
+);
+check(
+  'schimbarea politicii de bilete costă bani și are termen de 2 luni',
+  html.includes('_smTixCost(d)') &&
+    html.includes('_cool>0') &&
+    html.includes('ticketTransitionUntil:_cur+2') &&
+    html.includes('(H.ticketTransitionUntil>=fe?.8:1)')
+);
+check(
+  'o promisiune încălcată costă clubul 3 salarii',
+  html.includes('Re.budget-=Math.round(3*((Re.players.find(')
+);
+check(
+  'starea șantierelor e migrată în salvările vechi',
+  html.includes('facilityWorks:a.facilityWorks||{}') && html.includes('facilityWorks:{},ticketPolicyRound:-99')
+);
+check('valorile de cost sunt expuse pentru teste', html.includes('window.__smFac={cost:_smFacCost'));
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
