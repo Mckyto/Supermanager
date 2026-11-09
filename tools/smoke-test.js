@@ -86,8 +86,97 @@ async function scenarioTabs() {
   }
 }
 
+async function scenarioFacilities() {
+  console.log('\n4. Facilități, șantiere și costul deciziilor');
+  const before = app.errors.length;
+  const { window } = app;
+
+  const fac = window.__smFac;
+  check('funcțiile de cost sunt expuse în bundle', !!fac);
+  if (fac) {
+    const cost = [1, 2, 3].map((l) => fac.cost('hybridTurf', l, 'RO', 'realistic'));
+    check('gazonul costă ×2, ×6, ×16 pe niveluri', cost.join('/') === '280000/840000/2240000', cost.join('/'));
+    const total = ['hybridTurf', 'cryoClinic', 'vipStands', 'videoLab']
+      .map((id) => [1, 2, 3].map((l) => fac.cost(id, l, 'RO', 'realistic')).reduce((a, b) => a + b, 0))
+      .reduce((a, b) => a + b, 0);
+    check('toate facilitățile la maxim costă peste 13 milioane', total > 13e6, `${(total / 1e6).toFixed(2)} mil. €`);
+    check(
+      'mentenanța e 2% din investiție (toate la nivel 4)',
+      fac.upkeep({ hybridTurf: 4, cryoClinic: 4, vipStands: 4, videoLab: 4 }) === 266000,
+      `${fac.upkeep({ hybridTurf: 4, cryoClinic: 4, vipStands: 4, videoLab: 4 })} €/lună`
+    );
+    const overrun = fac.plan('hybridTurf', 1, { leagueCode: 'RO', difficulty: 'realistic' }, () => 0.05);
+    const delayed = fac.plan('hybridTurf', 1, { leagueCode: 'RO', difficulty: 'realistic' }, () => 0.15);
+    const clean = fac.plan('hybridTurf', 1, { leagueCode: 'RO', difficulty: 'realistic' }, () => 0.9);
+    check('20% din șantiere au depășire sau întârziere', overrun.cost > overrun.rounds * 0 && overrun.overrun && delayed.delay && !clean.overrun && !clean.delay);
+    check('șantierul durează 7 etape (10 cu întârziere)', clean.rounds === 7 && delayed.rounds === 10, `${clean.rounds}/${delayed.rounds}`);
+    const ticked = fac.tick({ hybridTurf: { to: 2, readyRound: 5 } }, { hybridTurf: 1, cryoClinic: 1, vipStands: 1, videoLab: 1 }, 5, []);
+    check('nivelul crește doar la recepție', ticked.facilities.hybridTurf === 2 && !ticked.facilityWorks.hybridTurf);
+    const early = fac.tick({ hybridTurf: { to: 2, readyRound: 5 } }, { hybridTurf: 1 }, 4, []);
+    check('șantierul nu avansează nivelul înainte de termen', early.facilities.hybridTurf === 1);
+    const career = {
+      leagueCode: 'RO',
+      userClubId: 'u',
+      clubs: ['u', 'a', 'b', 'c', 'd', 'e', 'f'].map((id) => ({ id, name: id.toUpperCase(), league: 'RO', shortName: id.toUpperCase() })),
+      calendar: [],
+    };
+    check('nivelul 4 e blocat fără loc de cupe europene', /top 3/.test(String(fac.gate(career, 4))), String(fac.gate(career, 4)).slice(0, 48));
+  }
+
+  if (!app.click(/Academie & Club/)) return fail('tab-ul Academie & Club există');
+  await app.sleep(500);
+  if (!app.click(/Stadion & Bilete/)) return fail('sub-tab-ul Stadion & Bilete există');
+  await app.sleep(600);
+
+  const panel = app.text();
+  check('panoul afișează mentenanța lunară', /Mentenanță:/.test(panel));
+  check('butonul arată costul și durata șantierului', /⬆️ Nivelul 2 • [\d.]+ € • 7 etape/.test(panel));
+  check('riscul de șantier e anunțat', /12% depășire/.test(panel));
+
+  const storage = window.localStorage;
+  const readBudget = () => {
+    for (let i = 0; i < storage.length; i += 1) {
+      const raw = storage.getItem(storage.key(i));
+      if (!raw || !/userClubId/.test(raw)) continue;
+      try {
+        const career = JSON.parse(raw);
+        const club = (career.clubs || []).find((c) => c.id === career.userClubId);
+        if (club) return club.budget;
+      } catch { /* cheie care nu e carieră */ }
+    }
+    return null;
+  };
+  const budgetBefore = readBudget();
+  check('butonul de modernizare e apăsat', app.click(/⬆️ Nivelul 2 • /));
+  await app.sleep(700);
+  const panelAfter = app.text();
+  check('șantierul e anunțat în panou', /Șantier la Nivelul 2/.test(panelAfter), (panelAfter.match(/Șantier[^.]{0,70}/) || [])[0]);
+  const budgetAfter = readBudget();
+  check(
+    'costul lucrării se scade din buget',
+    budgetBefore === null || budgetAfter === null || budgetAfter <= budgetBefore - 220000,
+    `${budgetBefore} → ${budgetAfter}`
+  );
+  check('al doilea șantier e blocat', /Un singur șantier activ/.test(app.text()));
+  check('fără erori în panoul de facilități', app.errors.length === before, app.errors[before]);
+
+  const tixBefore = readBudget();
+  app.click(/Bilete Populare/);
+  await app.sleep(600);
+  const tixAfter = readBudget();
+  check(
+    'schimbarea politicii de bilete costă bani',
+    tixBefore === null || tixAfter === null || tixAfter < tixBefore,
+    `${tixBefore} → ${tixAfter}`
+  );
+  check('fără erori după schimbarea biletelor', app.errors.length === before, app.errors[before]);
+
+  app.click(/Centru Comandă/);
+  await app.sleep(400);
+}
+
 async function scenarioMatch() {
-  console.log('\n4. Meci live');
+  console.log('\n5. Meci live');
   const before = app.errors.length;
   if (!app.click(/Intră în Meci/)) return fail('butonul „Intră în Meci" există');
   pass('intrare în meci');
@@ -170,7 +259,7 @@ async function scenarioMatch() {
 }
 
 async function scenarioAccessibility() {
-  console.log('\n6. Accesibilitate');
+  console.log('\n7. Accesibilitate');
   const { document, window } = app;
 
   // fontul minim: clasele utilitare mici nu mai coboară sub 12px
@@ -209,7 +298,7 @@ async function scenarioAccessibility() {
 }
 
 async function scenarioPersistence() {
-  console.log('\n5. Salvare');
+  console.log('\n6. Salvare');
   const storage = app.window.localStorage;
   const keys = [];
   for (let i = 0; i < storage.length; i += 1) keys.push(storage.key(i));
@@ -228,6 +317,7 @@ async function scenarioPersistence() {
     await scenarioBoot();
     await scenarioOnboarding();
     await scenarioTabs();
+    await scenarioFacilities();
     if (!SKIP_MATCH) await scenarioMatch();
     await scenarioPersistence();
     await scenarioAccessibility();

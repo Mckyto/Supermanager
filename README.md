@@ -35,9 +35,9 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (55 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (66 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică 34 de puncte din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică 42 de puncte din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -120,6 +120,29 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.37.8 (noiembrie 2026) — progresia facilităților costă
+
+- **Curba de cost a facilităților e exponențială.** Înainte, modernizarea costa `baseCost × nivel` (140k → 280k → 420k pentru gazon): toate cele patru facilități la maxim însemnau **3,3 mil. €**, bani de o singură fereastră de transfer. Acum multiplicatorii sunt `[2, 6, 16]`, cu factor de dificultate (0,85 normal / 1,0 realist / 1,2 hardcore):
+
+  | Facilitate | 1→2 | 2→3 | 3→4 | Total |
+  |---|---|---|---|---|
+  | Gazon hibrid | 280k | 840k | 2,24M | **3,36M** |
+  | Clinică crio | 260k | 780k | 2,08M | 3,12M |
+  | Peluză & Loje VIP | 350k | 1,05M | 2,80M | **4,20M** |
+  | Centru video | 220k | 660k | 1,76M | 2,64M |
+
+  Toate patru la maxim: **13,32 mil. €** (×4 față de înainte).
+
+- **Mentenanță lunară de 2% din valoarea investită.** La nivelul 4, gazonul costă 67k/lună, iar tot setul **266k/lună** (≈2,4 mil. € pe sezon). Se scade în bilanțul lunar, lângă salarii; dacă duce bugetul pe minus, conduci în deficit (−6% încredere).
+- **Upgrade-ul nu mai e instant.** Apeși butonul, plătești, dar nivelul nou se activează abia la **recepție, după 7 etape** (10 dacă prinde întârziere). Până atunci rămâne activ nivelul vechi — deci șantierul suspendă avantajul, iar lucrările se văd pe teren la momentul greșit dacă nu le planifici.
+- **Un singur șantier simultan.** Nu mai poți cumpăra toate cele patru modernizări în aceeași etapă.
+- **Risc de execuție:** 12% șansă de depășire de buget (+15% la cost) și 8% șansă de întârziere (+3 etape), anunțat pe card.
+- **Porți de acces pe nivel:** nivelul 3 cere loc de playoff (top 6), nivelul 4 cere loc de cupe europene (top 3) — evaluate pe clasamentul live. Peluza VIP nu mai poate sări la „Arenă Fortăreață” din postura de locul 12.
+- **Bonusul gratuit de +3 suporteri la fiecare upgrade a fost eliminat.**
+- **Schimbarea politicii de bilete costă bani și timp:** 25k + 200 € pe punct de suporter (≈38k), maximum o dată la 8 etape (2 luni), iar primele 2 etape încasările scad cu 20% până se recalibrează ticketing-ul.
+- **Promisiunile încălcate costă bani,** nu doar moral: pe lângă −14 moral și −6% coeziune, clubul plătește 3 salarii compensație jucătorului nemulțumit.
+- **Testat:** `data-check` a crescut la **66 de verificări** (curba de cost, mentenanța, șantierul, porțile, riscul, costul biletelor, compensația), iar smoke test-ul la **42** — verifică în DOM real costurile din panou, scăderea din buget, blocajul „un singur șantier” și costul schimbării politicii de bilete.
 
 ## Reparații aplicate în v10.37.7 (noiembrie 2026)
 
