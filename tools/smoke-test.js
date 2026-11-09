@@ -735,6 +735,12 @@ async function scenarioFaces() {
     const row = fx.facePick && fx.facePick({ name: `Test ${nat}`, nat, pos: 'CM', age: 24 });
     return row ? String(row[1]).split('|') : [];
   };
+  const mismatched = ['ROU', 'SEN', 'JPN', 'IND', 'BRA', 'TUR', 'NOR', 'CPV', 'KOR', 'NGA', 'ECU', 'ALB'].filter((nat) => {
+    const p = { name: `Test ${nat}`, nat, pos: 'CM', age: 24 };
+    const skins = natSkin(nat).map((k) => fx.skinFamily(k));
+    return !skins.includes(fx.skinFamily(fx.skinOf(p)));
+  });
+  check('fața aleasă are mereu familia de ten a jucătorului', mismatched.length === 0, mismatched.join(', ') || '12 naționalități');
   const rouSkins = natSkin('ROU');
   const senSkins = natSkin('SEN');
   const jpnSkins = natSkin('JPN');
