@@ -35,9 +35,9 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (87 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (89 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **156 de puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **157 de puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -125,16 +125,17 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
 
-## Modificări în v10.41.0 (noiembrie 2026) — fețe fotorealiste și avatarul cinematic
+## Modificări în v10.42.0 (noiembrie 2026) — fețe fotorealiste și avatarul cinematic
 
 - **Jucătorii fără fotografie primesc o față în stilul dating sim-ului.** Cei care nu au poză reală în bundle (tineri din academie, jucători generați la transferuri) vedeau până acum un bust desenat plat, de 64×64. Acum primesc un **portret fotorealist**: lumină caldă de reflector, tribună estompată în bokeh, piele cu textură naturală — aceeași rețetă vizuală ca portretele din „Relații & Întâlniri". Biblioteca se încarcă în bundle ca WebP de 192×192 (~4,5 KB bucata), deci nu se face nicio cerere către exterior.
+- **Potrivire pe trei criterii: ten, vârstă, păr.** Pe lângă familia de ten (pale→fair, amber→tan, ebony/dark_brown→dark, brown→Asia de Sud), alegerea ține cont de **banda de vârstă** (sub 21, 21–29, peste 29): un junior de 17 ani nu mai primește fața unui chel de 36. Sud-asiaticii nu mai împart grupul `brown` cu jucătorii afro-brazilieni — aceștia au trecut la `dark_brown`, iar `Bv` nu mai atribuie `brown` jucătorilor din America Latină (primesc `tan`).
 - **Fața e stabilă și potrivită jucătorului.** `_smFaceFor()` alege portretul printr-un hash pe nume (același jucător → aceeași față, și după reload), filtrat întâi după tenul și culoarea părului pe care motorul le atribuie deja din naționalitate — nu apare un jucător cu ten deschis peste o față întunecată. Fotografiile reale au în continuare prioritate; biblioteca e doar plasa de siguranță.
 - **Bokeh în culorile clubului, desenat procedural.** Fundalul portretului se colorează cu cele trei culori ale clubului (gradient radial + blend `soft-light`), așa că aceeași față arată corect la FCSB, la Rapid sau la un club din Top Europa fără să existe 24 × N randări de imagine.
 - **Avatarul antrenorului, redesenat cinematografic.** Cele 288 de combinații (6 tenuri × 8 coafuri × 6 ținute × 6 accesorii × 4 bărbi) rămân exact cum erau — aceleași chei în salvare — dar randarea a trecut de la forme plate la un portret cu **gradiente de ten, umbre difuze, lumină de contur, ochi cu iris și lumini speculare, fundal bokeh cald și vinietă**. Barba, ochelarii, butoniera, ceasul și cravata colorată sunt straturi separate peste același desen.
-- **Pază de greutate în `data-check`:** fiecare față generată trebuie să fie sub 18 KB, toate să fie WebP în bundle, iar `index.html` să rămână sub 7,5 MB.
-- **Stadiu bibliotecă (v10.41.6):** **70 din 80** de fețe. Tranșa 7 a închis grupul olive (Macedonia, Cipru, Maroc, Bosnia, Malta, Turcia) și a adăugat patru fețe deschise (ceh, român, ucrainean, scoțian). Rămân doar zece fețe fair, toate nordice și central-europene.
+- **Pază de greutate în `data-check`:** fiecare față generată trebuie să fie sub 18 KB, toate să fie WebP în bundle, iar `index.html` să rămână sub 7,5 MB (acum 5,78 MiB cu tot cu cele 80 de portrete).
+- **Bibliotecă completă: 80 de fețe.** Fiecare familie de ten din motor are acum portrete proprii, cu vârste între 17 și 36 de ani și coafuri de la bucle și dreadlocks la chelie: fair 24, olive 22, tan/amber 12, dark 16, est-asiatice 6. `tools/face-library.json` păstrează specificația fiecărui portret (vârstă, ten, coafură, barbă, etnie), iar `data-check` verifică acum că **toate cele 80 sunt livrate** și că etichetele de ten și păr respectă specificația — dacă o față e înlocuită sau adăugată greșit, testul pică.
 
-- **Testat:** smoke test-ul a crescut de la 138 la **153 de verificări** (fața e stabilă după reload, fețele se distribuie între jucători, fotografia reală are prioritate, toate cele 288 de combinații de avatar se randează cu gradiente proprii și fără cereri externe), iar `data-check` de la 79 la **87** (biblioteca de fețe, greutatea fiecărei imagini, acoperirea tenurilor, întâietatea fotografiei reale, limita de 7,5 MB). Storage 7, economy 6.
+- **Testat:** smoke test-ul a crescut de la 138 la **157 de verificări** (fața e stabilă după reload, fețele se distribuie între jucători, fotografia reală are prioritate, toate cele 288 de combinații de avatar se randează cu gradiente proprii și fără cereri externe), iar `data-check` de la 79 la **89** (biblioteca de fețe, greutatea fiecărei imagini, acoperirea tenurilor, întâietatea fotografiei reale, limita de 7,5 MB). Storage 7, economy 6.
 
 ## Modificări în v10.40.0 (noiembrie 2026) — mesajele încetează să mai mintă
 

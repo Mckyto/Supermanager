@@ -90,7 +90,7 @@
  {
   "age": 35,
   "skin": "fair",
-  "hairColor": "dark_brown",
+  "hairColor": "salt_pepper",
   "hairStyle": "bald",
   "beard": "goatee",
   "eth": "German",
@@ -716,7 +716,7 @@
  },
  {
   "age": 31,
-  "skin": "brown",
+  "skin": "dark_brown",
   "hairColor": "black",
   "hairStyle": "fade",
   "beard": "short",
@@ -727,7 +727,7 @@
  },
  {
   "age": 22,
-  "skin": "brown",
+  "skin": "dark_brown",
   "hairColor": "black",
   "hairStyle": "buzz",
   "beard": "none",

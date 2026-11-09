@@ -749,6 +749,14 @@ async function scenarioFaces() {
   check('tenul feței se potrivește cu naționalitatea',
     rouFam.every((k) => ['fair', 'olive'].includes(k)) && senSkins.some((k) => ['ebony', 'dark_brown'].includes(k)) && jpnSkins.includes('east_asian') && indSkins.includes('brown'),
     `ROU ${rouSkins.join('+')} • SEN ${senSkins.join('+')} • JPN ${jpnSkins.join('+')} • IND ${indSkins.join('+')}`);
+  const bandOf = (age, nat = 'ROU') => {
+    const row = fx.facePick({ name: `Varsta ${age}`, nat, pos: 'CM', age });
+    return row ? row[3] : null;
+  };
+  check('vârsta se potrivește: juniorii nu primesc fețe de veterani',
+    bandOf(17) === 'y' && bandOf(19) === 'y' && bandOf(27) === 'p' && bandOf(35) === 'v' && bandOf(34) === 'v',
+    `17→${bandOf(17)} 19→${bandOf(19)} 27→${bandOf(27)} 35→${bandOf(35)}`);
+
   const keys = lib.map((f) => f[0]);
   check('nicio față nu apare de două ori în bibliotecă', new Set(keys).size === keys.length, `${keys.length} intrări`);
 
