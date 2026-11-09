@@ -35,9 +35,9 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (66 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (79 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică 42 de puncte din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică 72 de puncte din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -120,6 +120,19 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.37.9 (noiembrie 2026) — telefonul care te taxează, simulare de sezon
+
+- **Mesajele ignorate te costă bani.** Până acum telefonul nerespectat însemna doar încredere și coeziune pierdute; acum fiecare mesaj expirat aplică o taxă în bugetul clubului: **patronat 80.000 €**, agent 35.000 € (+3.000 € din contul personal), vestiar 25.000 €, presă 15.000 €. Plafon **250.000 € pe etapă**, ca o etapă în care n-ai intrat în joc să nu te falimenteze.
+- **Escaladare la repetiție.** Dacă ignori același expeditor în două etape consecutive, taxa crește **×1,5**, apoi **×2,5**; după a treia ignorare conducem cu încrederea afectată suplimentar.
+- **Persoana te ceartă.** Pe lângă taxă, expeditorul îți scrie un mesaj de reproș (text diferit pe fiecare treaptă) și primești o replică vorbită cu numele și portretul lui. Cardul de reproș rămâne în telefon, cu suma exactă reținută.
+- **Expirarea e vizibilă.** Fiecare mesaj nerezolvat arată **„⏳ Expiră la Etapa N"**; după expirare devine **„⌛ Expirat — taxat X €"** și se arhivează automat după 3 etape, ca inboxul să nu se umple.
+- **Simulare până la etapa X.** Butoane în bara de sus și pe Centru Comandă: **Tur (15)**, **Sezon (30)** și o etapă țintă introdusă manual, cu buton **Stop** care se oprește curat la finalul etapei. Simularea folosește același motor de rezultate ca „Simulează meciul" și rulează toată conducta de după meci (clasament, bani, salarii, mentenanță, accidentări, moral, știri), dar fără 3D și fără decizii în meci.
+- **Mod neutru, cum ai cerut:** în timpul simulării mesajele de pe telefon primesc răspuns automat neutru — **fără taxe, fără ceartă, dar și fără bonusuri** — iar conferințele de presă sunt sărite. Evenimentele și modalurile sunt oprite cât rulează simularea, ca să nu-ți sară ferestre peste ecran.
+- **Raport la final:** V-E-Î, golaveraj, locul în clasament, în știri și în jurnalul de decizii.
+- **Bonus, un bug vechi reparat:** simulatorul rapid de rezultate primea bonusul de manager ca obiect (`{bonus: 3.2}`) în loc de număr, deci toate meciurile „simulate" din cupă/națională ieșeau **0-0**. Acum bonusul e numeric și rezultatele sunt reale.
+- **Ecranul de start:** descrierea arhetipului selectat se afișează integral (era tăiată la 2 rânduri de `line-clamp-2`); cele neselectate rămân pe două rânduri, ca lista să rămână compactă.
+- **Testat:** `data-check` a ajuns la **79 de verificări**, smoke test-ul la **72** — verifică taxele pe roluri, escaladarea ×1,5/×2,5, plafonul, mesajul de reproș în DOM, expirarea taxată și simularea care duce cariera de la etapa 2 la 15 fără erori.
 
 ## Modificări în v10.37.8 (noiembrie 2026) — progresia facilităților costă
 

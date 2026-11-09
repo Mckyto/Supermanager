@@ -170,7 +170,10 @@ check(
     html.includes('lockerCohesion:ke((Je.lockerCohesion??64)-_coh,10,100)') &&
     html.includes('fanSupport:ke((Je.fanSupport??65)-_fan,10,100)')
 );
-check('mesajele ignorate sunt marcate expirate', html.includes('expired:!0,outcomeTone:"negative"'));
+check(
+  'mesajele ignorate sunt marcate expirate și taxate',
+  html.includes('expired:!0,taxPaid:') && html.includes('Mesaj ignorat — te-a costat ')
+);
 
 // 13. Oferta e corelată cu valoarea ȘI cu performanța (meci + sezon)
 check(
@@ -306,9 +309,70 @@ check(
 );
 check(
   'starea șantierelor e migrată în salvările vechi',
-  html.includes('facilityWorks:a.facilityWorks||{}') && html.includes('facilityWorks:{},ticketPolicyRound:-99')
+  html.includes('facilityWorks:a.facilityWorks||{}') && html.includes('facilityWorks:{},ignoreStrikes:{},ticketPolicyRound:-99')
 );
 check('valorile de cost sunt expuse pentru teste', html.includes('window.__smFac={cost:_smFacCost'));
+
+// 21. Ecranul de start: descrierea arhetipului selectat (v10.37.9)
+check(
+  'descrierea arhetipului selectat nu mai e trunchiată la 2 rânduri',
+  html.includes('${Q===L.id?"":"line-clamp-2"}')
+);
+
+// 22. Telefonul: taxe, escaladare și ceartă
+check(
+  'mesajele ignorate sunt taxate pe roluri (patron 80k, agent 35k, vestiar 25k, presă 15k)',
+  html.includes('_SM_PHONE_TAX={patron:8e4,agent:35e3,locker:25e3,press:15e3}')
+);
+check(
+  'taxa are plafon pe etapă și escaladare la ignorări repetate',
+  html.includes('_SM_PHONE_CAP=25e4') &&
+    html.includes('if(_tax>25e4)') &&
+    html.includes('_SM_PHONE_MULT=[1,1.5,2.5]') &&
+    html.includes('for(const mm of _ign){const role=String(mm.senderRole||"");')
+);
+check(
+  'mesajul expirat păstrează suma taxată',
+  html.includes('⌛ Expirat — taxat ') && html.includes('taxPaid:')
+);
+check(
+  'mesajele nerezolvate arată termenul de expirare',
+  html.includes('⏳ Expiră la Etapa ')
+);
+check(
+  'mesajele expirate se arhivează după 3 etape',
+  html.includes('u.expired&&_maxR-(u.roundGenerated||0)>3')
+);
+check(
+  'persoana te ceartă când o ignori (mesaj de reproș + replică vorbită)',
+  html.includes('scolding:!0') && html.includes('_smScoldText') && html.includes('mode:"event",mood:"furios"')
+);
+check(
+  'taxele apar în știri cu suma exactă',
+  html.includes('TAXE PENTRU TĂCERE')
+);
+
+// 23. Simulare în bloc (până la etapa X / tur / sezon)
+check(
+  'există bară de simulare cu Tur, Sezon și etapă țintă',
+  html.includes('_SmBulkBar') && html.includes('children:"Tur"') && html.includes('children:"Sezon"')
+);
+check(
+  'simularea folosește simulatorul de rezultate cu bonus numeric',
+  html.includes('_r=Pl(_h,_a,_h.id===d.userClubId?vt():0') && !html.includes('{bonus:vt()}')
+);
+check(
+  'în simulare deciziile sunt rezolvate neutru (fără taxe, fără bonusuri)',
+  html.includes('_smBulkActive){const _bm=') && html.includes('fără bonus, fără penalizare')
+);
+check(
+  'simularea raportează rezultatele în știri',
+  html.includes('SIMULARE ETAPE ') && html.includes('Simulare Rapidă')
+);
+check(
+  'simularea oprește evenimentele și modalurile în timpul rulării',
+  html.includes('if(!_smBulkActive&&Math.random()<No){') && html.includes('return _smBulkActive||setTimeout(()=>{Se({oldClubName:Re.name')
+);
 
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
