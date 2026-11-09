@@ -65,7 +65,7 @@ async function scenarioOnboarding() {
   );
 
   const portraits = [...app.document.querySelectorAll('button[aria-pressed] img[alt="Portret antrenor"]')];
-  check('onboarding-ul cere un portret de antrenor', portraits.length > 0, `${portraits.length} portrete`);
+  check('onboarding-ul cere un portret de antrenor', portraits.length === 24, `${portraits.length} portrete`);
 
   let pickedId = null;
   if (portraits.length > 1) {
@@ -805,6 +805,10 @@ async function scenarioFaces() {
 
   const coachIds = fx.coaches ? fx.coaches() : [];
   check('biblioteca de portrete de antrenor are 24 de intrări', coachIds.length === 24, `${coachIds.length}`);
+  const coachAssets = coachIds.map((id) => (fx.coachSrc ? fx.coachSrc(id) : ''));
+  check('fiecare portret de antrenor e încorporat în bundle',
+    coachAssets.every((src) => typeof src === 'string' && src.startsWith('data:image/webp;base64,')),
+    `${coachAssets.filter((src) => src && src.startsWith('data:')).length}/24`);
   const legacyA = fx.coachId ? fx.coachId({ manager: { name: 'Mister Popescu' } }) : null;
   const legacyB = fx.coachId ? fx.coachId({ manager: { name: 'Mister Popescu' } }) : null;
   check('salvările vechi primesc un portret stabil din nume', !!legacyA && legacyA === legacyB && coachIds.includes(legacyA), String(legacyA));

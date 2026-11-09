@@ -417,6 +417,7 @@ const coachAssets = coachList.map((id) => {
   return { id, bytes: uri ? Math.round(uri[1].length * 0.75) : 0 };
 });
 const shipped = coachAssets.filter((a) => a.bytes > 0);
+check('toate cele 24 de portrete sunt livrate în bundle', shipped.length === 24, `${shipped.length}/24`);
 check('portretele livrate sunt WebP încorporat, fără cereri externe', shipped.every((a) => a.bytes > 1500), `${shipped.length}/${coachAssets.length}`);
 check('fiecare portret e sub 18 KB', shipped.every((a) => a.bytes <= 18432),
   shipped.length ? `max ${Math.round(Math.max(...shipped.map((a) => a.bytes)) / 1024)} KB` : 'niciunul');

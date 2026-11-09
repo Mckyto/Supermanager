@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.39)
+# SuperManager 26/27 — Ediția Supremă (v10.43)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -14,6 +14,8 @@ tools/
   smoke-test.js         ← testele automate (`npm test`)
   storage-test.js       ← autosalvare + migrarea carierelor vechi
   economy-test.js       ← masa salarială vs buget, salariul antrenorului
+  face-library.json      ← specificația celor 80 de fețe de jucător
+  coach-library.json     ← specificația celor 24 de portrete de antrenor
   build-icons.sh        ← regenerează iconițele din assets/icon-source.png
 ```
 
@@ -35,9 +37,9 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (89 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (97 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **157 de puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **165 de puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -124,6 +126,15 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.43.0 (noiembrie 2026) — portretul antrenorului, ca în dating sim
+
+- **Antrenorul are acum chip de fotografie, nu de desen.** Cele 288 de combinații de avatar (6 tenuri × 8 coafuri × 6 ținute × 6 accesorii × 4 bărbi) desenau un bust plat, care nu semăna cu fețele fotorealiste ale jucătorilor. Acum managerul alege din **24 de portrete foto** — antrenori între 33 și 63 de ani, în costum, smoching, pardesiu bej sau trening, unii cu ochelari, barbă sau chelie. WebP de 216×270, **5,7–8,5 KB bucata**, încorporate în bundle: nicio cerere către exterior.
+- **Alegerea se face la începutul carierei.** În onboarding, sub numele de pe bancă, apare grila „Portretul Tău de Antrenor (24)" cu un portret preselectat; alegerea ajunge în salvare ca `manager.avatar.photoId` (ex. `coach-07`) și se scrie o singură dată, la semnarea contractului.
+- **Schimbabil oricând din Profil.** Butonul „🖼️ Schimbă portretul" deschide aceeași galerie, cu portretul curent marcat; click pe altul îl salvează pe loc și închide galeria. Editorul cu presetări a dispărut din interfață — desenul SVG rămâne doar ca plasă de siguranță, dacă imaginea lipsește.
+- **Carierele vechi nu rămân fără chip.** O salvare fără `photoId` primește un portret **determinist derivat din numele managerului** — același nume dă același portret la fiecare pornire, deci nu „sare" între fețe.
+- **Fără sigle pe echipament.** Portretele sunt decupate head-and-shoulders (58% din înălțime, ancorat sus, 4:5), ceea ce uniformizează încadrarea în galerie și scoate din cadru siglele și sponsorii generați pe tricouri.
+- **Testat:** smoke test-ul a crescut de la 157 la **165 de verificări** (onboarding-ul afișează toate cele 24 de portrete, alegerea se salvează în carieră, portretul schimbat din Profil persistă, salvare veche → portret stabil din nume, `photoId` are prioritate, fiecare portret e încorporat în bundle), iar `data-check` de la 89 la **97** (listă de 24 fără goluri, specificația `coach-library.json`, WebP sub 18 KB, galerie în ambele locuri, limita de 7,5 MB — acum 6,28 MB). Storage 7, economy 6.
 
 ## Modificări în v10.42.0 (noiembrie 2026) — fețe fotorealiste și avatarul cinematic
 
