@@ -575,6 +575,86 @@ async function scenarioCupSim() {
   if (app.click(/Centru Comandă/)) await app.sleep(500);
 }
 
+async function scenarioConflict() {
+  console.log('\n4d. Socoteala jucătorului nemulțumit');
+  const { window } = app;
+  const cf = window.__smConflict;
+  check('funcțiile de conflict sunt expuse', !!cf && !!cf.leaders && !!cf.odds && !!cf.messages && !!cf.exitCost);
+  if (!cf) return;
+
+  const mk = (id, pos, ovr, age, morale, extra = {}) => ({
+    id, name: `Jucător ${id}`, pos, ovr, age, morale, fitness: 95, wage: 10000, contractYears: 2, ...extra,
+  });
+  const players = [
+    mk('cap', 'CB', 70, 25, 40),
+    mk('vet1', 'CM', 80, 30, 90),
+    mk('vet2', 'ST', 74, 29, 60),
+    mk('young', 'RB', 78, 22, 90),
+    mk('gk', 'GK', 85, 31, 20),
+  ];
+  const club = { id: 'c1', name: 'FCSB', players };
+  const career = { userClubId: 'c1', lineupIds: { roles: { captain: 'cap' } }, clubs: [club], manager: { cash: 500000 }, boardConfidence: 70, currentRound: 7 };
+
+  const leaders = cf.leaders(career, club);
+  check('liderii = căpitan + veteranii 28+/72+', leaders.length === 3 && leaders[0].id === 'cap' && !leaders.some((l) => l.id === 'gk' || l.id === 'young'), leaders.map((l) => l.id).join(','));
+  const support = cf.support(career, club);
+  check('sprijinul liderilor e ponderat cu OVR', support === 64, `${support}% (cap 40, vet1 90, vet2 60, ponderat cu OVR)`);
+
+  const allOk = cf.odds({ ...career, boardConfidence: 70 }, club);
+  const noPeace = cf.odds({ ...career, boardConfidence: 30 }, { ...club, players: players.map((p) => ({ ...p, morale: 30 })) });
+  check('patron + lideri puternici = toate variantele', allOk.canDiscipline && !allOk.noPeace, `patron ${allOk.board}% / lideri ${allOk.support}%`);
+  check('patron + lideri slabi = fără cale de împăcare', noPeace.noPeace && noPeace.patronPressure && noPeace.lowLocker, `patron ${noPeace.board}% / lideri ${noPeace.support}%`);
+
+  const richExit = cf.exitCost({ ...career, boardConfidence: 70 }, players[1]);
+  const patronExit = cf.exitCost({ ...career, boardConfidence: 30 }, players[1]);
+  check('rezilierea costă salariile rămase când patronul e mulțumit', richExit.cash === 20000 && !richExit.patronPays, `${richExit.cash} €`);
+  check('când patronul e sub 40%, patronul plătește rezilierea', patronExit.cash === 0 && patronExit.patronPays, patronExit.text);
+
+  const unhappy = { ...career, clubs: [{ ...club, players: players.map((p) => (p.id === 'vet2' ? { ...p, morale: 40 } : p)) }] };
+  const msgs = cf.messages(unhappy, unhappy.clubs[0], 7, []);
+  const talk = msgs.find((m) => m.kind === 'unhappy');
+  check('jucătorul nemulțumit îți cere socoteala', !!talk, talk ? talk.text.slice(0, 60) : 'niciun mesaj');
+  check('textul socotelii are cifre reale', !!talk && /0 meciuri/.test(talk.text) && /0 minute/.test(talk.text));
+  check('variantele depind de patron și lideri', !!talk && talk.replies.some((r) => r.id === 'cmp_promise') && talk.replies.some((r) => r.id === 'cmp_transfer') && talk.replies.some((r) => r.id === 'cmp_bonus'), talk ? talk.replies.map((r) => r.id).join(',') : '');
+  check('disciplina apare doar când e sigură', !!talk && talk.replies.some((r) => r.id === 'cmp_warn'), talk ? talk.replies.map((r) => r.id).join(',') : '');
+
+  const badCareer = { ...career, boardConfidence: 30, clubs: [{ ...club, players: players.map((p) => ({ ...p, morale: 30 })) }] };
+  const badMsgs = cf.messages(badCareer, badCareer.clubs[0], 7, []);
+  check('fără cale de împăcare → cerere oficială de plecare', badMsgs.length > 0 && badMsgs.every((m) => m.kind === 'exit_request'), badMsgs.map((m) => m.kind).join(','));
+  check('cererea are cele 3 căi: împrumut, transfer, liber', badMsgs[0] && ['exit_loan', 'exit_transfer', 'exit_free'].every((id) => badMsgs[0].replies.some((r) => r.id === id)), badMsgs[0] ? badMsgs[0].replies.map((r) => r.id).join(',') : '');
+
+  const brokenCareer = { ...career, clubs: [{ ...club, players: players.map((p) => (p.id === 'vet2' ? { ...p, promiseBroken: true, morale: 55 } : p)) }] };
+  const brokenMsgs = cf.messages(brokenCareer, brokenCareer.clubs[0], 7, []);
+  check('promisiunea încălcată duce direct la cerere de plecare', brokenMsgs[0] && brokenMsgs[0].kind === 'exit_request' && brokenMsgs[0].playerId === 'vet2', brokenMsgs.map((m) => `${m.kind}:${m.playerId}`).join(','));
+
+  const manyUnhappy = { ...career, clubs: [{ ...club, players: players.map((p) => (p.pos === 'GK' ? p : { ...p, morale: 35 })) }] };
+  const capped = cf.messages(manyUnhappy, manyUnhappy.clubs[0], 7, []);
+  check('maximum 2 conflicte pe etapă', capped.length === 2, `${capped.length} mesaje`);
+
+  const busy = cf.messages(manyUnhappy, manyUnhappy.clubs[0], 7, [{ playerId: 'cap', replied: false, kind: 'unhappy' }]);
+  check('un conflict deschis nu se dublează', busy.length === 2 && !busy.some((m) => m.playerId === 'cap'), busy.map((m) => m.playerId).join(','));
+
+  const baseExit = { id: 'm1', kind: 'exit_request', playerId: 'vet2', senderName: 'Jucător vet2', conflict: cf.odds(career, club), exitCost: cf.exitCost({ ...career, boardConfidence: 70 }, players[1]) };
+  const loanOutcome = cf.reply ? cf.reply(baseExit, 'exit_loan') : null;
+  const listOutcome = cf.reply ? cf.reply(baseExit, 'exit_transfer') : null;
+  const freeOutcome = cf.reply ? cf.reply(baseExit, 'exit_free') : null;
+  check('împrumutul scoate jucătorul din lot', !!loanOutcome && loanOutcome.removePlayerId === 'vet2' && loanOutcome.loanOut === true);
+  check('lista de transfer păstrează jucătorul, dar îl marchează', !!listOutcome && listOutcome.listPlayerId === 'vet2' && !listOutcome.removePlayerId);
+  check('liber de contract plătește salariile rămase', !!freeOutcome && freeOutcome.removePlayerId === 'vet2' && freeOutcome.cashDelta === -20000, freeOutcome ? `${freeOutcome.cashDelta} €` : '');
+  const patronExitMsg = { ...baseExit, exitCost: cf.exitCost({ ...career, boardConfidence: 30 }, players[1]) };
+  const patronOutcome = cf.reply ? cf.reply(patronExitMsg, 'exit_free') : null;
+  check('cu patron nemulțumit, rezilierea nu costă clubul', !!patronOutcome && patronOutcome.removePlayerId === 'vet2' && !patronOutcome.cashDelta && patronOutcome.boardDelta === -8, patronOutcome ? patronOutcome.note.slice(0, 70) : '');
+  const lowLockerOdds = cf.odds({ ...career, boardConfidence: 40 }, { ...club, players: players.map((p) => ({ ...p, morale: 30 })) });
+  const promiseWeak = cf.reply ? cf.reply({ ...baseExit, kind: 'unhappy', conflict: lowLockerOdds }, 'cmp_promise') : null;
+  check('promisiunea costă coeziune când vestiarul nu te susține', !!promiseWeak && promiseWeak.cohDelta === -4 && promiseWeak.promisePlayer === true, promiseWeak ? promiseWeak.note.slice(0, 80) : '');
+  const patronOnly = cf.reply ? cf.reply({ ...baseExit, kind: 'unhappy', conflict: cf.odds({ ...career, boardConfidence: 30 }, club) }, 'cmp_promise') : null;
+  check('promisiunea costă încrederea patronului când patronul nu-l vrea', !!patronOnly && patronOnly.boardDelta === -4 && patronOnly.promisePlayer === true, patronOnly ? patronOnly.note.slice(0, 80) : '');
+
+  const escalated = cf.escalation({ ...career }, { id: 'x', morale: 40, conflictTalkRound: 5 }, 7);
+  const early = cf.escalation({ ...career }, { id: 'x', morale: 40, conflictTalkRound: 6 }, 7);
+  check('după 2 etape fără îmbunătățire urmează escaladarea', escalated === true && early === false);
+}
+
 async function scenarioPersistence() {
   console.log('\n8. Salvare');
   const storage = app.window.localStorage;
@@ -598,6 +678,7 @@ async function scenarioPersistence() {
     await scenarioFacilities();
     await scenarioProfile();
     await scenarioCupSim();
+    await scenarioConflict();
     if (!SKIP_MATCH) await scenarioMatch();
     if (!SKIP_MATCH) {
       await scenarioPhone();

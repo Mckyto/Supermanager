@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.38)
+# SuperManager 26/27 — Ediția Supremă (v10.39)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -37,7 +37,7 @@ npm run test:quick # ≈8s  — fără meci
 
 `tools/data-check.js` validează datele din bundle (79 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **101 puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **124 de puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -46,6 +46,7 @@ Testele încarcă bundle-ul real într-un DOM jsdom și verifică **101 puncte**
 - profilul de antrenor: avatarul se desenează, editorul are 38 de presetări, boosturile sunt plafonate, omogenitatea are motive pe fiecare legătură;
 - selecționerul: pool-ul are doar români, lotul de 23 e validat, 4 portari sau un lot incomplet sunt respinse;
 - schimbul de poziții din meci se execută și confirmă adaptarea −12%;
+- socoteala jucătorului nemulțumit: liderii vestiarului, matricea patron/lideri, costul fiecărei căi de ieșire, cele 3 variante din cererea de plecare, plafonul de 2 conflicte pe etapă;
 - cariera se salvează în `localStorage` (~535 KB) și în IndexedDB.
 
 Rulează automat în CI la fiecare pull request. Grafica 3D, sunetul și interacțiunea reală cu degetul nu pot fi acoperite în jsdom — pentru ele e nevoie de un browser.
@@ -123,6 +124,25 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.39.0 (noiembrie 2026) — socoteala jucătorului nemulțumit
+
+- **Evidență de minute pe fiecare jucător.** `appsThisSeason`, `startsThisSeason`, `minutesThisSeason`, `lastStartRound` se acumulează la fiecare etapă (90 de minute pentru titulari, 25 pentru cei intrați de pe bancă) și se resetează la începutul sezonului. Socoteala are cifre: „0 meciuri (0 ca titular) și 0 minute în acest sezon”.
+- **Cine te ia la întrebări.** Un jucător care nu e portar îți cere socoteala dacă are **moralul sub 52** *sau* dacă are **OVR ≥ 72, vârstă ≥ 23 și cel mult un meci ca titular după etapa 6** — adică exact cazul „jucător bun, lăsat pe bancă”. Doar jucători apți, cel mult **2 conflicte pe etapă**, iar un conflict deschis nu se dublează.
+- **Liderii vestiarului decid cât de mult poți promite.** `_smLeaders()` = **căpitanul + veteranii (28+ ani, OVR ≥ 72)**; `_smLeaderSupport()` = media moralului lor **ponderată cu OVR**. Se combină cu încrederea patronului (`boardConfidence`) și decid ce variante primești.
+- **Variantele de soluționare** (fiecare arată în text patronul și liderii, ca să știi pe ce te bazezi):
+  - **promisiune de titularizare** — +8 moral, +2% vestiar, +1% patron; dacă liderii sunt sub 40% costă −4% coeziune, iar dacă patronul e sub 40% costă −4% încredere;
+  - **explicația rolului** — +3 moral și +2% vestiar cu lideri puternici, doar +1 moral fără ei;
+  - **primă de joc** — 2 salarii din contul tău, +10 moral, +2% vestiar (ascunsă dacă patronul e sub 45% sau nu ai bani);
+  - **disciplină (tribune)** — apare doar când e sigură (patron puternic + lideri puternici, sau patron ≥ 60% cu lideri slabi); forțată când vestiarul nu te susține → −12 moral, −8% vestiar, −2% patron;
+  - **lista de transfer** — valoare −10%, moral +4, patron +2%;
+  - **„nu comentez acum”** — −10 moral, −4% vestiar și pornește ceasul conflictului.
+- **Cererea oficială de plecare.** Apare când **nu mai există cale de împăcare**: (a) patronul **și** liderii sunt sub 40%, (b) a trecut **o promisiune încălcată**, sau (c) au trecut **2 etape** de la discuție fără îmbunătățire (moral sub 45). Are exact trei căi:
+  - **împrumut până în vară** — pleacă din lot, clubul plătește 50% din salariu, vestiar −2%, patron +1%;
+  - **listă de transfer** — rămâne, dar e marcat (valoare −10%), moral +4, patron +2%;
+  - **liber de contract** — plătești salariile rămase din contract (−4% patron); **dacă încrederea patronului e sub 40%, patronul acoperă el rezilierea** (0 € din bugetul clubului, dar −8% încredere).
+- **Conflictul se vede în profil**, la secțiunea „Conflicte deschise & cereri de plecare”: cine e nemulțumit, ce cifre are, cine e pe lista de transfer și cine are promisiune încălcată — plus patronul și sprijinul liderilor, ca să știi dinainte ce variante vei avea.
+- **Testat:** smoke test-ul a crescut de la 101 la **124 de verificări** — liderii (căpitan + veterani, ponderat cu OVR), matricea patron/lideri, costul rezilierii cu patron mulțumit vs nemulțumit, cele 3 căi de ieșire, efectele promisiunii în funcție de vestiar și patron, plafonul de 2 conflicte pe etapă și nereluarea unui conflict deschis.
 
 ## Modificări în v10.38.0 (noiembrie 2026) — profilul antrenorului, boosturi plafonate, selecționer și omogenitate
 
