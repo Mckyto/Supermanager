@@ -53,6 +53,17 @@ async function scenarioOnboarding() {
   check('lista de cluburi e vizibilă', /FCSB/.test(text()) && /Universitatea Craiova/.test(text()));
   check('arhetipuri de manager prezente', /Fost Internațional/.test(text()));
 
+  const descs = [...app.document.querySelectorAll('button p')].filter((p) =>
+    /Jucătorii te respectă|Începi cu reputație|Deblochezi opțiuni|Conducerea și suporterii/.test(p.textContent || '')
+  );
+  const clipped = descs.filter((p) => /line-clamp-2/.test(p.className));
+  check('cele 4 arhetipuri au descriere proprie', descs.length === 4, `${descs.length} descrieri`);
+  check(
+    'descrierea arhetipului selectat e afișată integral',
+    descs.length === 4 && clipped.length === 3,
+    `${clipped.length} trunchiate din ${descs.length}`
+  );
+
   if (!click(/Semnează Contractul/)) return fail('butonul „Semnează Contractul" există');
   pass('butonul „Semnează Contractul" apăsat');
 
@@ -259,7 +270,7 @@ async function scenarioMatch() {
 }
 
 async function scenarioAccessibility() {
-  console.log('\n7. Accesibilitate');
+  console.log('\n9. Accesibilitate');
   const { document, window } = app;
 
   // fontul minim: clasele utilitare mici nu mai coboară sub 12px
@@ -297,8 +308,101 @@ async function scenarioAccessibility() {
   check('limba documentului e română', document.documentElement.lang === 'ro', document.documentElement.lang);
 }
 
+async function scenarioPhone() {
+  console.log('\n6. Telefon: taxe, ceartă și expirare');
+  const KEY = 'sm2627_career_slot_1';
+  const read = () => {
+    try {
+      const raw = app.window.localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  };
+  const before = app.errors.length;
+  const career = read();
+  const messages = (career && career.phoneMessages) || [];
+  const expired = messages.filter((m) => m.expired && m.taxPaid > 0);
+  const scolds = messages.filter((m) => m.scolding);
+  check('mesajul ignorat e taxat în bani', expired.length > 0, `${expired.length} taxate, ex. ${expired[0] ? expired[0].taxPaid : 0} €`);
+  check('expeditorul te ceartă după ignorare', scolds.length > 0, (scolds[0] && scolds[0].senderName) || '');
+  check('taxa e reținută pe expeditor', Object.keys((career && career.ignoreStrikes) || {}).length > 0);
+  const ph = app.window.__smPhone;
+  check('funcțiile de taxare sunt expuse în bundle', !!ph);
+  if (ph) {
+    const t1 = ph.tax('Patronat & Consiliu', 1);
+    const t2 = ph.tax('Patronat & Consiliu', 2);
+    const t3 = ph.tax('Patronat & Consiliu', 3);
+    check(
+      'taxa patronului escaladează ×1,5 apoi ×2,5',
+      t1.club === 80000 && t2.club === 120000 && t3.club === 200000,
+      `${t1.club} / ${t2.club} / ${t3.club}`
+    );
+    const ag = ph.tax('Agent & Impresar', 2);
+    check('agentul ia și din contul personal al managerului', ag.club === 52500 && ag.personal === 4500, `${ag.club} / ${ag.personal}`);
+    check(
+      'textele de reproș diferă pe trepte',
+      ph.scold('patron', 1) !== ph.scold('patron', 3) && /taxă|consiliul/i.test(ph.scold('patron', 3))
+    );
+    check('vestiarul e taxat mai blând decât patronul', ph.tax('Vestiar & Căpitan', 1).club === 25000);
+  }
+
+  check(
+    'reproșul conține suma taxată',
+    scolds.length > 0 && /Te-a taxat cu/.test(scolds[0].outcomeNote || ''),
+    scolds[0] ? String(scolds[0].outcomeNote).slice(0, 48) : ''
+  );
+
+  if (!app.click(/Telefon/)) return fail('butonul Telefon există');
+  await app.sleep(600);
+  const panel = app.text();
+  check('telefonul arată mesajul expirat cu suma', /Expirat — taxat/.test(panel));
+  check('telefonul afișează reproșul primit', /Te-a taxat cu/.test(panel));
+  check('fără erori în telefon', app.errors.length === before, app.errors[before]);
+
+  const close = [...app.document.querySelectorAll('button')].find((b) => {
+    if ((b.textContent || '').trim()) return false;
+    const root = b.closest('.fixed');
+    return root && /Telefonul lui Mister/.test(root.textContent || '');
+  });
+  if (close) close.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  await app.sleep(400);
+}
+
+async function scenarioBulkSim() {
+  console.log('\n7. Simulare rapidă (tur / până la etapa X)');
+  const KEY = 'sm2627_career_slot_1';
+  const read = () => {
+    try {
+      const raw = app.window.localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  };
+  const before = app.errors.length;
+  const start = read();
+  check('bara de simulare e vizibilă', app.labels().some((l) => l === 'Tur') && app.labels().some((l) => l === 'Sezon'));
+
+  if (!app.click((l) => l === 'Tur')) return fail('butonul Tur există');
+  let career = null;
+  for (let i = 0; i < 60; i += 1) {
+    await app.sleep(500);
+    career = read();
+    if (career && career.currentRound >= 15) break;
+  }
+  check(
+    'simularea avansează etapele până la tur',
+    !!career && career.currentRound >= 15,
+    `${start ? start.currentRound : '?'} → ${career ? career.currentRound : '?'}`
+  );
+  const news = ((career && career.newsFeed) || []).map((n) => n.text).join(' | ');
+  check('raportul simulării apare în știri', /SIMULARE ETAPE/.test(news), (news.match(/SIMULARE ETAPE[^|]{0,60}/) || [''])[0]);
+  check(
+    'în simulare mesajele sunt rezolvate neutru, fără taxe noi',
+    ((career && career.phoneMessages) || []).some((m) => m.autoNeutral)
+  );
+  check('fără erori în timpul simulării', app.errors.length === before, app.errors[before]);
+}
+
 async function scenarioPersistence() {
-  console.log('\n6. Salvare');
+  console.log('\n8. Salvare');
   const storage = app.window.localStorage;
   const keys = [];
   for (let i = 0; i < storage.length; i += 1) keys.push(storage.key(i));
@@ -319,6 +423,10 @@ async function scenarioPersistence() {
     await scenarioTabs();
     await scenarioFacilities();
     if (!SKIP_MATCH) await scenarioMatch();
+    if (!SKIP_MATCH) {
+      await scenarioPhone();
+      await scenarioBulkSim();
+    }
     await scenarioPersistence();
     await scenarioAccessibility();
   } catch (err) {
