@@ -1,0 +1,242 @@
+[
+ {
+  "age": 42,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "dark brown short neat haircut with a few grey hairs",
+  "beard": "clean shaven",
+  "outfit": "a navy suit with white shirt and burgundy tie",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 55,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "salt-and-pepper short neat haircut",
+  "beard": "short beard",
+  "outfit": "a charcoal grey suit with light blue shirt",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 38,
+  "eth": "Romanian",
+  "skin": "olive",
+  "hair": "black short fade haircut",
+  "beard": "light stubble",
+  "outfit": "an emerald green club tracksuit",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 47,
+  "eth": "Italian",
+  "skin": "olive",
+  "hair": "salt-and-pepper side-part haircut",
+  "beard": "goatee",
+  "outfit": "a navy suit with white shirt",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 34,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "blond short neat haircut",
+  "beard": "clean shaven",
+  "outfit": "a navy blue club tracksuit",
+  "expr": "calm confident",
+  "glasses": true
+ },
+ {
+  "age": 61,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "short grey hair receding at the temples",
+  "beard": "full trimmed beard",
+  "outfit": "a beige overcoat with scarf",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 45,
+  "eth": "Spanish",
+  "skin": "olive",
+  "hair": "black short neat haircut",
+  "beard": "short beard",
+  "outfit": "a black tuxedo with black bow tie",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 50,
+  "eth": "German",
+  "skin": "fair",
+  "hair": "salt-and-pepper buzz cut",
+  "beard": "goatee",
+  "outfit": "a charcoal grey suit",
+  "expr": "calm confident",
+  "glasses": true
+ },
+ {
+  "age": 36,
+  "eth": "Serbian",
+  "skin": "olive",
+  "hair": "dark brown short fade haircut",
+  "beard": "light stubble",
+  "outfit": "a navy club polo shirt",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 58,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "shaved bald head",
+  "beard": "full trimmed beard",
+  "outfit": "a black tuxedo",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 40,
+  "eth": "English",
+  "skin": "fair",
+  "hair": "brown short neat haircut",
+  "beard": "clean shaven",
+  "outfit": "a charcoal grey suit with blue tie",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 33,
+  "eth": "Brazilian",
+  "skin": "tan",
+  "hair": "black curly hair",
+  "beard": "light stubble",
+  "outfit": "a navy blazer over a white shirt",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 52,
+  "eth": "Romanian",
+  "skin": "olive",
+  "hair": "salt-and-pepper short neat haircut",
+  "beard": "short beard",
+  "outfit": "a beige overcoat",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 44,
+  "eth": "Turkish",
+  "skin": "olive",
+  "hair": "black buzz cut",
+  "beard": "full trimmed beard",
+  "outfit": "a black club tracksuit",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 39,
+  "eth": "Dutch",
+  "skin": "fair",
+  "hair": "light brown short neat haircut",
+  "beard": "clean shaven",
+  "outfit": "a navy suit with white shirt",
+  "expr": "calm confident",
+  "glasses": true
+ },
+ {
+  "age": 63,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "white short neat haircut",
+  "beard": "clean shaven",
+  "outfit": "a charcoal grey suit",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 48,
+  "eth": "Senegalese",
+  "skin": "ebony",
+  "hair": "black buzz cut",
+  "beard": "short beard",
+  "outfit": "a navy suit with white shirt",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 41,
+  "eth": "Portuguese",
+  "skin": "olive",
+  "hair": "dark brown short neat haircut",
+  "beard": "goatee",
+  "outfit": "a royal blue club polo shirt",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 37,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "ginger short haircut",
+  "beard": "light stubble",
+  "outfit": "a green club tracksuit",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 56,
+  "eth": "Croatian",
+  "skin": "fair",
+  "hair": "salt-and-pepper short neat haircut",
+  "beard": "full trimmed beard",
+  "outfit": "a beige overcoat",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 46,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "brown short neat haircut",
+  "beard": "light stubble",
+  "outfit": "a grey suit",
+  "expr": "calm confident",
+  "glasses": true
+ },
+ {
+  "age": 35,
+  "eth": "Nigerian",
+  "skin": "dark_brown",
+  "hair": "black short fade haircut",
+  "beard": "clean shaven",
+  "outfit": "a black club polo shirt",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 59,
+  "eth": "Romanian",
+  "skin": "fair",
+  "hair": "shaved bald head",
+  "beard": "goatee",
+  "outfit": "a navy suit with white shirt",
+  "expr": "calm confident",
+  "glasses": false
+ },
+ {
+  "age": 43,
+  "eth": "Greek",
+  "skin": "olive",
+  "hair": "black short neat haircut",
+  "beard": "short beard",
+  "outfit": "a black club tracksuit",
+  "expr": "calm confident",
+  "glasses": false
+ }
+]
