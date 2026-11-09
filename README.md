@@ -1,10 +1,10 @@
-# SuperManager 26/27 — Ediția Supremă (v10.37)
+# SuperManager 26/27 — Ediția Supremă (v10.38)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
 ```
 public/
-  index.html            ← tot jocul (single-file build, ~5.2 MB)
+  index.html            ← tot jocul (single-file build, ~5.5 MB)
   manifest.webmanifest  ← instalare pe telefon (PWA)
   sw.js                 ← cache offline (network-first pentru HTML)
   icons/                ← set complet de iconițe
@@ -37,13 +37,16 @@ npm run test:quick # ≈8s  — fără meci
 
 `tools/data-check.js` validează datele din bundle (79 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică 72 de puncte din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **101 puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
-- toate cele 7 secțiuni (Centru Comandă, Lot, Clasament, Cupe, Mercato, Academie, Viață) se randează;
+- toate cele 8 secțiuni (Centru Comandă, Lot, Clasament, Cupe, Mercato, Academie, Viață, Profil) se randează;
 - meciul live pornește, ceasul avansează, pauza de la 45' apare și repriza a doua reia jocul;
-- cariera se salvează în `localStorage` (~420 KB) și în IndexedDB.
+- profilul de antrenor: avatarul se desenează, editorul are 38 de presetări, boosturile sunt plafonate, omogenitatea are motive pe fiecare legătură;
+- selecționerul: pool-ul are doar români, lotul de 23 e validat, 4 portari sau un lot incomplet sunt respinse;
+- schimbul de poziții din meci se execută și confirmă adaptarea −12%;
+- cariera se salvează în `localStorage` (~535 KB) și în IndexedDB.
 
 Rulează automat în CI la fiecare pull request. Grafica 3D, sunetul și interacțiunea reală cu degetul nu pot fi acoperite în jsdom — pentru ele e nevoie de un browser.
 
@@ -120,6 +123,20 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.38.0 (noiembrie 2026) — profilul antrenorului, boosturi plafonate, selecționer și omogenitate
+
+- **Profil de antrenor (secțiune nouă „Profil”).** Un card complet de carieră: meciuri jucate, **V-E-Î**, golaveraj, rată de victorie, trofee, sezon și etapă, reputație, carismă, jucători aduși prin transfer și obiecte deținute. Contoarele se acumulează în motor (`careerStats`, actualizat la fiecare meci jucat) și se salvează odată cu cariera.
+- **Editor de avatar din presetări.** **6 tenuri × 8 coafuri × 6 ținute**, plus 6 accesorii și 4 tipuri de barbă — **38 de presetări**, fără slidere, fiecare aplicată instant. Avatarul e desenat ca SVG (fără asset-uri) și apare în profil; alegerea se salvează în carieră (`manager.avatar`) și supraviețuiește reload-ului.
+- **Obiectele cumpărate se văd pe tine.** Costumul croit pe comandă adaugă revere și nasturi aurii, ceasul elvețian apare ca badge ⌚, iar în profil lista „Pe tine” arată ce ai cumpărat — casă, mașină, garderobă, investiții.
+- **Fiecare achiziție dă un boost vizibil, dar plafonat.** Carisma și reputația sunt afișate ca **„brut → plafonat”**: contribuția maximă e **+8 pe atribut**, iar după +5 randamentul scade la jumătate pentru fiecare punct (`5 + (brut − 5) × 0,5`). În meci, tot ce ai cumpărat se traduce într-un **bonus de echipă de maximum +0,4 OVR** (`0,03 × carismă + 0,02 × reputație`, plafonat), aplicat în `vt()`. Cumpărăturile noi adaugă doar delta plafonată (`_smItemDelta`), deci nu mai poți ajunge la carismă 100 cumpărând șapte costume.
+- **Bonusuri active.** Secțiune în profil cu cele trei valori (carismă, reputație, bonus de meci), totalul brut și lista obiectelor cu contribuția fiecăruia.
+- **Simulare în cupe.** Două butoane noi în „Cupe & Europa”: **„Simulează runda de cupă”** (joacă tie-ul tău și calculează automat toate celelalte meciuri din aceeași rundă) și **„Simulează tot parcursul european”**, care rulează unul după altul toate meciurile rămase din faza curentă, cu rezultate reale.
+- **Selecționer: lotul naționalei din toate campioanele.** Panou nou când ești selecționer: pool-ul adună **toți jucătorii români** — SuperLiga, Top Europa și liberi de contract — cu filtre pe post, OVR minim, vârstă maximă, club și căutare după nume. Reguli FRF respectate: **lot de 23**, **maximum 3 portari**, **doar jucători apți** (accidentații, suspendații și cei cu refacere fizică sunt respinși). Buton „Completează automat (23)” și contor live `23/23`, portari, omogenitate. Lotul convocat (`ntSquad`) se salvează în carieră și **intră efectiv în meciurile naționalei** (live și simulate), cu bonusul de chimie al selecționatei.
+- **Fix de identitate:** clubul naționalei avea `id: "nt_romania"`, dar fixtures-urile și codul de meci foloseau `"romania_nt"` — deci naționala nu se rezolva corect. Aliniat la `"romania_nt"`.
+- **Omogenitate din relațiile reale.** Chimia nu mai e doar „aceeași naționalitate”: fiecare legătură dintre doi jucători apropiați pe teren adună **naționalitate (+18)**, **aceeași limbă (+9)**, **mentorat (+28)**, **moral ridicat la amândoi (+10)**, **vârstă apropiată (+4)**, **experiență comună (+3)**, și scade la **limbi diferite (−6)** sau **moral scăzut (−22)**. Fiecare legătură are motivele scrise în clar, iar profilul arată scorul, numărul de legături și **cele mai slabe trei legături** — exact acelea care scad precizia pasei. Funcționează la club **și la națională**.
+- **Schimbarea pozițiilor în timpul meciului.** În tabul „Tactică” din meciul live, alegi doi jucători și apeși **„Schimbă pozițiile”**: își inversează rolul, ancora și poziția pe teren, iar ambii primesc o **penalizare de adaptare de −12% la pas, șut și dribling pentru 6 minute**. Schimbarea formației în meci aplică și ea un **șoc de reorganizare** (−0,18 bonus de echipă, 8 minute). Ambele expiră singure, prin `_adaptTick()` din bucla motorului.
+- **Testat:** smoke test-ul a crescut de la 72 la **101 verificări** (profil, avatar, plafoane, motivele omogenității, lotul de 23, filtrele, schimbul de poziții cu confirmarea adaptării, bara de simulare în cupe); `data-check` rămâne la 79, storage 7, economy 6.
 
 ## Modificări în v10.37.9 (noiembrie 2026) — telefonul care te taxează, simulare de sezon
 
