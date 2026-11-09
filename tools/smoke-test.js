@@ -705,6 +705,53 @@ async function scenarioFixes() {
   check('patronul nu repetă aceeași cerere în etapele următoare', !repeated || repeated.playerId !== 'b2', repeated ? repeated.playerName : 'niciunul');
 }
 
+async function scenarioFaces() {
+  console.log('\n4f. Fețe fotorealiste și avatar cinematic (v10.41.0)');
+  const { window } = app;
+  const fx = window.__smFix;
+  const api = fx && fx.faceOf && fx.avatarSvg && fx.faces;
+  check('funcțiile de fețe sunt expuse', !!api);
+  if (!api) return;
+
+  const lib = fx.faces();
+  check('biblioteca de fețe e încărcată', Array.isArray(lib) && lib.length >= 8, `${lib ? lib.length : 0} fețe`);
+  const resolved = lib.every((f) => {
+    const uri = fx.faceOf({ name: 'Test', nat: 'ROU', pos: 'CM', age: 22 });
+    return typeof uri === 'string' && uri.startsWith('data:image/webp;base64,');
+  });
+  check('fețele sunt încorporate în bundle, fără cereri externe', resolved);
+
+  const ghost = { id: 'gen1', name: 'Jucător Fără Poză', nat: 'ROU', pos: 'CM', age: 21 };
+  check('jucătorul fără poză nu are fotografie reală', fx.realFace(ghost) === null);
+  const face = fx.faceOf(ghost);
+  check('jucătorul fără poză primește o față fotorealistă', typeof face === 'string' && face.startsWith('data:image/webp;base64,'), face ? `${face.length} caractere` : 'niciuna');
+  check('aceeași față pentru același jucător', fx.faceOf({ ...ghost }) === face);
+
+  const many = Array.from({ length: 24 }, (_, i) => fx.faceOf({ name: `Regen ${i}`, nat: 'ROU', pos: 'CB', age: 18 + (i % 6) }));
+  const distinct = new Set(many).size;
+  check('fețele se distribuie între jucători, nu una singură', distinct >= Math.min(lib.length, 6), `${distinct} fețe distincte din ${many.length}`);
+
+  const real = { id: 'real1', name: 'Ștefan Târnovanu', nat: 'ROU', pos: 'GK', age: 26 };
+  check('fotografia reală are prioritate față de bibliotecă', !!fx.realFace(real));
+
+  const sizes = lib.map((f) => window.__SM_ASSETS__ && window.__SM_ASSETS__[f[0]] ? window.__SM_ASSETS__[f[0]].length : 0);
+  check('fiecare față are un asset în bundle', sizes.every((n) => n > 2000), `min ${Math.min(...sizes)} caractere`);
+
+  const combos = [];
+  for (let skin = 0; skin < 6; skin += 1) for (let hs = 0; hs < 8; hs += 1) for (let outfit = 0; outfit < 6; outfit += 1) combos.push({ skin, hair: (skin + hs) % 8, hairStyle: hs, outfit, accessory: (hs + outfit) % 6, beard: (skin + outfit) % 4 });
+  const svgs = combos.map((c) => fx.avatarSvg({ manager: { avatar: c, ownedItems: [] } }, 132));
+  check('avatarul se randează pentru toate cele 288 de combinații', svgs.every((v) => typeof v === 'string' && v.startsWith('<svg')), `${svgs.length} combinații`);
+  check('avatarul folosește umbre și lumină, nu doar culori plate', svgs.every((v) => v.includes('radialGradient') && v.includes('feGaussianBlur')));
+  check('avatarul nu are cereri externe', svgs.every((v) => !/https?:\/\//.test(v)));
+  check('fiecare combinație are propriile gradiente', new Set(svgs).size === svgs.length);
+  const ids = new Set();
+  svgs.forEach((v) => (v.match(/id="[^"]+"/g) || []).forEach((m) => ids.add(m)));
+  check('identificatorii SVG nu se repetă între combinații', ids.size >= svgs.length * 6);
+
+  const styled = fx.avatarSvg({ manager: { avatar: { skin: 4, hair: 0, hairStyle: 2, outfit: 2, accessory: 2, beard: 3 }, ownedItems: [] } }, 132);
+  check('avatarul respectă tenul și barba alese', styled.includes(fx.mix('#8d5a33', '#4a2512', 0.5)) && styled.includes('goatee') === false);
+}
+
 async function scenarioPersistence() {
   console.log('\n8. Salvare');
   const storage = app.window.localStorage;
@@ -730,6 +777,7 @@ async function scenarioPersistence() {
     await scenarioCupSim();
     await scenarioConflict();
     await scenarioFixes();
+    await scenarioFaces();
     if (!SKIP_MATCH) await scenarioMatch();
     if (!SKIP_MATCH) {
       await scenarioPhone();
