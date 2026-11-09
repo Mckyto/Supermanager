@@ -374,6 +374,28 @@ check(
   html.includes('if(!_smBulkActive&&Math.random()<No){') && html.includes('return _smBulkActive||setTimeout(()=>{Se({oldClubName:Re.name')
 );
 
+// 24. Biblioteca de fețe generate + avatarul cinematic (v10.41.0)
+const faceTable = [...html.matchAll(/\["(faces\/gen-[0-9]+\.webp)","([a-z_|]+)","([a-z_]+)"\]/g)];
+check('biblioteca de fețe generate există', faceTable.length >= 8, `${faceTable.length} fețe`);
+const faceMissing = faceTable.filter((m) => !assetKeys.has(m[1]));
+check('fiecare față generată are asset în bundle', faceMissing.length === 0, faceMissing.slice(0, 3).map((m) => m[1]).join(', '));
+const faceBytes = faceTable.map((m) => {
+  const re = new RegExp('"' + m[1].replace(/\//g, '\\/') + '":"data:image\\/webp;base64,([A-Za-z0-9+/=]+)"');
+  const hit = html.match(re);
+  return hit ? Math.round(hit[1].length * 0.75) : 0;
+});
+const maxFace = Math.max(...faceBytes, 0);
+check('fiecare față generată e sub 18 KB', maxFace > 0 && maxFace <= 18432, `max ${Math.round(maxFace / 1024)} KB`);
+check('fețele sunt WebP, nu JPEG sau PNG', /"faces\/gen-01\.webp":"data:image\/webp;base64,/.test(html));
+const skinClasses = ['fair', 'olive', 'tan', 'amber', 'brown', 'dark_brown', 'ebony', 'east_asian'];
+const coveredSkins = new Set(faceTable.flatMap((m) => m[2].split('|')));
+const fullLibrary = faceTable.length >= 80;
+check('biblioteca acoperă toate tenurile din joc', !fullLibrary || skinClasses.every((k) => coveredSkins.has(k)), `${faceTable.length} fețe: ${[...coveredSkins].join(', ')}`);
+check('fotografia reală are întâietate în componenta de jucător', html.includes('const _fg=_smFaceFor(a);') && html.includes(',m&&!g){'));
+check('avatarul e desenat cu gradiente și umbre, nu plat', html.includes('function _smAvatarSvg(a,e){') && html.includes('feGaussianBlur stdDeviation="2"') && html.includes('radialGradient id="k${U}"'));
+const htmlBytes = Buffer.byteLength(html, 'utf8');
+check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
