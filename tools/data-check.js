@@ -226,6 +226,19 @@ check(
   html.includes('_fw=l.filter(k=>(k.x-s.x)*_dir>1.5),_pool=_fw.length?_fw:l')
 );
 
+// 18. Fluidență: simulare cu pas fix + calitate adaptivă în 3D
+check(
+  'simularea are pas fix de 8 ms și plafon de timp simulat pe cadru',
+  html.includes('const _sSim=Math.min(s,.128),f=Math.max(1,Math.ceil(_sSim/.008)),m=_sSim/f;')
+);
+check('nu mai există bucla de 36 de substeps (spirala de lag)', !html.includes('Math.min(36,Math.ceil(s/.008))'));
+check(
+  'randarea 3D are guvernator de calitate (pixel ratio adaptiv)',
+  html.includes('Q.__qTier') && html.includes('Q.setPixelRatio(Math.min(window.devicePixelRatio||1,_nx===0?1.35:_nx===1?1.12:1))')
+);
+check('randarea se oprește când tabul e ascuns', html.includes('document.hidden)return'));
+check('publicul se animă mai rar pe treptele slabe de calitate', html.includes('Q.__qTier>=2?10:5'));
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
