@@ -207,6 +207,41 @@ async function scenarioMatch() {
     `${startMinute}' → ${laterMinute}'`
   );
 
+  // schimbarea pozițiilor în timpul meciului (v10.38.0)
+  const beforeTactics = app.errors.length;
+  if (app.click(/^\s*Tactică\s*$/)) {
+    await app.sleep(600);
+    const tacticsText = app.text();
+    check('tab-ul Tactică se deschide în meci', /Sistem de Joc Live/.test(tacticsText) && app.errors.length === beforeTactics);
+    check('instrumentul de schimbare a pozițiilor există', /Schimbă poziţiile în timpul meciului/.test(tacticsText));
+    const selects = [...app.document.querySelectorAll('select')].filter((sel) => /Jucător [AB]/.test(sel.textContent || ''));
+    check('schimbul are două selectoare de jucători', selects.length >= 2, `${selects.length} selectoare`);
+    if (selects.length >= 2) {
+      const [selA, selB] = selects;
+      const pick = (el, idx) => {
+        el.value = el.options[idx].value;
+        const Win = app.window;
+        el.dispatchEvent(new (Win.Event || Event)('change', { bubbles: true }));
+      };
+      pick(selA, 1);
+      await app.sleep(150);
+      pick(selB, 2);
+      await app.sleep(250);
+      const beforeSwap = app.errors.length;
+      if (app.click(/Schimbă poziţiile/)) {
+        await app.sleep(500);
+        check(
+          'schimbul de poziții confirmă adaptarea −12%',
+          /Pozițiile au fost schimbate/.test(app.text()) && /−12%/.test(app.text()) && app.errors.length === beforeSwap
+        );
+      } else {
+        fail('butonul de schimbare a pozițiilor există');
+      }
+    }
+  } else {
+    fail('tab-ul Tactică există în meci');
+  }
+
   // meciul trebuie să curgă fără popup-uri de decizie
   const DECIZII = /Corecții Tactice pe Tablă|Dialog 1-la-1|Analiza Secundului|Pericol de Eliminare|Ultimele 15 Minute|Gestionare Efort|Protejarea Avantajului/;
   let decizieInMeci = null;
@@ -401,6 +436,145 @@ async function scenarioBulkSim() {
   check('fără erori în timpul simulării', app.errors.length === before, app.errors[before]);
 }
 
+async function scenarioProfile() {
+  console.log('\n4b. Profil antrenor, avatar, boosturi și omogenitate');
+  const { window } = app;
+
+  check(
+    'funcțiile de profil sunt expuse în bundle',
+    !!window.__smAvatar && !!window.__smBoosts && !!window.__smChem
+  );
+
+  const av = window.__smAvatar ? window.__smAvatar({ manager: {} }) : null;
+  check(
+    'avatarul are o presetare implicită validă',
+    !!av && Number.isFinite(av.skin) && Number.isFinite(av.outfit) && Number.isFinite(av.hairStyle),
+    av ? `ten ${av.skin}, coafură ${av.hairStyle}, ținută ${av.outfit}` : ''
+  );
+
+  const boost = window.__smBoosts
+    ? window.__smBoosts({
+        manager: {
+          ownedItems: ['bespoke_suit', 'swiss_watch', 'italian_supercar'],
+          homeId: 'penthouse',
+          carId: 'italian_supercar',
+        },
+      })
+    : null;
+  check(
+    'boosturile sunt plafonate la +8 pe atribut',
+    !!boost && boost.capped.charisma === 8,
+    boost ? `carismă ${boost.capped.charisma} (brut ${boost.raw.charisma})` : ''
+  );
+  check(
+    'randamentul scade după +5',
+    !!boost && boost.raw.charisma > 5 && boost.capped.charisma < boost.raw.charisma,
+    boost ? `${boost.raw.charisma} brut → ${boost.capped.charisma} aplicat` : ''
+  );
+  check(
+    'bonusul de meci e plafonat la +0,4',
+    !!boost && boost.capped.matchBonus <= 0.4,
+    boost ? `+${boost.capped.matchBonus}` : ''
+  );
+
+  const mk = (nat, i, morale = 85) => ({ id: `p${i}`, name: `Jucător ${i}`, nat, age: 26, morale });
+  const ro = Array.from({ length: 11 }, (_, i) => mk('ROU', i));
+  const mix = Array.from({ length: 11 }, (_, i) => mk(i % 2 ? 'BRA' : 'JPN', i));
+  const chemRo = window.__smChem ? window.__smChem.pairs(ro, '4-3-3', [], 70) : null;
+  const chemMix = window.__smChem ? window.__smChem.pairs(mix, '4-3-3', [], 70) : null;
+  check(
+    'omogenitatea e mai mare între jucători de aceeași limbă',
+    !!chemRo && !!chemMix && chemRo.score > chemMix.score,
+    chemRo && chemMix ? `${chemRo.score}% vs ${chemMix.score}%` : ''
+  );
+  const neutral = ro.map((p) => ({ ...p, morale: 60 }));
+  const noMentor = window.__smChem ? window.__smChem.pairs(neutral, '4-3-3', [], 70) : null;
+  const mentor = window.__smChem
+    ? window.__smChem.pairs(neutral, '4-3-3', [{ mentorId: 'p0', menteeId: 'p3' }], 70)
+    : null;
+  check(
+    'mentoratul ridică omogenitatea',
+    !!mentor && !!noMentor && mentor.score > noMentor.score,
+    mentor && noMentor ? `${noMentor.score}% → ${mentor.score}%` : ''
+  );
+  check(
+    'legăturile au motive explicite',
+    !!chemRo && chemRo.links.every((l) => Array.isArray(l.reasons) && l.reasons.length > 0),
+    chemRo && chemRo.links[0] ? chemRo.links[0].reasons.join(', ') : ''
+  );
+  const lowMorale = window.__smChem ? window.__smChem.pairs(ro.map((p) => ({ ...p, morale: 40 })), '4-3-3', [], 70) : null;
+  check(
+    'moralul scăzut scade omogenitatea',
+    !!lowMorale && !!chemRo && lowMorale.score < chemRo.score,
+    lowMorale && chemRo ? `${chemRo.score}% → ${lowMorale.score}%` : ''
+  );
+
+  const nt = window.__smNT;
+  check('funcțiile de selecționer sunt expuse', !!nt && !!nt.pool && !!nt.validate && !!nt.chem);
+  if (nt) {
+    const mkP = (i, nat, pos, ovr) => ({
+      id: `np${i}`, name: `Român ${i}`, nat, pos, ovr, age: 24, fitness: 92, pas: 70, sho: 70, dri: 70,
+    });
+    const squad = Array.from({ length: 40 }, (_, i) =>
+      mkP(i, i % 4 === 0 ? 'BRA' : 'ROU', i < 6 ? 'GK' : i < 16 ? 'DF' : i < 30 ? 'MF' : 'FW', 60 + i)
+    );
+    const synthetic = {
+      clubs: [{ id: 'c1', name: 'FCSB', league: 'RO', players: squad }],
+      marketPool: [mkP(999, 'ROU', 'FW', 88)],
+    };
+    const list = nt.pool(synthetic);
+    check('pool-ul naționalei are doar români', list.length > 0 && list.every((x) => (x.p.nat || 'ROU') === 'ROU'), `${list.length} jucători`);
+    const gks = list.filter((x) => x.p.pos === 'GK');
+    const outs = list.filter((x) => x.p.pos !== 'GK');
+    const squad23 = [...gks.slice(0, 3), ...outs.slice(0, 20)].map((x) => x.p.id);
+    const v23 = nt.validate({ ...synthetic, ntSquad: squad23 });
+    check('lotul de 23 e valid (max 3 portari)', v23.total === 23 && v23.gk === 3 && v23.ok, `${v23.total}/23, ${v23.gk} portari`);
+    const vBad = nt.validate({ ...synthetic, ntSquad: [...gks.slice(0, 4), ...outs.slice(0, 19)].map((x) => x.p.id) });
+    check('4 portari invalidează lotul', vBad.gk === 4 && !vBad.ok, `${vBad.gk} portari`);
+    const vShort = nt.validate({ ...synthetic, ntSquad: squad23.slice(0, 18) });
+    check('lotul incomplet e semnalat', vShort.total === 18 && !vShort.ok, `${vShort.total}/23`);
+    const chemNT = nt.chem({ ...synthetic, ntSquad: squad23 });
+    check('omogenitatea naționalei e calculată', chemNT.score > 0 && chemNT.matchBonus <= 2.5, `${chemNT.score}% / bonus ${chemNT.matchBonus}`);
+    check('jucătorul accidentat e considerat inapt', !nt.fit({ ...outs[0].p, injuredWeeks: 2 }) && nt.fit(outs[0].p));
+  }
+
+  const before = app.errors.length;
+  if (!app.click(/Profil Antrenor/)) {
+    fail('tab-ul Profil există');
+    return;
+  }
+  await app.sleep(700);
+  const text = app.text();
+  check('tab-ul Profil se randează', /Profilul tău de antrenor/.test(text) && app.errors.length === before);
+  check('avatarul e desenat în profil', !!app.document.querySelector('svg[role="img"]'));
+  check('secțiunea Bonusuri active există', /Bonusuri active/.test(text));
+  check('secțiunea Omogenitate există', /Omogenitate din relațiile reale/.test(text));
+
+  if (app.click(/Editează avatarul/)) {
+    await app.sleep(400);
+    const preset = [...app.document.querySelectorAll('button[aria-pressed]')];
+    check('editorul de avatar afișează presetări', preset.length >= 30, `${preset.length} presetări`);
+    check('editorul are ținute și accesorii', /Ținută/.test(app.text()) && /Accesoriu/.test(app.text()));
+  } else {
+    fail('butonul Editează avatarul există');
+  }
+}
+
+async function scenarioCupSim() {
+  console.log('\n4c. Simulare în cupe');
+  const before = app.errors.length;
+  if (!app.click(/Cupe, Europa/)) {
+    fail('tab-ul Cupe & Europa există');
+    return;
+  }
+  await app.sleep(600);
+  const text = app.text();
+  check('bara de simulare în cupe e vizibilă', /Simulare în cupe/.test(text) && app.errors.length === before);
+  check('butonul „Simulează runda de cupă" există', /Simulează runda de cupă/.test(text));
+  check('butonul „Simulează tot parcursul european" există', /Simulează tot parcursul european/.test(text));
+  if (app.click(/Centru Comandă/)) await app.sleep(500);
+}
+
 async function scenarioPersistence() {
   console.log('\n8. Salvare');
   const storage = app.window.localStorage;
@@ -422,6 +596,8 @@ async function scenarioPersistence() {
     await scenarioOnboarding();
     await scenarioTabs();
     await scenarioFacilities();
+    await scenarioProfile();
+    await scenarioCupSim();
     if (!SKIP_MATCH) await scenarioMatch();
     if (!SKIP_MATCH) {
       await scenarioPhone();
