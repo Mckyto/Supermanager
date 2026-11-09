@@ -404,6 +404,27 @@ const fullLibrary = faceTable.length >= 80;
 check('biblioteca acoperă toate tenurile din joc', !fullLibrary || skinClasses.every((k) => coveredSkins.has(k)), `${faceTable.length} fețe: ${[...coveredSkins].join(', ')}`);
 check('fotografia reală are întâietate în componenta de jucător', html.includes('const _fg=_smFaceFor(a);') && html.includes(',m&&!g){'));
 check('avatarul e desenat cu gradiente și umbre, nu plat', html.includes('function _smAvatarSvg(a,e){') && html.includes('feGaussianBlur stdDeviation="2"') && html.includes('radialGradient id="k${U}"'));
+// 25. Portretele foto ale antrenorului (galeria de 24)
+const coachIds = (html.match(/const _SM_COACHES=\[((?:"coach-\d{2}",?)+)\]/) || [])[1];
+const coachList = coachIds ? coachIds.match(/coach-\d{2}/g) : [];
+const coachLibrary = JSON.parse(fs.readFileSync(path.join(__dirname, 'coach-library.json'), 'utf8'));
+check('lista de portrete are exact 24 de intrări', coachList.length === 24, `${coachList.length}`);
+check('specificația antrenorilor are 24 de intrări', coachLibrary.length === 24, `${coachLibrary.length}`);
+check('portretele sunt numerotate 01–24, fără goluri',
+  coachList.every((id, i) => id === `coach-${String(i + 1).padStart(2, '0')}`), coachList.join(','));
+const coachAssets = coachList.map((id) => {
+  const uri = assetKeys.has(`coach/${id}.webp`) ? html.match(new RegExp(`"coach/${id}\\.webp":"(data:image\\/webp;base64,[A-Za-z0-9+/=]+)"`)) : null;
+  return { id, bytes: uri ? Math.round(uri[1].length * 0.75) : 0 };
+});
+const shipped = coachAssets.filter((a) => a.bytes > 0);
+check('portretele livrate sunt WebP încorporat, fără cereri externe', shipped.every((a) => a.bytes > 1500), `${shipped.length}/${coachAssets.length}`);
+check('fiecare portret e sub 18 KB', shipped.every((a) => a.bytes <= 18432),
+  shipped.length ? `max ${Math.round(Math.max(...shipped.map((a) => a.bytes)) / 1024)} KB` : 'niciunul');
+check('portretul se rezolvă din avatarul salvat, altfel determinist din nume',
+  html.includes('function _smCoachId(a){') && html.includes('photoId') && html.includes('%_SM_COACHES.length'));
+check('galeria e disponibilă și în onboarding, și în Profil',
+  html.includes('Portretul Tău de Antrenor') && html.includes('Schimbă portretul'));
+
 const htmlBytes = Buffer.byteLength(html, 'utf8');
 check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
 

@@ -64,11 +64,36 @@ async function scenarioOnboarding() {
     `${clipped.length} trunchiate din ${descs.length}`
   );
 
+  const portraits = [...app.document.querySelectorAll('button[aria-pressed] img[alt="Portret antrenor"]')];
+  check('onboarding-ul cere un portret de antrenor', portraits.length > 0, `${portraits.length} portrete`);
+
+  let pickedId = null;
+  if (portraits.length > 1) {
+    const target = portraits[portraits.length - 1].closest('button');
+    pickedId = String(target.getAttribute('title') || '').replace('Portret ', '').trim() || null;
+    target.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+    await app.sleep(200);
+    check('portretul selectat e marcat ca ales', target.getAttribute('aria-pressed') === 'true', pickedId || '');
+  }
+
   if (!click(/Semnează Contractul/)) return fail('butonul „Semnează Contractul" există');
   pass('butonul „Semnează Contractul" apăsat');
 
   const ok = await app.waitFor(/Pulsul SuperLigii/, 10000);
   check('dashboard-ul se încarcă', ok);
+
+  if (pickedId) {
+    await app.sleep(1200);
+    let saved = null;
+    try {
+      saved = JSON.parse(app.window.localStorage.getItem('sm2627_career_slot_1') || 'null');
+    } catch {}
+    check(
+      'portretul ales la începutul carierei e salvat',
+      saved && saved.manager && saved.manager.avatar && saved.manager.avatar.photoId === pickedId,
+      saved && saved.manager && saved.manager.avatar ? String(saved.manager.avatar.photoId) : 'fără avatar'
+    );
+  }
   check('fără erori la intrarea în carieră', app.errors.length === 0, app.errors[0]);
 }
 
@@ -553,17 +578,38 @@ async function scenarioProfile() {
   await app.sleep(700);
   const text = app.text();
   check('tab-ul Profil se randează', /Profilul tău de antrenor/.test(text) && app.errors.length === before);
-  check('avatarul e desenat în profil', !!app.document.querySelector('svg[role="img"]'));
+  const portrait = app.document.querySelector('img[alt="Portret antrenor"]');
+  check(
+    'portretul foto al antrenorului e afișat în profil',
+    !!portrait && /^data:image\/webp;base64,/.test(portrait.getAttribute('src') || ''),
+    portrait ? `~${Math.round((portrait.getAttribute('src') || '').length * 0.75 / 1024)} KB` : 'lipsește'
+  );
   check('secțiunea Bonusuri active există', /Bonusuri active/.test(text));
   check('secțiunea Omogenitate există', /Omogenitate din relațiile reale/.test(text));
 
-  if (app.click(/Editează avatarul/)) {
+  if (app.click(/Schimbă portretul/)) {
     await app.sleep(400);
-    const preset = [...app.document.querySelectorAll('button[aria-pressed]')];
-    check('editorul de avatar afișează presetări', preset.length >= 30, `${preset.length} presetări`);
-    check('editorul are ținute și accesorii', /Ținută/.test(app.text()) && /Accesoriu/.test(app.text()));
+    const gallery = [...app.document.querySelectorAll('img[alt="Portret antrenor"]')];
+    check('galeria de portrete se deschide', gallery.length > 1, `${gallery.length} portrete`);
+    const current = portrait ? portrait.getAttribute('src') : null;
+    const other = gallery.map((img) => img.closest('button')).find((b) => b && b.getAttribute('aria-pressed') !== 'true');
+    if (other) {
+      const wanted = String(other.getAttribute('title') || '').replace('Portret ', '').trim();
+      other.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+      await app.sleep(1200);
+      let saved = null;
+      try {
+        saved = JSON.parse(app.window.localStorage.getItem('sm2627_career_slot_1') || 'null');
+      } catch {}
+      const kept = saved && saved.manager && saved.manager.avatar && saved.manager.avatar.photoId;
+      const shown = app.document.querySelector('img[alt="Portret antrenor"]');
+      check('portretul schimbat din Profil persistă', kept === wanted, `${kept || 'fără avatar'}`);
+      check('portretul din profil se schimbă imediat', !!shown && shown.getAttribute('src') !== current);
+    } else {
+      fail('galeria are un portret diferit de cel curent');
+    }
   } else {
-    fail('butonul Editează avatarul există');
+    fail('butonul Schimbă portretul există');
   }
 }
 
@@ -756,6 +802,16 @@ async function scenarioFaces() {
   check('vârsta se potrivește: juniorii nu primesc fețe de veterani',
     bandOf(17) === 'y' && bandOf(19) === 'y' && bandOf(27) === 'p' && bandOf(35) === 'v' && bandOf(34) === 'v',
     `17→${bandOf(17)} 19→${bandOf(19)} 27→${bandOf(27)} 35→${bandOf(35)}`);
+
+  const coachIds = fx.coaches ? fx.coaches() : [];
+  check('biblioteca de portrete de antrenor are 24 de intrări', coachIds.length === 24, `${coachIds.length}`);
+  const legacyA = fx.coachId ? fx.coachId({ manager: { name: 'Mister Popescu' } }) : null;
+  const legacyB = fx.coachId ? fx.coachId({ manager: { name: 'Mister Popescu' } }) : null;
+  check('salvările vechi primesc un portret stabil din nume', !!legacyA && legacyA === legacyB && coachIds.includes(legacyA), String(legacyA));
+  check(
+    'portretul ales are prioritate față de cel din nume',
+    fx.coachId && fx.coachId({ manager: { name: 'Mister Popescu', avatar: { photoId: 'coach-24' } } }) === 'coach-24'
+  );
 
   const keys = lib.map((f) => f[0]);
   check('nicio față nu apare de două ori în bibliotecă', new Set(keys).size === keys.length, `${keys.length} intrări`);
