@@ -37,7 +37,7 @@ npm run test:quick # ≈8s  — fără meci
 
 `tools/data-check.js` validează datele din bundle (87 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **153 de puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **155 de puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -132,6 +132,7 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Bokeh în culorile clubului, desenat procedural.** Fundalul portretului se colorează cu cele trei culori ale clubului (gradient radial + blend `soft-light`), așa că aceeași față arată corect la FCSB, la Rapid sau la un club din Top Europa fără să existe 24 × N randări de imagine.
 - **Avatarul antrenorului, redesenat cinematografic.** Cele 288 de combinații (6 tenuri × 8 coafuri × 6 ținute × 6 accesorii × 4 bărbi) rămân exact cum erau — aceleași chei în salvare — dar randarea a trecut de la forme plate la un portret cu **gradiente de ten, umbre difuze, lumină de contur, ochi cu iris și lumini speculare, fundal bokeh cald și vinietă**. Barba, ochelarii, butoniera, ceasul și cravata colorată sunt straturi separate peste același desen.
 - **Pază de greutate în `data-check`:** fiecare față generată trebuie să fie sub 18 KB, toate să fie WebP în bundle, iar `index.html` să rămână sub 7,5 MB.
+- **Stadiu bibliotecă (v10.41.1):** **20 din 80** de fețe — tranșele următoare adaugă câte 10, până acoperă toate tenurile; fiecare tranșă doar adaugă intrări în tabelă și asset-uri.
 - **Testat:** smoke test-ul a crescut de la 138 la **153 de verificări** (fața e stabilă după reload, fețele se distribuie între jucători, fotografia reală are prioritate, toate cele 288 de combinații de avatar se randează cu gradiente proprii și fără cereri externe), iar `data-check` de la 79 la **87** (biblioteca de fețe, greutatea fiecărei imagini, acoperirea tenurilor, întâietatea fotografiei reale, limita de 7,5 MB). Storage 7, economy 6.
 
 ## Modificări în v10.40.0 (noiembrie 2026) — mesajele încetează să mai mintă

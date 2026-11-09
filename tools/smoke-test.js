@@ -731,6 +731,18 @@ async function scenarioFaces() {
   const distinct = new Set(many).size;
   check('fețele se distribuie între jucători, nu una singură', distinct >= Math.min(lib.length, 6), `${distinct} fețe distincte din ${many.length}`);
 
+  const natSkin = (nat) => {
+    const row = fx.facePick && fx.facePick({ name: `Test ${nat}`, nat, pos: 'CM', age: 24 });
+    return row ? String(row[1]).split('|') : [];
+  };
+  const rouSkins = natSkin('ROU');
+  const senSkins = natSkin('SEN');
+  const jpnSkins = natSkin('JPN');
+  check('tenul feței se potrivește cu naționalitatea', rouSkins.includes('fair') && senSkins.some((k) => ['ebony', 'dark_brown'].includes(k)) && jpnSkins.includes('east_asian'),
+    `ROU ${rouSkins.join('+')} • SEN ${senSkins.join('+')} • JPN ${jpnSkins.join('+')}`);
+  const keys = lib.map((f) => f[0]);
+  check('nicio față nu apare de două ori în bibliotecă', new Set(keys).size === keys.length, `${keys.length} intrări`);
+
   const real = { id: 'real1', name: 'Ștefan Târnovanu', nat: 'ROU', pos: 'GK', age: 26 };
   check('fotografia reală are prioritate față de bibliotecă', !!fx.realFace(real));
 
