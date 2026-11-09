@@ -731,6 +731,35 @@ async function scenarioFaces() {
   const distinct = new Set(many).size;
   check('fețele se distribuie între jucători, nu una singură', distinct >= Math.min(lib.length, 6), `${distinct} fețe distincte din ${many.length}`);
 
+  const natSkin = (nat) => {
+    const row = fx.facePick && fx.facePick({ name: `Test ${nat}`, nat, pos: 'CM', age: 24 });
+    return row ? String(row[1]).split('|') : [];
+  };
+  const mismatched = ['ROU', 'SEN', 'JPN', 'IND', 'BRA', 'TUR', 'NOR', 'CPV', 'KOR', 'NGA', 'ECU', 'ALB'].filter((nat) => {
+    const p = { name: `Test ${nat}`, nat, pos: 'CM', age: 24 };
+    const skins = natSkin(nat).map((k) => fx.skinFamily(k));
+    return !skins.includes(fx.skinFamily(fx.skinOf(p)));
+  });
+  check('fața aleasă are mereu familia de ten a jucătorului', mismatched.length === 0, mismatched.join(', ') || '12 naționalități');
+  const rouSkins = natSkin('ROU');
+  const senSkins = natSkin('SEN');
+  const jpnSkins = natSkin('JPN');
+  const indSkins = natSkin('IND');
+  const rouFam = rouSkins.map((k) => fx.skinFamily(k));
+  check('tenul feței se potrivește cu naționalitatea',
+    rouFam.every((k) => ['fair', 'olive'].includes(k)) && senSkins.some((k) => ['ebony', 'dark_brown'].includes(k)) && jpnSkins.includes('east_asian') && indSkins.includes('brown'),
+    `ROU ${rouSkins.join('+')} • SEN ${senSkins.join('+')} • JPN ${jpnSkins.join('+')} • IND ${indSkins.join('+')}`);
+  const bandOf = (age, nat = 'ROU') => {
+    const row = fx.facePick({ name: `Varsta ${age}`, nat, pos: 'CM', age });
+    return row ? row[3] : null;
+  };
+  check('vârsta se potrivește: juniorii nu primesc fețe de veterani',
+    bandOf(17) === 'y' && bandOf(19) === 'y' && bandOf(27) === 'p' && bandOf(35) === 'v' && bandOf(34) === 'v',
+    `17→${bandOf(17)} 19→${bandOf(19)} 27→${bandOf(27)} 35→${bandOf(35)}`);
+
+  const keys = lib.map((f) => f[0]);
+  check('nicio față nu apare de două ori în bibliotecă', new Set(keys).size === keys.length, `${keys.length} intrări`);
+
   const real = { id: 'real1', name: 'Ștefan Târnovanu', nat: 'ROU', pos: 'GK', age: 26 };
   check('fotografia reală are prioritate față de bibliotecă', !!fx.realFace(real));
 

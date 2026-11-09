@@ -375,8 +375,19 @@ check(
 );
 
 // 24. Biblioteca de fețe generate + avatarul cinematic (v10.41.0)
-const faceTable = [...html.matchAll(/\["(faces\/gen-[0-9]+\.webp)","([a-z_|]+)","([a-z_]+)"\]/g)];
-check('biblioteca de fețe generate există', faceTable.length >= 8, `${faceTable.length} fețe`);
+const faceTable = [...html.matchAll(/\["(faces\/gen-[0-9]+\.webp)","([a-z_|]+)","([a-z_]+)","([ypv])"\]/g)];
+check('biblioteca are toate cele 80 de fețe generate', faceTable.length === 80, `${faceTable.length} fețe`);
+const library = JSON.parse(fs.readFileSync(path.join(__dirname, 'face-library.json'), 'utf8'));
+const shippedIdx = faceTable.map((m) => Number(m[1].match(/gen-(\d+)/)[1])).sort((a, b) => a - b);
+const missingIdx = library.map((_, i) => i + 1).filter((i) => !shippedIdx.includes(i));
+check('fiecare specificație din face-library.json are o față livrată', library.length === 80 && missingIdx.length === 0,
+  missingIdx.length ? `lipsesc ${missingIdx.slice(0, 6).join(', ')}` : `${library.length} specificații`);
+const tagMismatch = faceTable.filter((m) => {
+  const i = Number(m[1].match(/gen-(\d+)/)[1]);
+  const spec = library[i - 1];
+  return !spec || !m[2].split('|').includes(spec.skin) || m[3] !== spec.hairColor;
+}).map((m) => m[1]);
+check('etichetele de ten și păr respectă specificația', tagMismatch.length === 0, tagMismatch.slice(0, 3).join(', '));
 const faceMissing = faceTable.filter((m) => !assetKeys.has(m[1]));
 check('fiecare față generată are asset în bundle', faceMissing.length === 0, faceMissing.slice(0, 3).map((m) => m[1]).join(', '));
 const faceBytes = faceTable.map((m) => {
