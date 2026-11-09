@@ -35,7 +35,7 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (50 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (55 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
 Testele încarcă bundle-ul real într-un DOM jsdom și verifică 34 de puncte din fluxul principal:
 
@@ -120,3 +120,11 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Reparații aplicate în v10.37.7 (noiembrie 2026)
+
+- **Texturile jucătorilor se generează la rezoluția potrivită dispozitivului.** Fiecare din cei 22 de jucători primiți în scenă avea o textură de tricou de 1024×512 și una de față de 512×512, adică ~3 MB de VRAM fiecare (~66 MB pe meci). Pe dispozitive slabe (DPR ≥ 2,5 sau ≤ 4 nuclee) canvas-ul se creează la jumătate (512×256, respectiv 256×256) și se desenează cu `ctx.scale(0.5)`, deci toate coordonatele rămân neschimbate: **~66 MB → ~16,5 MB** (−75%).
+- **Anizotropia scade la 2 pe dispozitivele slabe** (era 4) — mai puțin cost de filtrare la unghi ras pe texturile de tricou și față.
+- **Capetele au mai puține segmente**: 18×14 în loc de 22×18 (~−36% triunghiuri pe cap), invizibil la distanța camerei de meci.
+- Euristica e evaluată o singură dată, la pornire: desktop cu multe nuclee și DPR mic păstrează texturile la rezoluție maximă.
+

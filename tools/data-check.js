@@ -239,6 +239,30 @@ check(
 check('randarea se oprește când tabul e ascuns', html.includes('document.hidden)return'));
 check('publicul se animă mai rar pe treptele slabe de calitate', html.includes('Q.__qTier>=2?10:5'));
 
+// 19. Texturi de jucător adaptate dispozitivului
+check(
+  'există o euristică de dispozitiv pentru rezoluția texturilor',
+  html.includes('const _SM_SLOW=typeof navigator<"u"&&((navigator.devicePixelRatio||1)>=2.5||(navigator.hardwareConcurrency||4)<=4),_SM_TEXQ=_SM_SLOW?.5:1;')
+);
+check(
+  'tricoul se generează la jumătate de rezoluție pe dispozitive slabe',
+  html.includes('c.width=Math.round(1024*_SM_TEXQ),c.height=Math.round(512*_SM_TEXQ)') &&
+    html.includes('_SM_TEXQ<1&&u.scale(_SM_TEXQ,_SM_TEXQ)')
+);
+check(
+  'textura feței se generează la jumătate de rezoluție pe dispozitive slabe',
+  html.includes('l.width=Math.round(512*_SM_TEXQ),l.height=Math.round(512*_SM_TEXQ)') &&
+    html.includes('_SM_TEXQ<1&&c.scale(_SM_TEXQ,_SM_TEXQ)')
+);
+check(
+  'anizotropia scade pe dispozitive slabe',
+  html.includes('m.anisotropy=_SM_TEXQ<1?2:4') && html.includes('g.anisotropy=_SM_TEXQ<1?2:4')
+);
+check(
+  'capul jucătorilor are mai puține segmente (18x14 în loc de 22x18)',
+  html.includes('Q=d==="high"?18:12') && html.includes('new Qn(.118,Q,14)')
+);
+
 const ok = results.filter((r) => r.ok).length;
 console.log(`${ok}/${results.length} verificări de date OK`);
 process.exit(ok === results.length ? 0 : 1);
