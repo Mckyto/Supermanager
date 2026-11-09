@@ -745,8 +745,9 @@ async function scenarioFaces() {
   const senSkins = natSkin('SEN');
   const jpnSkins = natSkin('JPN');
   const indSkins = natSkin('IND');
+  const rouFam = rouSkins.map((k) => fx.skinFamily(k));
   check('tenul feței se potrivește cu naționalitatea',
-    rouSkins.includes('fair') && senSkins.some((k) => ['ebony', 'dark_brown'].includes(k)) && jpnSkins.includes('east_asian') && indSkins.includes('brown'),
+    rouFam.every((k) => ['fair', 'olive'].includes(k)) && senSkins.some((k) => ['ebony', 'dark_brown'].includes(k)) && jpnSkins.includes('east_asian') && indSkins.includes('brown'),
     `ROU ${rouSkins.join('+')} • SEN ${senSkins.join('+')} • JPN ${jpnSkins.join('+')} • IND ${indSkins.join('+')}`);
   const keys = lib.map((f) => f[0]);
   check('nicio față nu apare de două ori în bibliotecă', new Set(keys).size === keys.length, `${keys.length} intrări`);
