@@ -435,8 +435,8 @@ check('lotul arată contorul „arată X din Y" și buton de reset',
   html.includes('data-sm-count') && html.includes('" din "') && html.includes('Resetează'));
 check('starea antrenorului e derivată din consiliu, stres și rezultate',
   html.includes('function _smCoachMood(a){') && html.includes('label:"Tensionat"') && html.includes('label:"Încrezător"'));
-check('fiecare club are un antrenor din galerie (stabil)',
-  html.includes('function _smClubCoachId(a){') && html.includes('alt:"Antrenor "') && html.includes('_smCoachSrc(_smClubCoachId(w.clubId))'));
+check('fiecare club are un antrenor stabil (foto reală sau galerie)',
+  html.includes('function _smClubCoachId(a){') && html.includes('alt:"Antrenor "') && html.includes('_smClubCoachSrc(w.clubId)'));
 check('portretul se poate schimba o singură dată',
   html.includes('photoChangeUsed') && html.includes('Portret blocat') && html.includes('singura schimbare de portret'));
 check('onboarding-ul nu mai are pas de alegere a portretului',
@@ -480,6 +480,34 @@ check('3D: umbrele pornesc oprite pe dispozitivele slabe (același _SM_SLOW)',
 check('3D: portarul nu mai referențiează o variabilă inexistentă la tacticalOffset',
   !html.includes('D=side==="home"?xe(D+(p.tacticalOffsetX') &&
     html.includes('D=p.side==="home"?xe(D+(p.tacticalOffsetX'));
+
+// --- Reluarea golului (v10.50) --------------------------------------------
+check('reluare: motorul înregistrează fazele pentru reluare',
+  html.includes('_recordReplayFrame(e,t){') && html.includes('this._replayBuf||(this._replayBuf=[])'));
+check('reluare: pornește la gol și prelungește sărbătoarea cât să încapă',
+  html.includes('this._startReplay(),this.phase="GOAL_CELEBRATION"') &&
+    html.includes('this.phaseTimer=Math.max(2.45,(this._replay?.delay||0)+(this._replay?.dur||0)+.4)'));
+check('reluare: snapshot-ul expune starea (badge + viteză + progres), oprită în pauză',
+  html.includes('replay:this.replayActive&&this.phase!=="HALFTIME"') && html.includes('speed:this._replay?.speed||.7'));
+check('reluare: badge REPLAY peste teren, pentru 2D și 3D',
+  html.includes('"data-sm-replay":"1"') && html.includes('pointer-events-none absolute left-1/2 top-3'));
+check('reluare: 3D nu rulează animația de sărbătoare în timpul reluării',
+  html.includes('ht.phase==="GOAL_CELEBRATION"&&!ht.replay?.active'));
+check('reluare: nu supraviețuiește pauzei sau fluierului final',
+  html.includes('this._replay=null,this.replayActive=!1;return'));
+
+// --- Antrenori cu chip real (v10.50) --------------------------------------
+check('antrenori: numele reale sunt în bundle pentru toate cele 24 de cluburi',
+  html.includes('const _SM_COACH_NAMES={') && (html.match(/"[a-z]+":"[^"]+"/g) || []).length > 20 &&
+    html.includes('"fcsb":"Laurențiu Reghecampf"'));
+check('antrenori: chipul real are prioritate, cu fallback pe galeria de 24',
+  html.includes('function _smClubCoachSrc(a){') && html.includes('"coach/club/"+String(a||"")+".webp"') &&
+    html.includes('return _smCoachSrc(_smClubCoachId(a))'));
+check('antrenori: fotografiile reale sunt încorporate ca WebP în __SM_ASSETS__',
+  (html.match(/"coach\/club\/[a-z]+\.webp":"data:image\/webp;base64,/g) || []).length >= 4);
+check('antrenori: clasamentul folosește sursa reală și numele în alt/title',
+  html.includes('src:_smClubCoachSrc(w.clubId)') && html.includes('_smClubCoachName(w.clubId)'));
+check('antrenori: funcțiile sunt expuse pentru teste', html.includes('clubCoachSrc:a=>_smClubCoachSrc(a)'));
 
 const htmlBytes = Buffer.byteLength(html, 'utf8');
 check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
