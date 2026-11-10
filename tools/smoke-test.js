@@ -210,7 +210,7 @@ async function scenarioClubCoaches() {
     fx ? `${fx.clubCoach('fcsb')} / ${fx.clubCoach('rapid')}` : ''
   );
   // v10.50.0 — chipuri cu fotografia reală a antrenorului, acolo unde există
-  const realClubs = ['fcsb', 'rapid', 'cfr', 'craiova'];
+  const realClubs = ['fcsb', 'rapid', 'cfr', 'craiova', 'dinamo', 'ucluj', 'farul', 'petrolul', 'sepsi', 'uta'];
   check(
     'chipul clubului folosește fotografia reală când e încărcată',
     !!fx && realClubs.every((id) => typeof fx.clubCoachReal === 'function' && fx.clubCoachReal(id)) &&
