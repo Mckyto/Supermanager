@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.54.5)
+# SuperManager 26/27 — Ediția Supremă (v10.54.6)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## v10.54.6 — transferuri și salarii mai realiste
+
+- Taxa de transfer între cluburi este limitată la 75–150% din valoarea jucătorului, inclusiv la ofertele vechi și la finalizare. Salariile la venire și prelungire au un plafon legat de salariul și nivelul jucătorului și de cerințele contractuale.
+- Cluburile interesate trebuie să aibă buget, loc în lot și un nivel compatibil cu jucătorul și cu ceilalți jucători pe postul său. Ofertele pornesc de la circa 80% din cotă, ajustat pentru formă; la vânzare poți cere mai mult și clubul poate contraoferta. Salariul la plecare este negociat de club și jucător.
+- Vârstele lui David de Gea și Marc-André ter Stegen sunt corectate pentru începutul sezonului 2026/27, inclusiv în loturile europene generate deja în salvări. Celelalte vârste generate în loturile europene suplimentare nu au fost încă verificate individual.
+- Teste dedicate pentru limite, selecția cumpărătorilor, contraoferte și vârstele corectate.
 
 ## Reparații aplicate în v10.54.5 (noiembrie 2026) — HUD-ul din meciul 3D revine la locul lui
 
