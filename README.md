@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.54.7)
+# SuperManager 26/27 — Ediția Supremă (v10.54.8)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## v10.54.8 — radar mobil și mod Highlights 3D
+
+- Radarul tactic 3D este vizibil și pe ecrane înguste, în colțul stâng de jos, la dimensiune redusă; butonul Radar îl poate ascunde sau afișa. Nicio regulă nu redimensionează toate panourile HUD.
+- Noul mod „Highlights 3D” folosește același motor și aceeași scenă ca meciul live. Avansează mai repede în jocul neutru și revine la viteză normală în apropierea porții, la faze fixe, VAR, șuturi, parade, goluri și reluări; momentele detectate afișează o descriere. Pauza, comenzile și reluarea automată a golului rămân active. Dacă WebGL nu funcționează, se revine la 2D.
+- Acesta nu este un sistem de cinematice fotorealiste sau o arhivă de reluări pentru toate fazele: nu garantează surprinderea începutului fiecărei eliminări/parade, iar reacțiile antrenorilor sunt cele disponibile în scena 3D și în descrierile evenimentelor. Nu sunt inventate rezultate sau faze independente de meci.
+- Teste de motor pentru planuri, bonusul temporar și indicațiile de pe bancă, plus teste pentru selecția vitezei și radar. Renderizarea WebGL pe telefon trebuie verificată vizual pe dispozitiv.
 
 ## v10.54.7 — clasament fără pozele antrenorilor
 
