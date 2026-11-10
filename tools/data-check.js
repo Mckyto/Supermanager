@@ -579,6 +579,15 @@ check('viewport: zoom-out blocat, ca pagina să nu mai fie micșorată ca să î
     html.includes('viewport-fit=cover') && !html.includes('user-scalable=no'));
 check('viewport: zoom-in rămâne permis (accesibilitate, maximum-scale=5)',
   html.includes('maximum-scale=5'));
+check('3D: bloom verifică suportul pentru color-buffer float înainte de a porni',
+  html.includes(`if(_gl2){try{const _ex=renderer.extensions;if(_ex&&!_ex.has("EXT_color_buffer_half_float")&&!_ex.has("EXT_color_buffer_float"))return null}catch(_e){}}`));
+check('3D: fiecare render target de bloom e verificat cu checkFramebufferStatus (altfel ecran negru)',
+  html.includes('checkFramebufferStatus(_g.FRAMEBUFFER)') &&
+    html.includes('if(![_rtSt(rtScene),_rtSt(rtBright),_rtSt(rtA),_rtSt(rtB)].every(Boolean))'));
+check('3D: dacă imaginea iese neagră, meciul trece automat pe 2D (nu rămâne ecran gol)',
+  html.includes('const _smPitchProbe=') && html.includes('_smPitchProbe(Q,V)') &&
+    html.includes('typeof _onFail==="function"&&_onFail()'));
+
 const inlineCss = (html.match(/<style[^>]*>[\s\S]*?<\/style>/g) || []).join('\n');
 check('scroll: html/body/#root nu au overflow ascuns (ar bloca derularea pe telefon)',
   !/(^|[},])\s*(html|body|#root)\s*\{[^}]*overflow(-[xy])?\s*:\s*hidden/.test(inlineCss));
