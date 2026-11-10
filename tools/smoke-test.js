@@ -783,6 +783,26 @@ async function scenarioProfile() {
   await app.sleep(250);
   check('mărirea se închide după hover pe strat', !zoomShade || zoomShade.style.opacity === '0');
   chip.remove();
+
+  // click pe o poză care nu e buton → poster mare
+  const posterSource = app.document.querySelector('img[alt="Portret antrenor"]');
+  if (posterSource) {
+    posterSource.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+    await app.sleep(300);
+    const photoModal = app.document.getElementById('sm-photo-modal');
+    check('click pe fotografie deschide posterul mărit', !!photoModal && photoModal.style.display === 'flex');
+    check(
+      'posterul arată aceeași imagine și descrierea ei',
+      !!photoModal && !!photoModal.querySelector('img') &&
+        photoModal.querySelector('img').getAttribute('src') === posterSource.getAttribute('src') &&
+        /Portret antrenor/.test((app.document.getElementById('sm-photo-caption') || {}).textContent || '')
+    );
+    app.document.dispatchEvent(new app.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    await app.sleep(300);
+    check('Escape închide posterul', !photoModal || photoModal.style.display === 'none');
+  } else {
+    fail('există o fotografie pe care se poate face click');
+  }
 }
 
 async function scenarioCupSim() {
@@ -1032,6 +1052,29 @@ async function scenarioFaces() {
   check('avatarul respectă tenul și barba alese', styled.includes(fx.mix('#8d5a33', '#4a2512', 0.5)) && styled.includes('goatee') === false);
 }
 
+async function scenarioSlots() {
+  console.log('\n3d. Sloturile de salvare au chip');
+  const before = app.errors.length;
+  const btn = app.buttons().find((b) => /Salvări & Cross-Save/.test(b.getAttribute('title') || ''));
+  if (!btn) return fail('butonul de salvări există');
+  btn.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  await app.sleep(800);
+  const photos = [...app.document.querySelectorAll('img[data-sm-slot-photo]')];
+  check('slotul ocupat arată portretul antrenorului', photos.length >= 1, `${photos.length} portrete`);
+  check(
+    'portretul din slot e o fotografie din bundle',
+    photos.every((p) => /^data:image\/webp;base64,/.test(p.getAttribute('src') || ''))
+  );
+  check('portretul din slot are descriere pentru cititoare de ecran', photos.every((p) => /^Antrenor /.test(p.getAttribute('alt') || '')));
+  const close = app.buttons().find(
+    (b) => /Închide fereastra de salvări/.test(b.textContent || '') || b.getAttribute('aria-label') === 'Închide fereastra de salvări'
+  );
+  if (close) close.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  await app.sleep(400);
+  check('fereastra de salvări se închide', app.document.querySelectorAll('img[data-sm-slot-photo]').length === 0);
+  check('fără erori în fereastra de salvări', app.errors.length === before, app.errors[before]);
+}
+
 async function scenarioPersistence() {
   console.log('\n8. Salvare');
   const storage = app.window.localStorage;
@@ -1065,6 +1108,7 @@ async function scenarioPersistence() {
       await scenarioPhone();
       await scenarioBulkSim();
     }
+    await scenarioSlots();
     await scenarioPersistence();
     await scenarioAccessibility();
   } catch (err) {
