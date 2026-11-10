@@ -456,6 +456,31 @@ check('sloturile de salvare afișează portretul antrenorului',
   html.includes('data-sm-slot-photo') && html.includes('coachId:_smCoachId({manager:n.manager||{}})'));
 check('mișcarea redusă e respectată', html.includes('prefers-reduced-motion:reduce'));
 
+// --- 3D: umbre reale (v10.49) -------------------------------------------
+check('3D: harta de umbre folosește PCFShadowMap (soft a fost scos din three)',
+  html.includes('Q.shadowMap.type=1') && !html.includes('shadowMap.type=2'));
+check('3D: lumina principală proiectează umbră pe gazon',
+  html.includes('oe.castShadow=!0') && html.includes('oe.shadow.mapSize.set(2048,2048)') &&
+    html.includes('oe.shadow.normalBias=.022'));
+check('3D: umbra luminii acoperă tot terenul (115×76)',
+  html.includes('oe.shadow.camera.left=-78,oe.shadow.camera.right=78') &&
+    html.includes('oe.shadow.camera.top=58,oe.shadow.camera.bottom=-58'));
+check('3D: jucătorii și arbitrii aruncă umbră',
+  html.includes('_cs.isMesh&&_cs!==qa.groundShadow&&(_cs.castShadow=!0)') &&
+    html.includes('[ee,ve,pe].forEach'));
+check('3D: blob-ul de contact apare doar când umbrele reale sunt oprite',
+  html.includes('_t.groundShadow&&(_t.groundShadow.visible=!Q.shadowMap.enabled)'));
+check('3D: doar jucătorii aruncă umbră, nu tribunele (fără bandă neagră pe gazon)',
+  html.includes('l.traverse(_ss=>{_ss.isMesh&&(_ss.castShadow=!1)})'));
+check('3D: umbrele se aprind doar când GPU-ul are rezervă (histerezis pe guvernator)',
+  html.includes('const _shOn=Q.shadowMap.enabled?_avg<19.5:') && html.includes('_avg<14.5&&_nx===0') &&
+    html.includes('_smm.needsUpdate=!0'));
+check('3D: umbrele pornesc oprite pe dispozitivele slabe (același _SM_SLOW)',
+  html.includes('Q.shadowMap.enabled=!(_SM_SLOW||(navigator.hardwareConcurrency||8)<6)'));
+check('3D: portarul nu mai referențiează o variabilă inexistentă la tacticalOffset',
+  !html.includes('D=side==="home"?xe(D+(p.tacticalOffsetX') &&
+    html.includes('D=p.side==="home"?xe(D+(p.tacticalOffsetX'));
+
 const htmlBytes = Buffer.byteLength(html, 'utf8');
 check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
 
