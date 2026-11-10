@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.54.3)
+# SuperManager 26/27 — Ediția Supremă (v10.54.4)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,14 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Reparații aplicate în v10.54.4 (noiembrie 2026) — cauza reală a terenului negru în 3D
+
+- **Bugul:** în bucla de randare, `_avg` (media timpului pe cadru) era declarat cu **`const` în interiorul blocului de măsurare** (`if(ln._c>=24){const _avg=…}`), dar folosit **în afara** lui, în `if(ae&&_avg>30){…}` — garda care renunță la bloom când cadrele sunt lente. Ori de câte ori bloom-ul era pornit (`ae` nenul), fiecare cadru arunca `ReferenceError: _avg is not defined` **înainte** de `Q.render(scene, camera)`, deci canvas-ul rămânea negru din primul cadru, iar în meci se vedeau doar overlay-urile DOM. Când bloom-ul era oprit (`ae === null`), scurt-circuitul `ae && …` ascundea eroarea — de aceea pe unele telefoane mergea, iar pe altele nu.
+- **Fixul:** `let _avg = 0` la nivelul buclei, iar în blocul de măsurare doar atribuire. Garda de calitate (pixel ratio, umbre, ceață, renunțarea la bloom) funcționează acum ca intenționat.
+- **De ce a apărut abia acum:** variabila `ae` (lanțul de bloom) a devenit nenulă din v10.54.0. Până atunci ramura `if(ae && …)` nu se evalua niciodată, deci eroarea de scop dormea în cod.
+- **Două plase noi, ca să nu se mai poată întâmpla:** `_smPitchProbe` (v10.54.3) citește pixeli din canvas, iar un **watchdog de 3,5 s** comută meciul pe 2D dacă nu a apărut niciun cadru valid — indiferent ce ar arunca bucla. În plus, canvas-ul 3D e poziționat absolut (`.sm-3d-shell`), deci umple întotdeauna caseta terenului, fără să depindă de un lanț de `height:100%`.
+- **Testat:** `data-check` **162/162** (+3: `_avg` la nivelul buclei, watchdog-ul, canvasul absolut), smoke **233/233**, storage 9, economy 6.
 
 ## Reparații aplicate în v10.54.3 (noiembrie 2026) — meciul nu mai poate rămâne cu terenul gol
 
