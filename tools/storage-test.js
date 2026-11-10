@@ -58,6 +58,29 @@ async function newCareer(seed) {
   check('cheia legacy e ștearsă după migrare', migratedStore.getItem(LEGACY) === null);
   await legacyApp.close();
 
+  // 3. migrare portret: o carieră care are deja photoId a consumat schimbarea
+  const oldSave = JSON.parse(raw);
+  oldSave.manager = { ...(oldSave.manager || {}), avatar: { skin: 1, hair: 1, hairStyle: 2, outfit: 0, accessory: 1, beard: 0, photoId: 'coach-07', updatedAt: 1 } };
+  const photoApp = await launch({ seed: { [slotKey(1)]: JSON.stringify(oldSave) } });
+  await photoApp.sleep(900);
+  for (let i = 0; i < 20 && !/Centru Comandă/.test(photoApp.text()); i += 1) await photoApp.sleep(100);
+  photoApp.click(/Profil Antrenor/);
+  await photoApp.sleep(700);
+  const locked = [...photoApp.document.querySelectorAll('button')].some((b) => /Portret blocat/.test(b.textContent || '') && b.disabled);
+  check('portretul deja ales într-o salvare veche e marcat ca folosit', locked);
+  await photoApp.sleep(1200);
+  let migratedPhoto = null;
+  try {
+    migratedPhoto = JSON.parse(photoApp.window.localStorage.getItem(slotKey(1)) || 'null');
+  } catch {}
+  const migAv = migratedPhoto && migratedPhoto.manager && migratedPhoto.manager.avatar;
+  check(
+    'migrarea scrie photoChangeUsed, nu pierde portretul',
+    !!(migAv && migAv.photoChangeUsed === true && migAv.photoId === 'coach-07'),
+    migAv ? `photoId ${migAv.photoId}, folosit ${migAv.photoChangeUsed}` : 'fără avatar'
+  );
+  await photoApp.close();
+
   console.log(`\n${passed} verificări OK, ${failed} eșuate`);
   process.exit(failed === 0 ? 0 : 1);
 })();

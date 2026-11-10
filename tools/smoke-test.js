@@ -119,6 +119,29 @@ async function scenarioTabs() {
   }
 }
 
+async function scenarioClubCoaches() {
+  console.log('\n3b. Chipurile antrenorilor din clasament');
+  const before = app.errors.length;
+  if (!app.click(/Clasament & Etape/)) return fail('tab-ul Clasament există');
+  await app.sleep(800);
+  const faces = [...app.document.querySelectorAll('img[alt^="Antrenor "]')];
+  check('fiecare echipă din clasament are chipul antrenorului', faces.length >= 8, `${faces.length} chipuri`);
+  const uris = faces.map((f) => f.getAttribute('src') || '');
+  const distinct = new Set(uris).size;
+  check(
+    'chipurile sunt portrete foto din bibliotecă, distribuite',
+    uris.every((u) => /^data:image\/webp;base64,/.test(u)) && distinct >= 4,
+    `${distinct} portrete distincte`
+  );
+  const fx = app.window.__smFix;
+  check(
+    'același club are mereu același antrenor',
+    !!fx && fx.clubCoach('fcsb') === fx.clubCoach('fcsb') && fx.clubCoach('fcsb') !== fx.clubCoach('rapid'),
+    fx ? `${fx.clubCoach('fcsb')} / ${fx.clubCoach('rapid')}` : ''
+  );
+  check('fără erori la chipurile din clasament', app.errors.length === before, app.errors[before]);
+}
+
 async function scenarioFacilities() {
   console.log('\n4. Facilități, șantiere și costul deciziilor');
   const before = app.errors.length;
@@ -581,6 +604,12 @@ async function scenarioProfile() {
     !!portrait && /^data:image\/webp;base64,/.test(portrait.getAttribute('src') || ''),
     portrait ? `~${Math.round((portrait.getAttribute('src') || '').length * 0.75 / 1024)} KB` : 'lipsește'
   );
+  check('starea antrenorului e afișată în profil', /Stare: (Calm|Încrezător|Tensionat)/.test(text));
+  check(
+    'portretul primește filtrul stării',
+    !!portrait && (portrait.getAttribute('style') || '').includes('filter'),
+    portrait ? String(portrait.getAttribute('style')).slice(0, 40) : ''
+  );
   check('secțiunea Bonusuri active există', /Bonusuri active/.test(text));
   check('secțiunea Omogenitate există', /Omogenitate din relațiile reale/.test(text));
 
@@ -934,6 +963,7 @@ async function scenarioPersistence() {
     await scenarioBoot();
     await scenarioOnboarding();
     await scenarioTabs();
+    await scenarioClubCoaches();
     await scenarioFacilities();
     await scenarioProfile();
     await scenarioCupSim();
