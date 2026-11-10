@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.51)
+# SuperManager 26/27 — Ediția Supremă (v10.52)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.52.0 (noiembrie 2026) — portrete reale pentru toate cele 24 de cluburi
+
+- **Galerie completă.** Toate cele 24 de echipe din joc au acum fotografia reală a antrenorului: după cele 10 din valurile anterioare au intrat **Corvinul** (Florin Maxim), **Oțelul** (Rui Duarte), **Botoșani** (Marius Croitoru), **FC Argeș** (Bogdan Andone), **Voluntari** (Florin Pîrvu), **Csíkszereda** (Valentin Suciu) și cele opt din Europa: **Real Madrid** (Xabi Alonso), **Barcelona** (Hansi Flick), **Man. City** (Pep Guardiola), **Arsenal** (Mikel Arteta), **Liverpool** (Arne Slot), **Inter** (Cristian Chivu), **PSG** (Luis Enrique), **Bayern** (Vincent Kompany).
+- **Decupaje refăcute la nevoie.** Șapte poze au cerut a doua iterație (Flick, Guardiola, Luis Enrique, Kompany, Slot, Pîrvu, Suciu) — fie fața ieșea din cadru, fie decupajul prindea fundalul. Fiecare e verificată pe contact-sheet înainte de injecție; coordonatele stau în `assets/coach-photos/crops.json`.
+- **Greutate sub control:** 24 de poze × 128×128 WebP = **82 KB**, bundle **6,11 MB** (limita de test rămâne 7,5 MB). Fallback-ul pe galeria generică a rămas în cod pentru cluburi noi sau salvări cu id necunoscut.
+- **Testat:** `data-check` **132/132** (pragul de poze reale urcă la 24), smoke **222/222** — verificarea de acoperire „toate cele 24 de cluburi au fotografie reală" + fallback-ul pe un id inexistent. Storage 9, economy 6.
 
 ## Modificări în v10.51.0 (noiembrie 2026) — tranșa 2 de portrete reale (10/24)
 
