@@ -210,7 +210,7 @@ async function scenarioClubCoaches() {
     fx ? `${fx.clubCoach('fcsb')} / ${fx.clubCoach('rapid')}` : ''
   );
   // v10.50.0 — chipuri cu fotografia reală a antrenorului, acolo unde există
-  const realClubs = ['fcsb', 'rapid', 'cfr', 'craiova', 'dinamo', 'ucluj', 'farul', 'petrolul', 'sepsi', 'uta'];
+  const realClubs = ['fcsb', 'rapid', 'cfr', 'craiova', 'dinamo', 'ucluj', 'farul', 'petrolul', 'sepsi', 'uta', 'corvinul', 'otelul', 'botosani', 'arges', 'voluntari', 'csikszereda', 'realmadrid', 'barcelona', 'mancity', 'arsenal', 'liverpool', 'inter', 'psg', 'bayern'];
   check(
     'chipul clubului folosește fotografia reală când e încărcată',
     !!fx && realClubs.every((id) => typeof fx.clubCoachReal === 'function' && fx.clubCoachReal(id)) &&
@@ -223,7 +223,12 @@ async function scenarioClubCoaches() {
   );
   check(
     'cluburile fără fotografie reală cad pe galeria de 24',
-    !!fx && !fx.clubCoachReal('mancity') && fx.clubCoachSrc('mancity') === fx.coachSrc(fx.clubCoach('mancity'))
+    !!fx && !fx.clubCoachReal('club-inexistent') &&
+      fx.clubCoachSrc('club-inexistent') === fx.coachSrc(fx.clubCoach('club-inexistent'))
+  );
+  check(
+    'toate cele 24 de cluburi au acum fotografie reală',
+    !!fx && realClubs.length === 24 && realClubs.every((id) => fx.clubCoachReal(id))
   );
   const realChip = [...app.document.querySelectorAll('img[alt^="Antrenor"]')].find((img) => /Reghecampf/.test(img.alt || ''));
   check('clasamentul arată antrenorul real în alt/title', !!realChip && /Reghecampf/.test(realChip.title || realChip.alt || ''));

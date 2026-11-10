@@ -504,7 +504,7 @@ check('antrenori: chipul real are prioritate, cu fallback pe galeria de 24',
   html.includes('function _smClubCoachSrc(a){') && html.includes('"coach/club/"+String(a||"")+".webp"') &&
     html.includes('return _smCoachSrc(_smClubCoachId(a))'));
 check('antrenori: fotografiile reale sunt încorporate ca WebP în __SM_ASSETS__',
-  (html.match(/"coach\/club\/[a-z]+\.webp":"data:image\/webp;base64,/g) || []).length >= 10);
+  (html.match(/"coach\/club\/[a-z]+\.webp":"data:image\/webp;base64,/g) || []).length >= 24);
 check('antrenori: clasamentul folosește sursa reală și numele în alt/title',
   html.includes('src:_smClubCoachSrc(w.clubId)') && html.includes('_smClubCoachName(w.clubId)'));
 check('antrenori: funcțiile sunt expuse pentru teste', html.includes('clubCoachSrc:a=>_smClubCoachSrc(a)'));
