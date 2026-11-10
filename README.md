@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.50)
+# SuperManager 26/27 — Ediția Supremă (v10.51)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.51.0 (noiembrie 2026) — tranșa 2 de portrete reale (10/24)
+
+- **Încă șase chipuri reale în clasament:** **Dinamo** (Nuno Campos), **U Cluj** (Cristiano Bergodi), **Farul** (Ioan Ovidiu Sabău), **Petrolul** (Ricardo Sousa), **Sepsi OSK** (Ovidiu Burcă) și **UTA Arad** (Adrian Mihalcea). Fiecare e decupat manual pe față (`crops.json`), verificat pe contact-sheet, convertit la 128×128 WebP (2,6–4,4 KB) și injectat în bundle — totalul urcă la **10/24**, adică 32 KB de poze pentru 6,05 MB de bundle.
+- **Sepsi a cerut o a doua căutare:** prima poză (Burcă cu mâna pe frunte) ascundea fața, la fel și prima variantă a lui Ricardo Sousa — ambele au fost înlocuite cu portrete curate înainte de decupaj, ca să nu ajungă chipuri ilizibile la 24 px.
+- **Numele reale rămân sursa de adevăr:** `_SM_COACH_NAMES` + `alt`/`title` („Antrenor UTA Arad — Adrian Mihalcea"); cluburile fără poză încărcată (Corvinul, Oțelul, Botoșani, Argeș, Voluntari, Csíkszereda + cele 8 din Europa) cad în continuare pe galeria de 24.
+- **Testat:** `data-check` **132/132** (pragul de poze reale a urcat de la 4 la 10), smoke **221/221** — verificarea „chipul clubului folosește fotografia reală" acoperă acum toate cele 10 cluburi. Storage 9, economy 6.
 
 ## Modificări în v10.50.0 (noiembrie 2026) — reluarea golului și chipurile reale ale antrenorilor
 
