@@ -140,6 +140,24 @@ async function scenarioRosterFilters() {
   const before = app.errors.length;
   if (!app.click(/Lot, Tabla XI/)) return fail('tab-ul Lot există');
   await app.sleep(600);
+  const formationTitle = app.text().match(/Tabla Tactică — Primul 11 \(([^)]+)\)/);
+  const previousFormation = formationTitle && formationTitle[1];
+  const pickedFormation = app.click(/^4-2-1-3$/);
+  await app.sleep(350);
+  const slot = (role) => app.document.querySelector(`[data-sm-slot-role="${role}"]`);
+  let rb = slot('RB'), lb = slot('LB'), rw = slot('RW'), lw = slot('LW');
+  const left = el => el ? parseFloat(el.style.left) : NaN;
+  check('4-2-1-3: fundașii și extremele au flancurile corecte pe tablă', pickedFormation && left(lb)<50 && left(rb)>50 && left(lw)<50 && left(rw)>50);
+  const rbId = rb && rb.getAttribute('data-sm-slot-player'), lbId = lb && lb.getAttribute('data-sm-slot-player');
+  if (rb && lb) {rb.click(); await app.sleep(150); lb.click();}
+  await app.sleep(350);
+  rb = slot('RB'); lb = slot('LB');
+  check('după rocada titularilor, etichetele aparțin postului iar jucătorii chiar schimbă flancul',
+    !!rb && !!lb && rb.getAttribute('data-sm-slot-player')===lbId && lb.getAttribute('data-sm-slot-player')===rbId && left(lb)<50 && left(rb)>50);
+  if (rb && lb) {rb.click(); await app.sleep(150); lb.click();}
+  await app.sleep(250);
+  if (previousFormation && previousFormation !== '4-2-1-3') app.click(new RegExp(`^${previousFormation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`));
+  await app.sleep(300);
   if (!app.click(/Lot Complet/)) return fail('sub-tab-ul Lot Complet există');
   await app.sleep(700);
 
