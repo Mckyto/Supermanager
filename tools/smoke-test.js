@@ -376,6 +376,31 @@ async function scenarioMatch() {
       if (!app.document.querySelector('[data-sm-replay]')) ended = true;
     }
     check('reluarea se termină singură și meciul reia', ended);
+
+    // v10.53.0 — eroarea de prim control (pasă rapidă + tehnică slabă)
+    const weak = engine.homePlayers[5];
+    const strong = engine.homePlayers[6];
+    const weakDri = weak.dri;
+    const strongDri = strong.dri;
+    let looseWeak = 0;
+    for (let i = 0; i < 200; i += 1) {
+      weak.dri = 45;
+      engine.ball.owner = weak;
+      engine._firstTouch(weak, 26);
+      if (!engine.ball.owner) looseWeak += 1;
+    }
+    let looseStrong = 0;
+    for (let i = 0; i < 200; i += 1) {
+      strong.dri = 92;
+      engine.ball.owner = strong;
+      engine._firstTouch(strong, 8);
+      if (!engine.ball.owner) looseStrong += 1;
+    }
+    weak.dri = weakDri;
+    strong.dri = strongDri;
+    engine.ball.owner = null;
+    check('prim control: pasa rapidă la tehnică slabă scapă mingea', looseWeak > 15, `${looseWeak}/200`);
+    check('prim control: tehnica bună la pasă lentă nu scapă mingea', looseStrong < 12, `${looseStrong}/200`);
   }
   check('reluarea nu produce erori', app.errors.length === replayErrors, app.errors[replayErrors]);
 

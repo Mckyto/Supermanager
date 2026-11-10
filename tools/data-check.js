@@ -509,6 +509,19 @@ check('antrenori: clasamentul folosește sursa reală și numele în alt/title',
   html.includes('src:_smClubCoachSrc(w.clubId)') && html.includes('_smClubCoachName(w.clubId)'));
 check('antrenori: funcțiile sunt expuse pentru teste', html.includes('clubCoachSrc:a=>_smClubCoachSrc(a)'));
 
+// --- Valul 2, restul (v10.53) ---------------------------------------------
+check('prim control: eroarea depinde de tehnică și de viteza pasei',
+  html.includes('_firstTouch(e,t){') && html.includes('.05+(t-17)*.007-(n-70)*.0035') &&
+    html.includes('p.cooldown=this._firstTouch(p,_ftSp)'));
+check('lovitura liberă: barajul poate bloca șutul (probabilitate redusă)',
+  html.includes('const _freeKick=n.source==="FREE_KICK"') &&
+    html.includes('v<(_freeKick?1.05:1.38)') && html.includes('*(_freeKick?.55:1)'));
+check('vignetă discretă peste teren, în 2D și 3D',
+  html.includes('"data-sm-vignette":"1"') && html.includes('radial-gradient(ellipse at center'));
+
+check('legea avantajului: arbitrul lasă jocul să continue când mingea ajunge la un coechipier',
+  html.includes('_advMate&&t.x*_advDir>58&&Math.random()<.45') && html.includes('▶️ AVANTAJ'));
+
 const htmlBytes = Buffer.byteLength(html, 'utf8');
 check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
 

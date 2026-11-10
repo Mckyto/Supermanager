@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.52)
+# SuperManager 26/27 — Ediția Supremă (v10.53)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,15 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.53.0 (noiembrie 2026) — barajul de la lovitura liberă, primul control, legea avantajului
+
+- **Barajul de la lovitura liberă blochează, în sfârșit.** Barajul de patru oameni exista vizual din v10.36, dar `_checkDefenderShotBlock` sărea explicit peste `source === "FREE_KICK"` — adică șuturile treceau prin zid. Acum barajul blochează, cu reguli proprii: rază de blocare mai mică (**1,05 m** față de 1,38 m în joc deschis) și probabilitate **×0,55**, ca să nu transforme loviturile libere în ziduri impenetrabile. Penalty-urile rămân exceptate.
+- **Eroare de prim control.** Recepția nu mai e perfectă: `_firstTouch(jucător, viteza_pasei)` calculează o probabilitate `0,05 + (viteză−17)·0,007 − (tehnică−70)·0,0035`, plafonată la 1–24%. Dacă „scapă”, mingea sare 0,75–2 m înaintea jucătorului cu viteză mică, `owner` se eliberează, iar `cooldown` urcă la 0,26 s — deci un adversar aproape poate fura. Portarii sunt exceptați. Măsurat în jsdom: 35/200 scăpări la `dri 45` + pasă de 26 m/s, 2/200 la `dri 92` + pasă de 8 m/s.
+- **Legea avantajului.** Când o intrare e fault, dar mingea liberă ajunge la un coechipier al faultatului (sub 9,5 m) în jumătatea ofensivă, arbitrul lasă jocul să continue (45% din cazuri): banner „▶️ AVANTAJ", eveniment în relatare și +4 impuls, fără lovitură liberă. Faultul rămâne statistic.
+- **Vignetă de transmisie.** Un strat CSS discret (radial-gradient + `inset` shadow, `pointer-events-none`) peste teren, valabil identic în **2D și 3D** — închide colțurile fără post-processing și fără cost pe GPU.
+- **Ce era deja acolo și nu a fost rescris:** cameră TV cu amortizare și shake pe impact (v10.40), numere + nume pe tricou (`kR`, 1024×512), gazon procedural cu dungi și urme (`sA`, 2048×1024), public instanțiat (v10.37.6), ghete colorate, reluarea golului (v10.50), tuneluri de lumină la cele patru nocturne. Bloom real ar cere post-processing (EffectComposer) peste bundle-ul minificat — rămâne singurul punct deschis din listă, plus dynamic boot-marks în timpul meciului.
+- **Testat:** `data-check` **136/136** (+4), smoke **224/224** (+2 pe primul control, cu praguri statistice pe 200 de recepții), storage 9, economy 6.
 
 ## Modificări în v10.52.0 (noiembrie 2026) — portrete reale pentru toate cele 24 de cluburi
 
