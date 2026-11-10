@@ -423,8 +423,13 @@ check('fiecare portret e sub 18 KB', shipped.every((a) => a.bytes <= 18432),
   shipped.length ? `max ${Math.round(Math.max(...shipped.map((a) => a.bytes)) / 1024)} KB` : 'niciunul');
 check('portretul se rezolvă din avatarul salvat, altfel determinist din nume',
   html.includes('function _smCoachId(a){') && html.includes('photoId') && html.includes('%_SM_COACHES.length'));
-check('galeria e disponibilă și în onboarding, și în Profil',
-  html.includes('Portretul Tău de Antrenor') && html.includes('Schimbă portretul'));
+check('portretul se schimbă doar din Profil', html.includes('Schimbă portretul') && !html.includes('Portretul Tău de Antrenor'));
+check('onboarding-ul nu mai are pas de alegere a portretului',
+  !html.includes('_smSP') && !html.includes('avatar:{photoId:'));
+check('zoom la hover: panoul de mărire e prezent pentru orice fotografie',
+  html.includes('id="sm-zoom-js"') && html.includes('sm-zoom-panel') && html.includes('mouseover'));
+check('zoom-ul respectă echipamentele fără hover și mișcarea redusă',
+  html.includes('(hover: none)') && html.includes('prefers-reduced-motion:reduce'));
 
 const htmlBytes = Buffer.byteLength(html, 'utf8');
 check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
