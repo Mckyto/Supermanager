@@ -1,6 +1,6 @@
 {
   "name": "supermanager",
-  "version": "10.54.5",
+  "version": "10.54.6",
   "private": true,
   "description": "SuperManager 26/27 — Ediția Supremă: joc de management fotbalistic, build single-file (React) servit static, instalabil și jucabil offline.",
   "license": "UNLICENSED",
@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node tools/data-check.js && node tools/storage-test.js && node tools/economy-test.js && node tools/smoke-test.js",
+    "test": "node tools/data-check.js && node tools/transfer-test.js && node tools/storage-test.js && node tools/economy-test.js && node tools/smoke-test.js",
     "test:quick": "node tools/smoke-test.js --no-match",
     "icons": "bash tools/build-icons.sh",
     "serve:python": "python3 -m http.server 3000 --bind 0.0.0.0 --directory public",

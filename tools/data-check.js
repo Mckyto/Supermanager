@@ -181,7 +181,7 @@ check(
   html.includes('_mf=Math.max(0,Math.min(.2,(u-7)*.06))') &&
     html.includes('_gf=Math.min(.15,f*.06+m*.04)') &&
     html.includes('_sf=Math.min(.2,((_sg+_sa)/_ap)*.45)') &&
-    html.includes('S*(d?1.08:1.32)*(1+_mf+_gf+_sf+_af)')
+    html.includes('S*.8*(1+_mf+_gf+_sf+_af)')
 );
 check('ofertele apar la performanță bună, nu doar la nota 8.1', html.includes('if(u<7.6&&f<1&&m<1||(a.ovr||0)<67)return null'));
 
