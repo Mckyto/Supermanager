@@ -43,6 +43,14 @@ async function scenarioBoot() {
   const { root, text, errors } = app;
   check('#root are conținut', root.childElementCount > 0, `${root.childElementCount} noduri`);
   check('ecranul de titlu e randat', /SUPERMANAGER 26\/27/i.test(text()));
+  const viewport = app.document.querySelector('meta[name="viewport"]');
+  const viewportContent = (viewport && viewport.getAttribute('content')) || '';
+  check(
+    'viewport-ul blochează micșorarea paginii, dar permite mărirea',
+    /width=device-width/.test(viewportContent) && /minimum-scale=1/.test(viewportContent) &&
+      /maximum-scale=5/.test(viewportContent) && /viewport-fit=cover/.test(viewportContent),
+    viewportContent
+  );
   check('fără erori la boot', errors.length === 0, errors[0]);
 }
 
@@ -73,6 +81,14 @@ async function scenarioOnboarding() {
 
   const ok = await app.waitFor(/Pulsul SuperLigii/, 10000);
   check('dashboard-ul se încarcă', ok);
+  const toolbar = app.document.querySelector('.sm-toolbar');
+  const shell = app.document.querySelector('.sm-app-shell');
+  check(
+    'bara de unelte din header e un rând care se împachetează',
+    !!toolbar && toolbar.className.includes('sm-toolbar'),
+    toolbar ? toolbar.className : 'lipsă'
+  );
+  check('shell-ul aplicației umple ecranul', !!shell, shell ? shell.className.split(' ')[0] : 'lipsă');
 
   await app.sleep(1200);
   let savedCareer = null;

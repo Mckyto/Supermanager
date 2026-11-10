@@ -573,6 +573,26 @@ check('bloom: se oprește pe dispozitivele slabe, cu randare directă ca plasă 
     html.includes('ae?.composer?(ae.lensPass?.uniforms?.uTime&&') &&
     html.includes('try{ae?.composer?.dispose?.()}catch{}'));
 
+// --- Layout pe telefon: pagina umple ecranul (v10.54.1) --------------------
+check('viewport: zoom-out blocat, ca pagina să nu mai fie micșorată ca să încapă',
+  html.includes('name="viewport"') && html.includes('width=device-width,initial-scale=1,minimum-scale=1') &&
+    html.includes('viewport-fit=cover') && !html.includes('user-scalable=no'));
+check('viewport: zoom-in rămâne permis (accesibilitate, maximum-scale=5)',
+  html.includes('maximum-scale=5'));
+check('layout: html/body/#root au lățime fixată pe ecran, fără depășire pe orizontală',
+  html.includes('html{width:100%;max-width:100%;overflow-x:hidden}') &&
+    html.includes('body,#root{width:100%;max-width:100%}') &&
+    html.includes('#root{display:flex;flex-direction:column;min-height:100vh}') &&
+    html.includes('.sm-app-shell{width:100%;max-width:100%}') &&
+    html.includes('.sm-app-shell{flex:1 0 auto}'));
+check('layout: conținutul principal are min-w-0 și nu poate împinge pagina',
+  html.includes('.sm-main-stage{width:100%;max-width:100%;min-width:0}') &&
+    html.includes('sm-main-stage max-w-7xl w-full mx-auto px-4 py-5 flex-1 min-w-0'));
+check('header: bara de butoane se împachetează în loc să iasă din ecran',
+  html.includes('.sm-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.375rem;min-width:0;max-width:100%}') &&
+    html.includes('r.jsxs("div",{className:"sm-toolbar text-xs"') &&
+    html.includes('.sm-command-header>div{min-width:0}'));
+
 const htmlBytes = Buffer.byteLength(html, 'utf8');
 check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
 
