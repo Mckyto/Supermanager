@@ -369,6 +369,13 @@ async function scenarioMatch() {
 
   check('panoul de meci e afișat', /Adrenalină pe Gazon|LIVE/.test(app.text()));
 
+  check('modul Radio Live înlocuiește Highlights 3D', app.click(/Radio Live/) && !app.labels().some(label => /Highlights 3D/.test(label)));
+  await app.sleep(500);
+  const radio = app.document.querySelector('[data-sm-radio]');
+  check('Radio Live afișează evenimente reale fără teren 3D', !!radio && /Comentariu de meci/.test(radio.textContent) && !!radio.querySelector('[aria-live]'));
+  app.click(/2D Tactic/);
+  await app.sleep(300);
+  check('revenirea la 2D păstrează motorul meciului', !app.document.querySelector('[data-sm-radio]') && !!app.window.__smEngine);
   // viteză maximă ca testul să dureze puțin
   app.click(/^8x$/);
 
@@ -469,14 +476,18 @@ async function scenarioMatch() {
     const oneTwoErrors = app.errors.length;
     const cm = engine.homePlayers.find((p) => p.pos === 'CM') || engine.homePlayers[3];
     const rw = engine.homePlayers.find((p) => p.pos === 'RW') || engine.homePlayers[6];
+    // Testăm o fază validă, nu pozițiile aleatorii din meciul live.
+    const armEngine = Object.create(engine);
+    armEngine._activePlayers = () => [];
+    const passer = {...cm, x:40, y:34, redCard:false};
+    const receiver = {...rw, x:50, y:34, redCard:false};
     let armed = 0;
     for (let i = 0; i < 200; i += 1) {
-      engine._oneTwo = null;
-      engine._oneTwoLockMin = 0;
-      engine.ball.owner = cm;
-      engine.activePass = { kind: 'GROUND', peakZ: 0.05 };
-      engine._maybeArmOneTwo(cm, rw);
-      if (engine._oneTwo) armed += 1;
+      armEngine._oneTwo = null;
+      armEngine._oneTwoLockMin = 0;
+      armEngine.activePass = { kind: 'GROUND', peakZ: 0.05 };
+      armEngine._maybeArmOneTwo(passer, receiver);
+      if (armEngine._oneTwo) armed += 1;
     }
     check('un-doi: pasa scurtă pe culoar poate arma dubla pasă', armed > 20 && armed < 200, `${armed}/200`);
     // scenă deterministă: alergătorul și cel care dublează stau într-o zonă liberă, la 9 m
@@ -709,7 +720,7 @@ async function scenarioPhone() {
   const scolds = messages.filter((m) => m.scolding);
   check('mesajul ignorat e taxat în bani', expired.length > 0, `${expired.length} taxate, ex. ${expired[0] ? expired[0].taxPaid : 0} €`);
   const entryMsg = messages.filter((m) => (m.roundGenerated || 1) === 1);
-  check('mesajele din etapa 1 nu sunt niciodată taxate', entryMsg.every((m) => !m.expired), `${entryMsg.length} mesaje de început`);
+  check('mesajele ignorate din etapa 1 expiră și ele', entryMsg.some((m) => m.expired), `${entryMsg.length} mesaje de început`);
   check('expeditorul te ceartă după ignorare', scolds.length > 0, (scolds[0] && scolds[0].senderName) || '');
   check('taxa e reținută pe expeditor', Object.keys((career && career.ignoreStrikes) || {}).length > 0);
   const ph = app.window.__smPhone;
@@ -741,7 +752,7 @@ async function scenarioPhone() {
   if (!app.click(/Telefon/)) return fail('butonul Telefon există');
   await app.sleep(600);
   const panel = app.text();
-  check('telefonul arată mesajul expirat cu suma', /Expirat — taxat/.test(panel));
+  check('mesajele expirate dispar din telefon, inclusiv cele din salvări vechi', expired.every(m => !app.document.querySelector(`[data-sm-phone-id="${m.id}"]`)) && !/Expirat — taxat/.test(panel));
   check('telefonul afișează reproșul primit', /Te-a taxat cu/.test(panel));
   check('fără erori în telefon', app.errors.length === before, app.errors[before]);
 
@@ -782,8 +793,9 @@ async function scenarioBulkSim() {
   const news = ((career && career.newsFeed) || []).map((n) => n.text).join(' | ');
   check('raportul simulării apare în știri', /SIMULARE ETAPE/.test(news), (news.match(/SIMULARE ETAPE[^|]{0,60}/) || [''])[0]);
   check(
-    'în simulare mesajele sunt rezolvate neutru, fără taxe noi',
-    ((career && career.phoneMessages) || []).some((m) => m.autoNeutral)
+    'în simulare apar reproșuri pentru mesaje ignorate',
+    ((career && career.phoneMessages) || []).some((m) => m.scolding && m.roundGenerated > (start?.currentRound || 0)) &&
+      !((career && career.phoneMessages) || []).some((m) => m.autoNeutral && m.roundGenerated > (start?.currentRound || 0))
   );
   check('fără erori în timpul simulării', app.errors.length === before, app.errors[before]);
 }
@@ -1144,8 +1156,9 @@ async function scenarioFixes() {
   const lost = fx.stats({ matches: 3, w: 1, d: 1, l: 1, gf: 4, ga: 3 }, false, false, true, 0, 1);
   check('înfrângerea 0-1 se acumulează corect', lost.matches === 4 && lost.l === 2 && lost.gf === 4 && lost.ga === 4, `${lost.gf}:${lost.ga}, ${lost.matches} meciuri`);
 
-  check('mesajul din etapa 1 nu expiră niciodată', fx.phoneStale({ roundGenerated: 1 }, 10) === false);
+  check('mesajul din etapa 1 expiră în etapa 2', fx.phoneStale({ roundGenerated: 1 }, 1) === false && fx.phoneStale({ roundGenerated: 1 }, 2) === true);
   check('mesajul din etapa 3 expiră în etapa 4, nu înainte', fx.phoneStale({ roundGenerated: 3 }, 3) === false && fx.phoneStale({ roundGenerated: 3 }, 4) === true);
+  check('memento-ul personal și mesajul de ofertă expiră la fel', fx.phoneStale({roundGenerated: 3, relationshipReminder: true}, 4) && fx.phoneStale({roundGenerated: 3, kind:'transfer_offer'}, 4));
   check('mesajele deja răspunse sau expirate nu se taxează', fx.phoneStale({ roundGenerated: 1, replied: true }, 9) === false && fx.phoneStale({ roundGenerated: 1, expired: true }, 9) === false);
 
   const bench = [

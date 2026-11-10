@@ -175,6 +175,14 @@ check(
   html.includes('expired:!0,taxPaid:') && html.includes('Mesaj ignorat — te-a costat ')
 );
 
+check('telefon: o ofertă ignorată nu mai poate fi acceptată din mercato',
+  html.includes('msg.offerId===offer.id') && html.includes('status:"expired"'));
+check('telefon: blocare la răspuns și la aplicarea modificărilor după expirare',
+  html.includes('_smPhoneStale(N,d.currentRound)') && html.includes('_smPhoneStale(current,J.currentRound)'));
+check('radio: înlocuiește highlights, dar păstrează motorul și comenzile de viteză',
+  html.includes('children:"📻 Radio Live"') && html.includes('pe.step(ve,A)') &&
+    !html.includes('children:"🎬 Highlights 3D"'));
+
 // 13. Oferta e corelată cu valoarea ȘI cu performanța (meci + sezon)
 check(
   'taxa ofertei crește cu nota din meci, golurile și randamentul sezonului',
@@ -333,15 +341,15 @@ check(
 );
 check(
   'mesajul expirat păstrează suma taxată',
-  html.includes('⌛ Expirat — taxat ') && html.includes('taxPaid:')
+  html.includes('expired:!0,taxPaid:') && html.includes('Te-a taxat cu')
 );
 check(
   'mesajele nerezolvate arată termenul de expirare',
   html.includes('⏳ Expiră la Etapa ')
 );
 check(
-  'mesajele expirate se arhivează după 3 etape',
-  html.includes('u.expired&&_maxR-(u.roundGenerated||0)>3')
+  'mesajele expirate dispar imediat din telefon și nu pot primi răspuns',
+  html.includes('vv=a.filter(u=>!u.expired&&!_smPhoneStale(u,round))') && html.includes('N.replied||N.expired||N.scolding||_smPhoneStale(N,d.currentRound)')
 );
 check(
   'persoana te ceartă când o ignori (mesaj de reproș + replică vorbită)',
@@ -362,8 +370,8 @@ check(
   html.includes('_r=Pl(_h,_a,_h.id===d.userClubId?vt():0') && !html.includes('{bonus:vt()}')
 );
 check(
-  'în simulare deciziile sunt rezolvate neutru (fără taxe, fără bonusuri)',
-  html.includes('_smBulkActive){const _bm=') && html.includes('fără bonus, fără penalizare')
+  'mesajele ignorate în simulare primesc aceleași consecințe',
+  !html.includes('_smBulkActive){const _bm=') && html.includes('const _ign=N.filter(mm=>_smPhoneStale(mm,w))')
 );
 check(
   'simularea raportează rezultatele în știri',
