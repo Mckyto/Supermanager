@@ -627,6 +627,50 @@ async function scenarioProfile() {
   zoomTarget.dispatchEvent(new app.window.MouseEvent('mouseout', { bubbles: true }));
   await app.sleep(250);
   check('mărirea dispare când mouse-ul pleacă', !zoom || zoom.style.opacity === '0');
+
+  // Regresie: jucătorii fără fotografie au un strat decorativ peste <img>,
+  // deci hover-ul lovește un <div>, nu poza. Zoom-ul trebuie să meargă și așa.
+  const chip = app.document.createElement('div');
+  chip.style.cssText = 'position:relative;width:40px;height:40px;border-radius:9999px;overflow:hidden';
+  const chipImg = app.document.createElement('img');
+  chipImg.setAttribute('src', zoomSrc);
+  chipImg.setAttribute('alt', 'Jucător fără fotografie');
+  chipImg.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top';
+  const chipShade = app.document.createElement('div');
+  chipShade.setAttribute('aria-hidden', 'true');
+  chipShade.style.cssText = 'position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, rgba(255,255,255,.12), rgba(0,0,0,.45))';
+  chip.appendChild(chipImg);
+  chip.appendChild(chipShade);
+  app.document.body.appendChild(chip);
+
+  chipShade.dispatchEvent(new app.window.MouseEvent('mouseover', { bubbles: true }));
+  await app.sleep(320);
+  const zoomShade = app.document.getElementById('sm-zoom-panel');
+  check(
+    'hover pe stratul de peste poză (jucători fără fotografie) deschide mărirea',
+    !!zoomShade && zoomShade.style.opacity === '1',
+    zoomShade ? `${zoomShade.style.width}×${zoomShade.style.height}` : 'fără panou'
+  );
+  check(
+    'mărirea folosește poza de sub strat',
+    !!zoomShade && !!zoomShade.querySelector('img') && zoomShade.querySelector('img').getAttribute('src') === zoomSrc
+  );
+
+  const hasDirectImg = (el) => [...(el.children || [])].some((c) => c.tagName === 'IMG');
+  const realShade = [...app.document.querySelectorAll('div[aria-hidden="true"]')].find((d) => {
+    const st = d.style;
+    return st && st.position === 'absolute' && d.parentElement && hasDirectImg(d.parentElement);
+  });
+  if (realShade) {
+    realShade.dispatchEvent(new app.window.MouseEvent('mouseover', { bubbles: true }));
+    await app.sleep(320);
+    check('chip-ul real de jucător generat face zoom la hover', !!zoomShade && zoomShade.style.opacity === '1');
+  }
+
+  chipShade.dispatchEvent(new app.window.MouseEvent('mouseout', { bubbles: true }));
+  await app.sleep(250);
+  check('mărirea se închide după hover pe strat', !zoomShade || zoomShade.style.opacity === '0');
+  chip.remove();
 }
 
 async function scenarioCupSim() {

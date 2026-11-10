@@ -4618,6 +4618,29 @@ default:return{tone:"positive",note:"✓ Mesaj confirmat (+1% Vestiar).",cohDelt
     document.body.appendChild(panel);
   }
 
+  // Fotografiile sunt adesea acoperite de un strat decorativ (umbra/vinieta),
+  // așa că hover-ul nu nimerește mereu <img>-ul. Căutăm poza în elementul
+  // apuntat, apoi în părintele lui (un nivel): chip-ul de jucător e
+  // div.rounded-full > img + div[aria-hidden].
+  function directImg(el){
+    if (!el || !el.children) return null;
+    for (var i = 0; i < el.children.length; i++){
+      if (el.children[i].tagName === "IMG") return el.children[i];
+    }
+    return null;
+  }
+  function resolveImg(t){
+    if (!t || !t.tagName) return null;
+    if (t.tagName === "IMG") return t;
+    // chip-ul însuși: div > img + strat decorativ
+    var own = directImg(t);
+    if (own) return own;
+    // stratul de peste poză: părintele are <img> ca fiu direct
+    var up = directImg(t.parentElement);
+    if (up) return up;
+    return null;
+  }
+
   function clamp(v, min, max){ return v < min ? min : (v > max ? max : v); }
   function viewport(){
     return {
@@ -4636,7 +4659,7 @@ default:return{tone:"positive",note:"✓ Mesaj confirmat (+1% Vestiar).",cohDelt
     var r = el.getBoundingClientRect();
     var measured = r.width > 0 && r.height > 0;
     // Fotografiile mici merită mărite; cele deja mari (hero, fundal) nu.
-    if (measured && (r.width < 30 || r.width > 300)) return;
+    if (measured && (r.width < 22 || r.width > 300)) return;
 
     if (!panel) build();
 
@@ -4679,18 +4702,23 @@ default:return{tone:"positive",note:"✓ Mesaj confirmat (+1% Vestiar).",cohDelt
 
   document.addEventListener("mouseover", function(e){
     var t = e.target;
-    if (!t || !t.tagName || t.tagName !== "IMG") return;
+    if (!t || !t.tagName) return;
     if (panel && (t === pimg || (t.closest && t.closest("#sm-zoom-panel")))) return;
     clearTimeout(showT); clearTimeout(hideT);
-    if (t === cur) return;
-    showT = setTimeout(function(){ show(t); }, 140);
+    var el = resolveImg(t);
+    if (!el){ if (cur) hideT = setTimeout(hide, 110); return; }
+    if (el === cur) return;
+    showT = setTimeout(function(){ show(el); }, 140);
   }, true);
 
   document.addEventListener("mouseout", function(e){
     var t = e.target;
-    if (!t || !t.tagName || t.tagName !== "IMG") return;
+    if (!t || !t.tagName) return;
+    if (panel && t.closest && t.closest("#sm-zoom-panel")) return;
+    // Dacă mouse-ul doar se plimbă în același chip (de pe strat pe poză), nu ascundem.
+    if (cur && resolveImg(e.relatedTarget) === cur) return;
     clearTimeout(showT);
-    hideT = setTimeout(hide, 90);
+    hideT = setTimeout(hide, 110);
   }, true);
 
   window.addEventListener("scroll", hide, true);
