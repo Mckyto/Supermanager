@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.45)
+# SuperManager 26/27 — Ediția Supremă (v10.46)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -37,9 +37,9 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (102 verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (105 verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **178 de puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **184 de puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.46.0 (noiembrie 2026) — antrenorii din galerie intră în clasament, portretul are stare
+
+- **Fiecare echipă are acum chipul antrenorului, în clasament.** Cele 24 de portrete foto primesc o a doua viață: clubul e mapat determinist pe un portret (`_smClubCoachId`, hash pe id-ul clubului), așa că FCSB are mereu același chip, Rapid altul, iar chipul apare în **ambele** tabele de clasament (sezon regular + play-off/out), lângă emblema clubului. Hover pe chip → mărirea din v10.44.1.
+- **Portretul tău are stare.** `_smCoachMood` derivă o stare din încrederea consiliului, stresul managerului și seria de rezultate: **Calm**, **Încrezător** (2+ victorii la rând sau consiliu peste 78) sau **Tensionat** (2+ înfrângeri, consiliu sub 40 sau stres peste 70). Starea apare ca badge în Profil („Stare: Încrezător") și **filtrează fotografia** — caldă și saturată când e bine, desaturată și mai întunecată când e presiune. Zero asset-uri noi.
+- **Salvările vechi sunt aliniate la regula „o singură schimbare".** O carieră care are deja `manager.avatar.photoId` (ales în 10.43/10.44, când exista pasul din onboarding) primește la încărcare `photoChangeUsed: true` + `photoMigrated: true`, deci nu mai are o a doua schimbare. Carierele noi, fără `photoId`, rămân cu schimbarea disponibilă.
+- **Testat:** smoke test-ul a crescut de la 178 la **184 de verificări** (16 chipuri în clasament, toate WebP din bibliotecă, minim 4 portrete distincte, același club → același antrenor, starea afișată în Profil și filtrul aplicat pe portret), `storage-test` de la 7 la **9** (o salvare veche cu `photoId` se încarcă cu butonul „Portret blocat" și migrarea scrie `photoChangeUsed` fără să piardă portretul), iar `data-check` la **105**. Economy 6.
 
 ## Modificări în v10.45.0 (noiembrie 2026) — portretul se schimbă o singură dată
 
