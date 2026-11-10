@@ -369,6 +369,32 @@ async function scenarioMatch() {
   const engine = app.window.__smEngine;
   check('motorul de meci e expus pentru teste', !!engine);
   if (engine) {
+    // Motor separat: exercităm metodele reale fără să alterăm meciul în curs.
+    const makeDecisionEngine = () => {
+      const e = Object.create(Object.getPrototypeOf(engine));
+      Object.assign(e, { minute: 10, homeTactics: {mentality:'balanced', width:'normal', passing:'mixed', pressing:'medium', defLine:'normal', tackling:'normal'}, awayTactics: {}, homeBonus: 2, awayBonus: 1, managerPlanEffect: {home:null,away:null}, activeShout:{home:null,away:null}, shoutCooldownUntil:{home:0,away:0}, events:[], userSide:'home', score:{home:0,away:0}, homeClub:{name:'Gazde',shortName:'GAZ'}, awayClub:{name:'Oaspeți',shortName:'OAS'}, decisionContext:{managerCharisma:60}, coachReactionCount:0, homePlayers:[], awayPlayers:[] });
+      e._pushHighlight = () => {}; e._addMomentum = () => {};
+      return e;
+    };
+    const decision = makeDecisionEngine();
+    const originalShift = decision._getTacticalShift('home');
+    decision.applyManagerPlan('home', 'direct', {mentality:'attacking',width:'wide',passing:'direct',pressing:'high',defLine:'high'}, 60, 'Angajări rapide');
+    const shift = decision._getTacticalShift('home');
+    check('planul rapid modifică pasele, poziționarea și presingul motorului', decision.homeTactics.passing === 'direct' && shift.shiftX > originalShift.shiftX && shift.widthScale > originalShift.widthScale && shift.pressRadius > originalShift.pressRadius);
+    check('planul rapid adaugă bonus la execuții', decision._getTeamBonus('home') > 2 && decision._getTeamBonus('away') === 1);
+    decision.minute = 20;
+    check('bonusul planului expiră după 10 minute fără a șterge tactica', decision._getTeamBonus('home') === 2 && decision.homeTactics.passing === 'direct');
+    const shouts = [
+      ['push_forward', 'mentality', 'ultra_attacking'], ['tighten_up', 'defLine', 'deep'],
+      ['calm_down', 'tackling', 'cautious'], ['demand_more', 'pressing', 'high']
+    ];
+    check('indicațiile de pe bancă schimbă tacticile efective', shouts.every(([id,key,val]) => {
+      const e = makeDecisionEngine(); const result = e.triggerShout('home', id);
+      return result.ok && e._getEffectiveTactics('home')[key] === val && !e.triggerShout('home', id).ok && (e.minute = 23, e._getEffectiveTactics('home')[key] !== val);
+    }));
+    const encourage = makeDecisionEngine();
+    const response = encourage.triggerShout('home', 'encourage');
+    check('încurajarea produce o reacție reală, inclusiv rezultat neutru', response.ok && /Impuls|neschimbat/.test(response.note) && (encourage.homeBonus === 2 || encourage.homeBonus > 2));
     let buffered = 0;
     for (let i = 0; i < 40 && buffered < 20; i += 1) {
       await app.sleep(250);

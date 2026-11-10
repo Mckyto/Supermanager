@@ -593,7 +593,7 @@ check('3D: canvasul umple caseta terenului prin containerul dedicat .sm-3d-mount
 check('3D: nicio regulă pe copiii shell-ului 3D (ar umfla HUD-ul: minimap, presete cameră, telemetrie)',
   !/\.sm-3d-shell\s*>\s*div/.test(html));
 check('3D: HUD-ul din meci își păstrează stilurile proprii (fără width/height forțat)',
-  html.includes('className:"hidden sm:block",children:r.jsx("canvas",{ref:y,width:158,height:100') &&
+  html.includes('className:"sm-3d-radar", "data-sm-radar":"1",children:r.jsx("canvas",{ref:y,width:158,height:100') && html.includes('.sm-3d-radar{top:auto!important;bottom:10px;width:110px;max-width:32%}') &&
     !/\.sm-3d-(shell|mount)\s*\{[^}]*pointer-events/.test(html));
 check('3D: bloom verifică suportul pentru color-buffer float înainte de a porni',
   html.includes(`if(_gl2){try{const _ex=renderer.extensions;if(_ex&&!_ex.has("EXT_color_buffer_half_float")&&!_ex.has("EXT_color_buffer_float"))return null}catch(_e){}}`));
