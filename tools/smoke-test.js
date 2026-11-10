@@ -206,19 +206,23 @@ async function scenarioRosterFilters() {
 }
 
 async function scenarioClubCoaches() {
-  console.log('\n3b. Chipurile antrenorilor din clasament');
+  console.log('\n3b. Clasamentul fără pozele antrenorilor');
   const before = app.errors.length;
+  if (!app.click(/^Centru Comandă/)) return fail('tab-ul Centru Comandă există');
+  await app.sleep(600);
+  const dashboard = app.document.querySelector('[data-sm-standings="dashboard"]');
+  check('clasamentul din centru are echipe fără fotografii de antrenor',
+    !!dashboard && dashboard.querySelectorAll('tbody tr').length >= 8 && !dashboard.querySelector('img[alt^="Antrenor "]'));
   if (!app.click(/Clasament & Etape/)) return fail('tab-ul Clasament există');
   await app.sleep(800);
-  const faces = [...app.document.querySelectorAll('img[alt^="Antrenor "]')];
-  check('fiecare echipă din clasament are chipul antrenorului', faces.length >= 8, `${faces.length} chipuri`);
-  const uris = faces.map((f) => f.getAttribute('src') || '');
-  const distinct = new Set(uris).size;
-  check(
-    'chipurile sunt portrete foto din bibliotecă, distribuite',
-    uris.every((u) => /^data:image\/webp;base64,/.test(u)) && distinct >= 4,
-    `${distinct} portrete distincte`
-  );
+  const league = app.document.querySelector('[data-sm-standings="league"]');
+  const rows = league ? [...league.querySelectorAll('tbody tr')] : [];
+  check('clasamentul oficial are echipe fără fotografii de antrenor',
+    rows.length >= 8 && !league.querySelector('img[alt^="Antrenor "]'));
+  check('numele cluburilor, stemele și punctele rămân vizibile',
+    rows.length >= 8 && rows.every(row => row.cells.length === 9 && row.cells[1].textContent.trim() && row.cells[1].querySelector('svg, img') && row.cells[8].textContent.trim()));
+  check('numele antrenorului rămâne disponibil în titlul clubului',
+    !!league && !!league.querySelector('[title="Antrenor: Laurențiu Reghecampf"]'));
   const fx = app.window.__smFix;
   check(
     'același club are mereu același antrenor',
@@ -246,9 +250,7 @@ async function scenarioClubCoaches() {
     'toate cele 24 de cluburi au acum fotografie reală',
     !!fx && realClubs.length === 24 && realClubs.every((id) => fx.clubCoachReal(id))
   );
-  const realChip = [...app.document.querySelectorAll('img[alt^="Antrenor"]')].find((img) => /Reghecampf/.test(img.alt || ''));
-  check('clasamentul arată antrenorul real în alt/title', !!realChip && /Reghecampf/.test(realChip.title || realChip.alt || ''));
-  check('fără erori la chipurile din clasament', app.errors.length === before, app.errors[before]);
+  check('fără erori la clasament', app.errors.length === before, app.errors[before]);
 }
 
 async function scenarioFacilities() {

@@ -436,7 +436,7 @@ check('lotul arată contorul „arată X din Y" și buton de reset',
 check('starea antrenorului e derivată din consiliu, stres și rezultate',
   html.includes('function _smCoachMood(a){') && html.includes('label:"Tensionat"') && html.includes('label:"Încrezător"'));
 check('fiecare club are un antrenor stabil (foto reală sau galerie)',
-  html.includes('function _smClubCoachId(a){') && html.includes('alt:"Antrenor "') && html.includes('_smClubCoachSrc(w.clubId)'));
+  html.includes('function _smClubCoachId(a){') && html.includes('function _smClubCoachSrc(a){'));
 check('portretul se poate schimba o singură dată',
   html.includes('photoChangeUsed') && html.includes('Portret blocat') && html.includes('singura schimbare de portret'));
 check('onboarding-ul nu mai are pas de alegere a portretului',
@@ -505,8 +505,10 @@ check('antrenori: chipul real are prioritate, cu fallback pe galeria de 24',
     html.includes('return _smCoachSrc(_smClubCoachId(a))'));
 check('antrenori: fotografiile reale sunt încorporate ca WebP în __SM_ASSETS__',
   (html.match(/"coach\/club\/[a-z]+\.webp":"data:image\/webp;base64,/g) || []).length >= 24);
-check('antrenori: clasamentul folosește sursa reală și numele în alt/title',
-  html.includes('src:_smClubCoachSrc(w.clubId)') && html.includes('_smClubCoachName(w.clubId)'));
+check('clasament: fără fotografii de antrenor, numele rămâne în titlul clubului',
+  !html.includes('src:_smClubCoachSrc(w.clubId)') &&
+    html.includes('title:_smClubCoachName(w.clubId)?"Antrenor: "+_smClubCoachName(w.clubId):void 0') &&
+    html.includes('"data-sm-standings":"dashboard"') && html.includes('"data-sm-standings":"league"'));
 check('antrenori: funcțiile sunt expuse pentru teste', html.includes('clubCoachSrc:a=>_smClubCoachSrc(a)'));
 
 // --- Valul 2, restul (v10.53) ---------------------------------------------
