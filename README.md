@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.43)
+# SuperManager 26/27 — Ediția Supremă (v10.44)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -37,9 +37,9 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (97 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (100 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **165 de puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **170 de puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.44.0 (noiembrie 2026) — zoom pe fotografii și portretul ales doar din Profil
+
+- **Mărire la hover, pe orice fotografie.** Treci cu mouse-ul peste o poză — chipul jucătorului din lot, fața din fereastra de decizie, portretul antrenorului, emblema clubului — și lângă ea apare o mărire (190–320 px, până la 72% din înălțimea ecranului), cu aceeași încadrare ca originalul (`object-fit`/`object-position` preluate din element). Panoul e `pointer-events:none`, se mută singur dacă nu are loc în dreapta, și dispare la `mouseout`, scroll, resize, click sau tastă. Nu se activează pe ecrane tactile (`(hover: none)`), nu apare pentru imaginile deja mari (hero, fundal, > 300 px) și respectă `prefers-reduced-motion`.
+- **Portretul antrenorului nu se mai alege la începutul carierei.** Pasul „Portretul Tău de Antrenor (24)" a fost scos din onboarding: ecranul de start revine la nume → dificultate → arhetipuri → club → semnarea contractului. Cariera nouă primește **automat** un portret stabil, derivat din numele managerului (același nume → același chip, la fiecare pornire) — nimic nu se mai scrie în salvare ca „alegere".
+- **Singurul loc de schimbare rămâne Profilul.** „🖼️ Schimbă portretul" deschide galeria celor 24, cu portretul curent marcat; click pe altul îl salvează ca `manager.avatar.photoId` și închide galeria. Salvările vechi fără `photoId` continuă să primească portretul determinist din nume.
+- **Testat:** smoke test-ul a crescut de la 165 la **170 de verificări** (onboarding fără grilă de portrete, cariera nouă primește portret automat și stabil din nume, alegerea nu se scrie în salvare, portretul schimbat din Profil persistă, hover-ul deschide mărirea cu exact aceeași imagine și o închide la `mouseout`), iar `data-check` de la 97 la **100** (portret schimbabil doar din Profil, onboarding fără pas de portret, scriptul de zoom prezent, respectarea `hover: none` și `prefers-reduced-motion`). Storage 7, economy 6, bundle 6,28 MB.
 
 ## Modificări în v10.43.0 (noiembrie 2026) — portretul antrenorului, ca în dating sim
 

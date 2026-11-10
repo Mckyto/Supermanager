@@ -64,17 +64,9 @@ async function scenarioOnboarding() {
     `${clipped.length} trunchiate din ${descs.length}`
   );
 
-  const portraits = [...app.document.querySelectorAll('button[aria-pressed] img[alt="Portret antrenor"]')];
-  check('onboarding-ul cere un portret de antrenor', portraits.length === 24, `${portraits.length} portrete`);
-
-  let pickedId = null;
-  if (portraits.length > 1) {
-    const target = portraits[portraits.length - 1].closest('button');
-    pickedId = String(target.getAttribute('title') || '').replace('Portret ', '').trim() || null;
-    target.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
-    await app.sleep(200);
-    check('portretul selectat e marcat ca ales', target.getAttribute('aria-pressed') === 'true', pickedId || '');
-  }
+  const onboardingPortraits = [...app.document.querySelectorAll('button[aria-pressed] img[alt="Portret antrenor"]')];
+  check('onboarding-ul nu mai cere alegerea unui portret', onboardingPortraits.length === 0, `${onboardingPortraits.length} portrete`);
+  check('onboarding-ul revine la nume → dificultate → arhetipuri', !/Portretul Tău de Antrenor/.test(text()));
 
   if (!click(/Semnează Contractul/)) return fail('butonul „Semnează Contractul" există');
   pass('butonul „Semnează Contractul" apăsat');
@@ -82,18 +74,23 @@ async function scenarioOnboarding() {
   const ok = await app.waitFor(/Pulsul SuperLigii/, 10000);
   check('dashboard-ul se încarcă', ok);
 
-  if (pickedId) {
-    await app.sleep(1200);
-    let saved = null;
-    try {
-      saved = JSON.parse(app.window.localStorage.getItem('sm2627_career_slot_1') || 'null');
-    } catch {}
-    check(
-      'portretul ales la începutul carierei e salvat',
-      saved && saved.manager && saved.manager.avatar && saved.manager.avatar.photoId === pickedId,
-      saved && saved.manager && saved.manager.avatar ? String(saved.manager.avatar.photoId) : 'fără avatar'
-    );
-  }
+  await app.sleep(1200);
+  let savedCareer = null;
+  try {
+    savedCareer = JSON.parse(app.window.localStorage.getItem('sm2627_career_slot_1') || 'null');
+  } catch {}
+  const fxBoot = app.window.__smFix;
+  const autoId = savedCareer && fxBoot && fxBoot.coachId ? fxBoot.coachId(savedCareer) : null;
+  check('cariera nouă primește portret automat, fără să alegi', !!autoId && /^coach-\d{2}$/.test(autoId), String(autoId));
+  check(
+    'portretul automat nu e scris în salvare ca alegere',
+    !(savedCareer && savedCareer.manager && savedCareer.manager.avatar && savedCareer.manager.avatar.photoId)
+  );
+  check(
+    'portretul automat e stabil pentru același nume',
+    !!autoId && !!fxBoot && autoId === fxBoot.coachId({ manager: { name: savedCareer.manager.name } }),
+    autoId && savedCareer ? `${autoId} pentru „${savedCareer.manager.name}"` : ''
+  );
   check('fără erori la intrarea în carieră', app.errors.length === 0, app.errors[0]);
 }
 
@@ -611,6 +608,25 @@ async function scenarioProfile() {
   } else {
     fail('butonul Schimbă portretul există');
   }
+
+  await app.sleep(300);
+  const zoomTarget = app.document.querySelector('img[alt="Portret antrenor"]') || app.document.querySelector('img');
+  if (!zoomTarget) {
+    fail('există o fotografie de mărit în Profil');
+    return;
+  }
+  const zoomSrc = zoomTarget.getAttribute('src');
+  zoomTarget.dispatchEvent(new app.window.MouseEvent('mouseover', { bubbles: true }));
+  await app.sleep(320);
+  const zoom = app.document.getElementById('sm-zoom-panel');
+  check('hover pe fotografie deschide o mărire', !!zoom && zoom.style.opacity === '1', zoom ? `${zoom.style.width}×${zoom.style.height}` : 'fără panou');
+  check(
+    'mărirea arată exact aceeași fotografie',
+    !!zoom && !!zoom.querySelector('img') && zoom.querySelector('img').getAttribute('src') === zoomSrc
+  );
+  zoomTarget.dispatchEvent(new app.window.MouseEvent('mouseout', { bubbles: true }));
+  await app.sleep(250);
+  check('mărirea dispare când mouse-ul pleacă', !zoom || zoom.style.opacity === '0');
 }
 
 async function scenarioCupSim() {
