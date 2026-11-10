@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.47)
+# SuperManager 26/27 — Ediția Supremă (v10.48)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -37,9 +37,9 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (108 verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (112 verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **202 puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **210 puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -126,6 +126,14 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.48.0 (noiembrie 2026) — sloturi cu chip, zoom pe touch, poster la click
+
+- **Sloturile de salvare arată cine ești.** Fiecare slot ocupat din „Salvări & Cross-Save" afișează acum **portretul antrenorului** (12×15 mm pe ecran, derivat din `manager.avatar` al salvării, cu fallback pe nume) și **emblema clubului** suprapusă peste colț, lângă numele clubului, managerul, sezonul, etapa și bugetul. Sloturile libere rămân cu textul „Slot liber".
+- **Zoom pe touch.** Pe telefoane și tablete, **apăsarea lungă (~380 ms)** pe o fotografie deschide aceeași mărire; se închide singură la ~1,2 s după ce ridici degetul, iar `touchmove` anulează intenția (ca să nu apară măriri când dai scroll). Evenimentele de mouse sunt ignorate ~0,9 s după un touch, ca să nu se dubleze.
+- **Poster la click.** Click pe o fotografie care **nu** stă într-un buton deschide o vedere mare: imagine până la 92vw/78vh, fundal estompat, descrierea pozei (textul `alt`) dedesubt. Se închide cu click oriunde, cu `Escape` sau cu un click pe fundal. Pozele din butoane (galeria de portrete, chipurile care fac altceva la click) sunt excluse, ca să nu fure acțiunea.
+- **Accesibilitate:** butonul de închidere al ferestrei de salvări primea nume doar din iconiță — are acum `title` și `aria-label` („Închide fereastra de salvări"), deci testul „fiecare buton are nume" rămâne verde.
+- **Testat:** smoke test-ul a crescut de la 202 la **210 de verificări** (click pe fotografie deschide posterul, imaginea și descrierea coincid, `Escape` închide, slotul ocupat arată portretul WebP din bundle cu `alt` descriptiv, fereastra se închide), iar `data-check` la **112** (touch, poster, excluderea pozelor din butoane, portretul din slot). Storage 9, economy 6.
 
 ## Modificări în v10.47.0 (noiembrie 2026) — lotul se filtrează și se sortează
 

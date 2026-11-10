@@ -446,8 +446,15 @@ check('zoom la hover: panoul de mărire e prezent pentru orice fotografie',
 check('zoom-ul găsește poza și de sub stratul decorativ (jucători fără fotografie)',
   html.includes('function resolveImg(t){') && html.includes('function directImg(el){') &&
     html.includes('var up = directImg(t.parentElement);'));
-check('zoom-ul respectă echipamentele fără hover și mișcarea redusă',
-  html.includes('(hover: none)') && html.includes('prefers-reduced-motion:reduce'));
+check('zoom-ul funcționează și pe touch (apăsare lungă)',
+  html.includes('"touchstart"') && html.includes('"touchend"') && html.includes('"touchmove"') && html.includes('380'));
+check('click pe o fotografie deschide un poster mărit, închis cu Escape',
+  html.includes('sm-photo-modal') && html.includes('sm-photo-caption') && html.includes('Escape'));
+check('posterul nu se deschide pentru pozele din butoane (nu fură click-ul)',
+  html.includes('function inControl(el){') && html.includes('button,a,[role=button],label,select'));
+check('sloturile de salvare afișează portretul antrenorului',
+  html.includes('data-sm-slot-photo') && html.includes('coachId:_smCoachId({manager:n.manager||{}})'));
+check('mișcarea redusă e respectată', html.includes('prefers-reduced-motion:reduce'));
 
 const htmlBytes = Buffer.byteLength(html, 'utf8');
 check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
