@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.54.2)
+# SuperManager 26/27 — Ediția Supremă (v10.54.3)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,16 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Reparații aplicate în v10.54.3 (noiembrie 2026) — meciul nu mai poate rămâne cu terenul gol
+
+Scenă raportată: în meci se vedea bara de scor și comentariul, dar terenul rămânea negru. Trei plase de siguranță, toate în calea 3D:
+
+- **Bloom-ul verifică ce poate GPU-ul înainte de a porni.** Lanțul are nevoie de render target-uri **half-float**, iar pe multe GPU-uri mobile combinația half-float + MSAA ×2 produce un framebuffer incomplet — randarea în render target nu aruncă nicio eroare, doar scrie negru. Acum, dacă lipsește `EXT_color_buffer_half_float`/`EXT_color_buffer_float`, lanțul nu se mai construiește deloc și se randează direct.
+- **Fiecare render target e verificat cu `checkFramebufferStatus`.** Dacă unul dintre cele patru (scenă, bright-pass, blur A, blur B) nu e `FRAMEBUFFER_COMPLETE`, RT-urile se eliberează și bloom-ul e abandonat, în loc să lase ecranul negru.
+- **Sondă de imagine: dacă terenul iese negru, meciul trece singur pe 2D.** `_smPitchProbe` citește cinci pixeli din canvas (`gl.readPixels`) în primele cadre; dacă toți sunt negri opt cadre la rând, pornește fallback-ul existent (`onWebGLFallback`) și meciul continuă în vederea tactică 2D. Sonda se oprește la prima imagine validă, deci nu costă nimic în jocul normal.
+- **De știut:** pe telefoanele cu `devicePixelRatio ≥ 2,5` sau ≤ 4 nuclee jocul se declară „slow" (`_SM_SLOW`) și **oprește din start bloom-ul, umbrele și urmele de ghete** — deci acolo bloom-ul nu era cauza. Plasele de mai sus acoperă și restul căilor (WebGL indisponibil, context pierdut, framebuffer incomplet).
+- **Testat:** `data-check` **159/159** (+3: garda de capabilitate, verificarea framebuffer-urilor, sonda cu fallback pe 2D), smoke **233/233**, storage 9, economy 6. jsdom nu are WebGL, deci căile 3D sunt acoperite de verificări statice pe bundle și de plasele din cod, nu de randare reală.
 
 ## Reparații aplicate în v10.54.2 (noiembrie 2026) — jocul umple ecranul **și** derulează normal
 
