@@ -425,6 +425,14 @@ check('portretul se rezolvă din avatarul salvat, altfel determinist din nume',
   html.includes('function _smCoachId(a){') && html.includes('photoId') && html.includes('%_SM_COACHES.length'));
 check('portretul se schimbă doar din Profil', html.includes('Schimbă portretul') && !html.includes('Portretul Tău de Antrenor'));
 check('salvările vechi cu portret ales sunt marcate ca „folosit"', html.includes('photoMigrated:!0'));
+check('lotul are filtre rapide (contract, morală, indisponibili, juniori)',
+  html.includes('function _smRosterView(a,e){') && html.includes('data-sm-flag') &&
+    html.includes('Contract < 1 an') && html.includes('Morală < 60') && html.includes('Indisponibili'));
+check('lotul se poate sorta pe șase criterii',
+  html.includes('const _SM_ROSTER_SORTS=') &&
+    ['ovr', 'age', 'value', 'salary', 'minutes', 'name'].every((k) => html.includes(`${k}:(a,b)=>`)));
+check('lotul arată contorul „arată X din Y" și buton de reset',
+  html.includes('data-sm-count') && html.includes('" din "') && html.includes('Resetează'));
 check('starea antrenorului e derivată din consiliu, stres și rezultate',
   html.includes('function _smCoachMood(a){') && html.includes('label:"Tensionat"') && html.includes('label:"Încrezător"'));
 check('fiecare club are un antrenor din galerie (stabil)',
