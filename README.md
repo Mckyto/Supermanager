@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.54.4)
+# SuperManager 26/27 — Ediția Supremă (v10.54.5)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Reparații aplicate în v10.54.5 (noiembrie 2026) — HUD-ul din meciul 3D revine la locul lui
+
+- **Regresia din v10.54.4:** regula `.sm-3d-shell>div{width:100%;height:100%}` era menită să întindă doar containerul canvas-ului, dar selectorul `>` prinde **toți** copiii direcți ai shell-ului 3D — adică și panourile HUD (minimap, cardul jucătorului, presetele de cameră, telemetria). Panourile au stiluri inline cu `position`/`top`/`left`, dar fără `width`/`height`, deci regula le-a umflat la toată caseta: butoanele „FIFA Tele / Co-Op TV / Pro Cam / Aproape / Tactic" s-au împrăștiat pe teren, iar minimap-ul a devenit un dreptunghi mare peste gazon.
+- **Fixul:** containerul canvas-ului are acum clasă proprie — `.sm-3d-mount{position:absolute;inset:0;width:100%;height:100%}` — iar `.sm-3d-shell` rămâne doar rama (`position:relative`, `overflow:hidden`). Nicio regulă nu mai atinge copiii shell-ului, deci HUD-ul își păstrează stilurile.
+- **Plasă anti-regresie:** `data-check` respinge orice regulă de forma `.sm-3d-shell > div` și verifică faptul că minimap-ul își ține atributele proprii de canvas.
+- **Testat:** `data-check` **164/164** (+2), smoke **233/233**, storage 9, economy 6.
 
 ## Reparații aplicate în v10.54.4 (noiembrie 2026) — cauza reală a terenului negru în 3D
 
