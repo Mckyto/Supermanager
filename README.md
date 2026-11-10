@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.54.9)
+# SuperManager 26/27 — Ediția Supremă (v10.55.0)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## v10.55.0 — Radio Live și mesaje cu termen
+
+- „Radio Live” înlocuiește „Highlights 3D”: afișează comentariul și fazele produse de același motor al meciului, fără teren 3D. Scorul, comenzile, pauza și viteza aleasă rămân comune cu 2D/3D; poți comuta în timpul meciului.
+- Mesajele care necesită răspuns sunt disponibile în etapa în care au fost primite. La trecerea în etapa următoare dispar din telefon și nu mai pot fi răspunse, inclusiv mesajele de început de sezon și cele din salvări vechi. Expeditorul trimite un reproș, iar consecințele se aplică o singură dată; ofertele de transfer ignorate sunt retrase. Mesajele răspunse și reproșurile rămân vizibile.
+- Regula se aplică și în simularea în bloc: dacă simulezi peste o etapă fără să răspunzi, mesajele se consideră ignorate. Taxele pe etapă rămân plafonate; sumele din reproșuri reflectă plafonul aplicat.
+- Teste pentru comutarea Radio/2D, expirare, reproșuri, protecție împotriva răspunsurilor târzii și simularea în bloc.
 
 ## v10.54.9 — flancuri corecte pe tabla tactică
 
