@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.48)
+# SuperManager 26/27 — Ediția Supremă (v10.49)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,16 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.49.0 (noiembrie 2026) — umbre reale pe gazon (valul 2, 3D)
+
+- **Scena 3D proiectează umbre, în sfârșit.** `renderer.shadowMap` era oprit complet, iar fiecare jucător avea doar un „blob" desenat sub el. Acum lumina principală (turnul de nocturnă) are `castShadow`, hartă de **2048×2048** cu **`PCFShadowMap`** (`PCFSoftShadowMap` a fost scos din three-ul inclus — cerea fallback la fiecare cadre) și cameră de umbră **±78 / ±58**, suficient ca să acopere tot terenul de 115×76. Umbră aruncă **cei 22 de jucători, arbitrul, cei doi asistenți, mingea, buturile și porțile**, iar gazonul (deja `receiveShadow`) le primește.
+- **Tribunele nu aruncă umbră, intenționat.** Acoperișul stă la 16 m, nocturna la 38 m — dacă tribuna ar arunca umbră, jumătate din gazon ar intra într-o bandă neagră care nu are sens fizic. Grupul stadionului e exclus explicit, deci umbrele vin doar de la ce e *pe* teren.
+- **Blob-ul de contact devine fallback.** Când umbrele reale sunt active, blob-ul vechi se ascunde (fără dublură „lipită"); când sunt oprite, revine exact ca înainte.
+- **Guvernatorul de calitate (din 10.37.6) decide.** Umbrele pornesc doar dacă dispozitivul nu e marcat lent (`_SM_SLOW`: dpr ≥ 2,5 sau ≤ 4 nuclee) și are măcar 6 nuclee. În buclă, dacă media ultimelor 24 de cadre trece de **19,5 ms** umbrele se sting singure; se reaprind doar sub **14,5 ms** și pe treapta 0 — histerezis, deci nu „pompează". La comutare, materialele primesc `needsUpdate` ca shaderele să fie recompilate o singură dată.
+- **Reparat un bug de portar.** Ramura de poziționare a portarului cu `tacticalOffsetX/Y` referenția o variabilă `side` care nu exista în acel scope (`D=side==="home"`), adică un `ReferenceError` gata să sară la primul portar cu offset tactic. Acum folosește `p.side`.
+- **Fizica valului 2 era deja acolo.** Recunoașterea codului a arătat că Magnus pe șut/centrare, restituția pe bare, frecarea de rulare, accelerația/inerția jucătorilor (`vx += (țintă-vx)·(1-e^{-6,3·dt})`), viteza în funcție de oboseală, separarea de capsule (`_resolvePhysicalSpacing`), portarul pe bisectoare cu timp de reacție (`gkDive` ANTICIPATE/PARRY/DESPERATE) și eroarea de execuție la șut există deja (v10.36–v10.40). Nu au fost rescrise — ar fi recalibrat distribuția șuturi/goluri fără câștig.
+- **Testat:** `data-check` a crescut de la 112 la **121** (7 verificări noi pe configurația de umbre + guard-ul de dispozitiv + fixul de portar), smoke **210/210**, storage 9, economy 6. jsdom nu are WebGL, deci calea 3D e acoperită de verificări statice pe bundle și de `try/catch` în jurul comutării, nu de randare reală.
 
 ## Modificări în v10.48.0 (noiembrie 2026) — sloturi cu chip, zoom pe touch, poster la click
 
