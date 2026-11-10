@@ -522,6 +522,57 @@ check('vignetă discretă peste teren, în 2D și 3D',
 check('legea avantajului: arbitrul lasă jocul să continue când mingea ajunge la un coechipier',
   html.includes('_advMate&&t.x*_advDir>58&&Math.random()<.45') && html.includes('▶️ AVANTAJ'));
 
+// --- Valul 2: un-doi, urme de ghete, bloom (v10.54) ------------------------
+check('un-doi: se armează doar la pase scurte, pe pământ, înainte',
+  html.includes('_maybeArmOneTwo(e,l){const _ok=this.activePass;') &&
+    html.includes('if(_ok.kind!=="GROUND"&&_ok.kind!=="THROUGH")return;') &&
+    html.includes('if((_ok.peakZ||0)>.4)return;') &&
+    html.includes('if((l.x-e.x)*_od<-5)return;'));
+check('un-doi: probabilitatea crește cu pasa bună și cu spațiul din față',
+  html.includes('const _osk=xe(((e.pas||68)-55)/45,.1,.9)') &&
+    html.includes('_och=.42+_osk*.3+_osp*.26'));
+check('un-doi: returul are garduri (alergare, distanță, culoar, offside)',
+  html.includes('_oneTwoReturn(e,_fromId){') &&
+    html.includes('if((mate.x-o.fromX)*_od<.8)return!1;') &&
+    html.includes('if(_tq>.08&&_tq<.92&&ya(_oq.x,_oq.y,e.x+_lax*_tq,e.y+_lay*_tq)<1.45)return!1') &&
+    html.includes('this._oneTwoLockMin=this.minute+1.6'));
+check('un-doi: alergătorul pornește înainte, dar rămâne onside',
+  html.includes('_otLim=p.side==="home"?this.offsideLines.awayDefX-.4') &&
+    html.includes('this._oneTwo&&this._oneTwo.passerId===p.id&&this._oneTwo.side===p.side&&this.minute<=this._oneTwo.until'));
+check('un-doi: returul e o pasă în alergare, nu un dribling (momentum + relatare)',
+  html.includes('forcedKind:"GROUND"},this._getEffectiveTactics(e.side)') &&
+    html.includes('🔄 Un-doi perfect:') && html.includes('this._addMomentum(e.side,3)'));
+
+check('gazon: urmele de ghete se acumulează pe un strat separat, deasupra ierbii',
+  html.includes('let _SW_ON=!1,_SW_TEX=null,_SW_CTX=null') &&
+    html.includes('new mn({map:_tex,transparent:!0,depthWrite:!1,opacity:.92})') &&
+    html.includes('_mesh.rotation.x=-Math.PI/2,_mesh.position.y=.006'));
+check('gazon: urmele se copiază pe hartă la 8 px/m, din coordonatele reale',
+  html.includes('_SW_MX=_SW_W/115,_SW_MY=_SW_H/76') &&
+    html.includes('const cn=(Et.x+5)*_SW_MX,qa=(Et.y+4)*_SW_MY;'));
+check('gazon: alergarea lasă urme, alunecarea lasă dâre, ploaia le întunecă',
+  html.includes('ht<2.7)return;') && html.includes('Et.kickAnim.kind==="SLIDE_TACKLE"') &&
+    html.includes('_SW_HEAVY=He==="rain"?1.55:He==="snow"?1.25:1'));
+check('gazon: stratul se estompează lent și se reîncarcă rar în GPU',
+  html.includes('_SW_CTX.globalCompositeOperation="destination-out"') &&
+    html.includes('if(_SW_UP>.45){_SW_UP=0,_SW_TEX.needsUpdate=!0}'));
+check('gazon: urmele se opresc pe dispozitivele slabe sau la cerere',
+  html.includes('window.__SM_BOOTMARKS===!1'));
+
+check('bloom: lanț de post-procesare propriu, fără EffectComposer',
+  html.includes('function _smBloomChain(renderer,scene,camera,w,h){') &&
+    html.includes('const composer={render:_run,setSize:') && html.includes('ae=_smBloomChain(Q,Z,le,z,W)'));
+check('bloom: bright-pass + blur separabil 5 taps, la sfert de rezoluție',
+  html.includes('float w=smoothstep(uThreshold,uThreshold+uKnee,l);') &&
+    html.includes('0.2270270270') && html.includes('const _q=Math.max(.18,.26);'));
+check('bloom: compunerea reface exact ACES + sRGB, deci culorile nu se schimbă',
+  html.includes('vec3 _smRRT(vec3 v)') && html.includes('c*=uExposure/0.6;') &&
+    html.includes('pow(c,vec3(0.41666))*1.055-0.055'));
+check('bloom: se oprește pe dispozitivele slabe, cu randare directă ca plasă de siguranță',
+  html.includes('if(!_SM_SLOW&&!(typeof window!=="undefined"&&window.__SM_BLOOM===!1))') &&
+    html.includes('ae?.composer?(ae.lensPass?.uniforms?.uTime&&') &&
+    html.includes('try{ae?.composer?.dispose?.()}catch{}'));
+
 const htmlBytes = Buffer.byteLength(html, 'utf8');
 check('bundle-ul rămâne sub 7,5 MB', htmlBytes < 7.5 * 1024 * 1024, `${(htmlBytes / 1048576).toFixed(2)} MB`);
 

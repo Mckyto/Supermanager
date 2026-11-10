@@ -347,6 +347,7 @@ async function scenarioMatch() {
 
   // v10.50.0 — reluarea golului (badge REPLAY peste teren, în 2D și 3D)
   const replayErrors = app.errors.length;
+  let armCalls = 0;
   const engine = app.window.__smEngine;
   check('motorul de meci e expus pentru teste', !!engine);
   if (engine) {
@@ -402,6 +403,90 @@ async function scenarioMatch() {
     check('prim control: pasa rapidă la tehnică slabă scapă mingea', looseWeak > 15, `${looseWeak}/200`);
     check('prim control: tehnica bună la pasă lentă nu scapă mingea', looseStrong < 12, `${looseStrong}/200`);
   }
+    // v10.54.0 — un-doi (dubla pasă)
+    const oneTwoErrors = app.errors.length;
+    const cm = engine.homePlayers.find((p) => p.pos === 'CM') || engine.homePlayers[3];
+    const rw = engine.homePlayers.find((p) => p.pos === 'RW') || engine.homePlayers[6];
+    let armed = 0;
+    for (let i = 0; i < 200; i += 1) {
+      engine._oneTwo = null;
+      engine._oneTwoLockMin = 0;
+      engine.ball.owner = cm;
+      engine.activePass = { kind: 'GROUND', peakZ: 0.05 };
+      engine._maybeArmOneTwo(cm, rw);
+      if (engine._oneTwo) armed += 1;
+    }
+    check('un-doi: pasa scurtă pe culoar poate arma dubla pasă', armed > 20 && armed < 200, `${armed}/200`);
+    // scenă deterministă: alergătorul și cel care dublează stau într-o zonă liberă, la 9 m
+    const oppAll = engine.awayPlayers.filter((p) => !p.redCard);
+    let spot = { x: 52.5, y: 34 };
+    let best = -1;
+    for (let gx = 24; gx <= 80; gx += 4) {
+      for (let gy = 10; gy <= 58; gy += 4) {
+        let near = 99;
+        for (const o of oppAll) near = Math.min(near, Math.hypot(o.x - gx, o.y - gy));
+        if (near > best) { best = near; spot = { x: gx, y: gy }; }
+      }
+    }
+    const savedX = { cm: cm.x, rw: rw.x, rwY: rw.y };
+    const savedOffside = engine.offsideLines.awayDefX;
+    const dirHome = cm.side === 'home' ? 1 : -1;
+    rw.x = spot.x;
+    rw.y = spot.y;
+    cm.x = spot.x - 9 * dirHome;
+    cm.y = spot.y;
+    engine.offsideLines = { ...engine.offsideLines, awayDefX: cm.side === 'home' ? 104 : engine.offsideLines.awayDefX };
+    engine._oneTwo = null;
+    engine._oneTwoLockMin = 0;
+    engine.activePass = null;
+    engine.ball.owner = rw;
+    engine.ball.x = rw.x;
+    engine.ball.y = rw.y;
+    const oneTwoBefore = engine._oneTwoCount || 0;
+    engine._oneTwo = {
+      passerId: cm.id,
+      receiverId: rw.id,
+      side: rw.side,
+      fromX: cm.x - 4 * dirHome,
+      fromY: cm.y,
+      until: engine.minute + 2
+    };
+    const returned = engine._oneTwoReturn(rw, cm.id);
+    check(
+      'un-doi: mingea se întoarce la alergător, nu rămâne la cel care a dublat',
+      returned === true && !!engine.activePass && engine.activePass.receiverId === cm.id &&
+        engine.activePass.passerId === rw.id && !engine._oneTwo,
+      engine.activePass ? engine.activePass.kind : `fără pasă (cel mai liber punct: ${best.toFixed(1)} m)`
+    );
+    check(
+      'un-doi: se anunță în banner și în relatare, cu impuls',
+      /UN-DOI/.test(engine.banner || '') && (engine._oneTwoCount || 0) === oneTwoBefore + 1 &&
+        engine.events.slice(0, 3).some((e) => /un-doi/i.test(e.text || ''))
+    );
+    engine.activePass = null;
+    engine.ball.owner = null;
+    engine._oneTwo = {
+      passerId: cm.id,
+      receiverId: rw.id,
+      side: rw.side,
+      fromX: cm.x + 6 * dirHome,
+      fromY: cm.y,
+      until: engine.minute + 2
+    };
+    check('un-doi: nu se declanșează dacă alergătorul nu avansează', engine._oneTwoReturn(rw, cm.id) === false);
+    engine._oneTwo = null;
+    engine._oneTwoLockMin = 0;
+    engine.activePass = null;
+    engine.ball.owner = null;
+    cm.x = savedX.cm;
+    rw.x = savedX.rw;
+    rw.y = savedX.rwY;
+    engine.offsideLines = { ...engine.offsideLines, awayDefX: savedOffside };
+    check('un-doi: fără erori', app.errors.length === oneTwoErrors, app.errors[oneTwoErrors]);
+
+    // cârligul din _passBall e legat: numără pasele reale din meci
+    const armOrig = engine._maybeArmOneTwo.bind(engine);
+    engine._maybeArmOneTwo = (a, b) => { armCalls += 1; return armOrig(a, b); };
   check('reluarea nu produce erori', app.errors.length === replayErrors, app.errors[replayErrors]);
 
   // schimbarea pozițiilor în timpul meciului (v10.38.0)
@@ -498,6 +583,7 @@ async function scenarioMatch() {
     }
   }
 
+  check('un-doi: mecanismul e legat de pasele din meciul real', armCalls > 0, `${armCalls} pase`);
   check('fără erori în timpul meciului', app.errors.length === before, app.errors[before]);
 }
 
