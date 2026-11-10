@@ -579,6 +579,15 @@ check('viewport: zoom-out blocat, ca pagina să nu mai fie micșorată ca să î
     html.includes('viewport-fit=cover') && !html.includes('user-scalable=no'));
 check('viewport: zoom-in rămâne permis (accesibilitate, maximum-scale=5)',
   html.includes('maximum-scale=5'));
+check('3D: _avg trăiește la nivelul buclei de randare (altfel ReferenceError la fiecare cadru)',
+  html.includes('let _avg=0;') && html.includes('if(ln._c>=24){_avg=ln._s/ln._c*1e3;') &&
+    !html.includes('const _avg=ln._s'));
+check('3D: plasă de siguranță pe timp — fără niciun cadru valid în 2,6 s, meciul trece pe 2D',
+  html.includes('let _sm3DSeen=!1;') && html.includes('const _smGuard=setTimeout(()=>{if(!_sm3DSeen)') &&
+    html.includes('clearTimeout(_smGuard),'));
+check('3D: canvasul umple caseta terenului (poziționare absolută, nu height:100%)',
+  html.includes('.sm-3d-shell{position:absolute;inset:0;') && html.includes('.sm-3d-shell>div{width:100%;height:100%}') &&
+    html.includes('className:"sm-3d-shell"'));
 check('3D: bloom verifică suportul pentru color-buffer float înainte de a porni',
   html.includes(`if(_gl2){try{const _ex=renderer.extensions;if(_ex&&!_ex.has("EXT_color_buffer_half_float")&&!_ex.has("EXT_color_buffer_float"))return null}catch(_e){}}`));
 check('3D: fiecare render target de bloom e verificat cu checkFramebufferStatus (altfel ecran negru)',
