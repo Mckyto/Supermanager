@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.54.1)
+# SuperManager 26/27 — Ediția Supremă (v10.54.2)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -127,13 +127,12 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
 
-## Reparații aplicate în v10.54.1 (noiembrie 2026) — jocul umple tot ecranul pe telefon
+## Reparații aplicate în v10.54.2 (noiembrie 2026) — jocul umple ecranul **și** derulează normal
 
-- **Cauza reală a benzii moarte din dreapta.** Rândul de butoane din header (Joacă / tur / sezon / buget / telefon / salvare / ecran complet / carieră nouă) era un simplu `flex … gap-2` **fără `flex-wrap`**: pe un ecran de ~412 px CSS conținutul măsura ~500 px, deci pagina ieșea pe orizontală. Braven — fără `maximum-scale` în meta viewport — **micșora automat toată pagina** ca s-o încapă, iar rezultatul era o aplicație la ~0,8× cu o bandă transparentă în dreapta și elemente `fixed` care păreau tăiate. Nu era o problemă de zoom/transform în CSS: era lățimea minimă a header-ului.
-- **Bara de unelte se împachetează.** Cluster-ul e acum `.sm-toolbar`: `display:flex; flex-wrap:wrap; justify-content:flex-end; gap:.375rem; min-width:0; max-width:100%` (gap de 0,5 rem de la 640 px în sus). Butoanele trec pe rândul următor în loc să lărgească pagina, iar `min-width:0` lasă caseta de tur/sezon să se strângă.
-- **Garda de lățime.** `html{width:100%;max-width:100%;overflow-x:hidden}`, `body,#root{width:100%;max-width:100%}`, `#root` ca coloană flex de minimum un ecran (`.sm-app-shell{flex:1 0 auto}`), `.sm-main-stage{width:100%;min-width:0}` și `main` cu `min-w-0`. Pe desktop arată la fel: conținutul e tot în `max-w-7xl` centrat.
-- **Viewport:** `width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,viewport-fit=cover`. Blochează micșorarea automată a paginii, dar **mărirea rămâne permisă** (accesibilitate), iar `viewport-fit=cover` lasă fundalul să intre sub decupaj pe telefoanele cu notch.
-- **Testat:** `data-check` **155/155** (+5: meta viewport, lățimea html/body/#root, `min-w-0` pe main, `.sm-toolbar` cu `flex-wrap` în bundle), smoke **233/233** (+3: viewport în DOM, `.sm-toolbar` randat în header, shell-ul prezent), storage 9, economy 6. jsdom nu face layout real, deci verificarea e pe DOM/CSS, nu pe pixel.
+- **Ce s-a stricat în v10.54.1:** odată cu garda de lățime am pus `html{overflow-x:hidden}`, `body,#root{width:100%}` și `#root{display:flex;flex-direction:column;min-height:100vh}`. Pe telefon, combinația dintre `overflow-x` pe elementul rădăcină și `#root` transformat în container flex a **blocat derularea verticală**: pagina se încadra pe orizontală, dar conținutul lung nu mai putea fi derulat.
+- **Fixul din v10.54.2:** garda de lățime a fost **scoasă complet** — nu mai atingem `html`, `body`, `#root` sau `.sm-app-shell`. Nu se pune `overflow` ascuns pe rădăcină și nu se forțează `display:flex` pe `#root`, deci documentul derulează exact ca înainte de v10.54.1.
+- **Ce rămâne din fixul de layout (partea care conta):** bara de butoane din header e `.sm-toolbar` cu `flex-wrap`, `justify-content:flex-end`, `gap:.375rem`, `min-width:0`, `max-width:100%` — se împachetează pe două rânduri în loc să lărgească pagina. Header-ul are `max-width:100%`, copilul lui `min-width:0`, iar `main` are `min-w-0`, ca niciun rând să nu poată împinge documentul pe orizontală. Meta viewport rămâne `width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5,viewport-fit=cover`: fără micșorare automată, dar cu zoom-in permis.
+- **Testat:** `data-check` **156/156** (+6 față de v10.54.0: meta viewport, absența `overflow:hidden` pe `html`/`body`/`#root`, absența unui `#root` flex/înălțime fixă, `min-w-0` pe main, `.sm-toolbar` cu `flex-wrap` în bundle), smoke **233/233** (+3: viewport în DOM, `.sm-toolbar` randat, shell prezent), storage 9, economy 6.
 
 ## Modificări în v10.54.0 (noiembrie 2026) — un-doi, urme de ghete pe gazon, bloom real
 
