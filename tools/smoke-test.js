@@ -602,6 +602,19 @@ async function scenarioProfile() {
       const shown = app.document.querySelector('img[alt="Portret antrenor"]');
       check('portretul schimbat din Profil persistă', kept === wanted, `${kept || 'fără avatar'}`);
       check('portretul din profil se schimbă imediat', !!shown && shown.getAttribute('src') !== current);
+
+      const av = saved && saved.manager && saved.manager.avatar;
+      check('schimbarea e marcată ca folosită în salvare', !!(av && av.photoChangeUsed));
+      await app.sleep(500);
+      const lockBtn = [...app.document.querySelectorAll('button')].find((b) => /Portret blocat/.test(b.textContent || ''));
+      check('butonul de schimbare se blochează după o folosire', !!lockBtn && lockBtn.disabled === true);
+      check('profilul spune că schimbarea a fost folosită', /singura schimbare de portret/.test(app.text()));
+      if (lockBtn) lockBtn.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+      await app.sleep(400);
+      check(
+        'galeria nu se mai deschide după ce schimbarea a fost folosită',
+        app.document.querySelectorAll('img[alt="Portret antrenor"]').length === 1
+      );
     } else {
       fail('galeria are un portret diferit de cel curent');
     }

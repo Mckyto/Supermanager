@@ -424,6 +424,8 @@ check('fiecare portret e sub 18 KB', shipped.every((a) => a.bytes <= 18432),
 check('portretul se rezolvă din avatarul salvat, altfel determinist din nume',
   html.includes('function _smCoachId(a){') && html.includes('photoId') && html.includes('%_SM_COACHES.length'));
 check('portretul se schimbă doar din Profil', html.includes('Schimbă portretul') && !html.includes('Portretul Tău de Antrenor'));
+check('portretul se poate schimba o singură dată',
+  html.includes('photoChangeUsed') && html.includes('Portret blocat') && html.includes('singura schimbare de portret'));
 check('onboarding-ul nu mai are pas de alegere a portretului',
   !html.includes('_smSP') && !html.includes('avatar:{photoId:'));
 check('zoom la hover: panoul de mărire e prezent pentru orice fotografie',
