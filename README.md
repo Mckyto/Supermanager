@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.49)
+# SuperManager 26/27 — Ediția Supremă (v10.50)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,15 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Modificări în v10.50.0 (noiembrie 2026) — reluarea golului și chipurile reale ale antrenorilor
+
+- **Reluarea golului, automată, în 2D și în 3D.** Motorul înregistrează acum fazele (minge + toți cei 22 de jucători, 20 Hz de timp real, ultimele 90 de cadre) într-un ring buffer. La gol, `_startReplay()` păstrează fereastra relevantă (max. 48 de cadre, cel mult 3,2 s de joc) și o redă **3,1 secunde**, indiferent de viteza de simulare; sărbătoarea e prelungită automat cât să încapă reluarea (`phaseTimer = max(2,45, delay+dur+0,4)`).
+- **O singură sursă de adevăr pentru ambele randări.** Reluarea scrie pozițiile interpolate înapoi în starea motorului (`homePlayers/awayPlayers/ball`), deci **canvas-ul 2D și scena 3D** o afișează fără cod duplicat; 3D-ul nu mai rulează animația de sărbătoare cât timp `snapshot.replay.active` e true. Snapshot-ul expune `replay: {active, progress, speed}`, iar HUD-ul arată un badge **REPLAY** cu viteza efectivă (ex. 0,8× la 1×, 2,2× când joci la 8×) peste teren, în ambele moduri.
+- **Siguranță:** reluarea nu supraviețuiește pauzei de 45' sau fluierului final, se termină singură, iar toate metodele sunt în `try/catch` (un eșec de reluare nu poate opri meciul).
+- **Chipurile antrenorilor devin fotografii reale.** Fiecare club are acum **numele real al antrenorului** (`_SM_COACH_NAMES`, 24 de intrări), iar chipul din clasament folosește **portretul foto real** când e încărcat (`coach/club/<clubId>.webp` în `__SM_ASSETS__`), cu fallback pe galeria generică de 24 pentru cluburile fără poză. `alt`/`title` spun acum și numele: „Antrenor FCSB — Laurențiu Reghecampf".
+- **Pipeline reproductibil:** pozele stau în `assets/coach-photos/<clubId>.jpg` (+ `crops.json` pentru decupaj), iar `node tools/coach-photos.js` le decupează pătrat, le face **128×128 WebP (~2–4 KB)** și le injectează în bundle. `--list` arată ce lipsește. În 10.50.0 sunt gata **4/24** (FCSB, Rapid, CFR, Universitatea Craiova); restul intră în tranșe, fără nicio schimbare de cod.
+- **Testat:** `data-check` **132** (+11: configurația reluării, badge-ul, garda de pauză, pipeline-ul de poze, numele reale), smoke **221** (+4 pe chipurile reale, +7 pe reluare: badge, snapshot, mișcare, terminare automată), storage 9, economy 6.
 
 ## Modificări în v10.49.0 (noiembrie 2026) — umbre reale pe gazon (valul 2, 3D)
 

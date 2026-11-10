@@ -209,6 +209,24 @@ async function scenarioClubCoaches() {
     !!fx && fx.clubCoach('fcsb') === fx.clubCoach('fcsb') && fx.clubCoach('fcsb') !== fx.clubCoach('rapid'),
     fx ? `${fx.clubCoach('fcsb')} / ${fx.clubCoach('rapid')}` : ''
   );
+  // v10.50.0 — chipuri cu fotografia reală a antrenorului, acolo unde există
+  const realClubs = ['fcsb', 'rapid', 'cfr', 'craiova'];
+  check(
+    'chipul clubului folosește fotografia reală când e încărcată',
+    !!fx && realClubs.every((id) => typeof fx.clubCoachReal === 'function' && fx.clubCoachReal(id)) &&
+      realClubs.every((id) => /^data:image\/webp;base64,/.test(fx.clubCoachSrc(id)))
+  );
+  check(
+    'numele real al antrenorului e disponibil pentru club',
+    !!fx && fx.clubCoachName('fcsb') === 'Laurențiu Reghecampf' && fx.clubCoachName('rapid') === 'Daniel Pancu',
+    fx ? `${fx.clubCoachName('fcsb')} / ${fx.clubCoachName('rapid')}` : ''
+  );
+  check(
+    'cluburile fără fotografie reală cad pe galeria de 24',
+    !!fx && !fx.clubCoachReal('mancity') && fx.clubCoachSrc('mancity') === fx.coachSrc(fx.clubCoach('mancity'))
+  );
+  const realChip = [...app.document.querySelectorAll('img[alt^="Antrenor"]')].find((img) => /Reghecampf/.test(img.alt || ''));
+  check('clasamentul arată antrenorul real în alt/title', !!realChip && /Reghecampf/.test(realChip.title || realChip.alt || ''));
   check('fără erori la chipurile din clasament', app.errors.length === before, app.errors[before]);
 }
 
@@ -321,6 +339,40 @@ async function scenarioMatch() {
     startMinute !== null && laterMinute !== null && laterMinute > startMinute,
     `${startMinute}' → ${laterMinute}'`
   );
+
+  // v10.50.0 — reluarea golului (badge REPLAY peste teren, în 2D și 3D)
+  const replayErrors = app.errors.length;
+  const engine = app.window.__smEngine;
+  check('motorul de meci e expus pentru teste', !!engine);
+  if (engine) {
+    let buffered = 0;
+    for (let i = 0; i < 40 && buffered < 20; i += 1) {
+      await app.sleep(250);
+      buffered = (engine._replayBuf || []).length;
+    }
+    check('motorul înregistrează faze pentru reluare', buffered >= 20, `${buffered} cadre`);
+    engine._startReplay();
+    await app.sleep(1100);
+    check('reluarea pornește automat și apare badge-ul REPLAY', !!app.document.querySelector('[data-sm-replay]'));
+    const snap = engine.getSnapshot();
+    check(
+      'reluarea e marcată în snapshot (viteză + progres)',
+      !!snap.replay && snap.replay.active === true && typeof snap.replay.progress === 'number' && !!(snap.replay.speed > 0),
+      snap.replay ? `${snap.replay.speed}× / ${Math.round(snap.replay.progress * 100)}%` : 'lipsă'
+    );
+    const x1 = engine.homePlayers[3].x;
+    const y1 = engine.homePlayers[3].y;
+    await app.sleep(700);
+    const moved = engine.homePlayers[3].x !== x1 || engine.homePlayers[3].y !== y1 || !!engine.replayActive;
+    check('jucătorii se mișcă în reluare', moved);
+    let ended = false;
+    for (let i = 0; i < 24 && !ended; i += 1) {
+      await app.sleep(250);
+      if (!app.document.querySelector('[data-sm-replay]')) ended = true;
+    }
+    check('reluarea se termină singură și meciul reia', ended);
+  }
+  check('reluarea nu produce erori', app.errors.length === replayErrors, app.errors[replayErrors]);
 
   // schimbarea pozițiilor în timpul meciului (v10.38.0)
   const beforeTactics = app.errors.length;
