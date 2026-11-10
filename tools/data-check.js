@@ -585,9 +585,14 @@ check('3D: _avg trăiește la nivelul buclei de randare (altfel ReferenceError l
 check('3D: plasă de siguranță pe timp — fără niciun cadru valid în 2,6 s, meciul trece pe 2D',
   html.includes('let _sm3DSeen=!1;') && html.includes('const _smGuard=setTimeout(()=>{if(!_sm3DSeen)') &&
     html.includes('clearTimeout(_smGuard),'));
-check('3D: canvasul umple caseta terenului (poziționare absolută, nu height:100%)',
-  html.includes('.sm-3d-shell{position:absolute;inset:0;') && html.includes('.sm-3d-shell>div{width:100%;height:100%}') &&
-    html.includes('className:"sm-3d-shell"'));
+check('3D: canvasul umple caseta terenului prin containerul dedicat .sm-3d-mount',
+  html.includes('.sm-3d-mount{position:absolute;inset:0;width:100%;height:100%}') &&
+    html.includes('className:"sm-3d-mount"') && html.includes('className:"sm-3d-shell"'));
+check('3D: nicio regulă pe copiii shell-ului 3D (ar umfla HUD-ul: minimap, presete cameră, telemetrie)',
+  !/\.sm-3d-shell\s*>\s*div/.test(html));
+check('3D: HUD-ul din meci își păstrează stilurile proprii (fără width/height forțat)',
+  html.includes('className:"hidden sm:block",children:r.jsx("canvas",{ref:y,width:158,height:100') &&
+    !/\.sm-3d-(shell|mount)\s*\{[^}]*pointer-events/.test(html));
 check('3D: bloom verifică suportul pentru color-buffer float înainte de a porni',
   html.includes(`if(_gl2){try{const _ex=renderer.extensions;if(_ex&&!_ex.has("EXT_color_buffer_half_float")&&!_ex.has("EXT_color_buffer_float"))return null}catch(_e){}}`));
 check('3D: fiecare render target de bloom e verificat cu checkFramebufferStatus (altfel ecran negru)',
