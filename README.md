@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.44)
+# SuperManager 26/27 — Ediția Supremă (v10.44.1)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -37,9 +37,9 @@ npm run test:economy # ≈6s — masa salarială față de bugetul de salarii
 npm run test:quick # ≈8s  — fără meci
 ```
 
-`tools/data-check.js` validează datele din bundle (100 de verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
+`tools/data-check.js` validează datele din bundle (101 verificări): fiecare club are antrenor, flag-ul U21 respectă limita de vârstă, loturi fără nume/numere duplicate, `pot ≥ ovr`, `shortName` unic și fără coliziune cu codurile UEFA, toate imaginile referite există în bundle, viewport-ul permite zoom, iar motorul live avansează pasul de simulare cu ceasul meciului (nu încărcat de două ori de viteza de joc) autosalvarea scrie într-o singură cheie `localStorage`, clasele de font mici sunt ridicate la 12px, iar jocul nu încarcă nicio resursă de pe alt domeniu.
 
-Testele încarcă bundle-ul real într-un DOM jsdom și verifică **170 de puncte** din fluxul principal:
+Testele încarcă bundle-ul real într-un DOM jsdom și verifică **174 de puncte** din fluxul principal:
 
 - aplicația bootează și randează ecranul de titlu, fără erori în consolă;
 - onboarding-ul (cluburi, arhetipuri de manager) și intrarea în carieră;
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## Reparații în v10.44.1 (noiembrie 2026) — zoom-ul prinde și jucătorii fără fotografie
+
+- **Hover-ul pe chipul unui jucător generat nu deschidea mărirea.** Jucătorii fără fotografie reală primesc portretul din bibliotecă, dar peste `<img>` stă un strat decorativ (`div[aria-hidden]` cu vinietă radială), așa că evenimentul de mouse lovea un `<div>`, nu imaginea — iar scriptul de zoom asculta doar `e.target.tagName === "IMG"`. Jucătorii cu fotografie reală nu au acel strat, de aceea la ei funcționa.
+- **Acum poza e căutată și sub strat.** `resolveImg()` verifică întâi elementul apuntat, apoi îi caută un `<img>` fiu direct (chip-ul întreg), apoi face același lucru pe părintele lui (stratul de peste poză). Căutarea e limitată la fii direcți, ca hover-ul pe un rând de tabel să nu mai declanșeze măriri nedorite.
+- **Pragul de mărime a coborât la 22 px**, ca să includă și chipurile mici din tabele; rămâne plafonul de 300 px (hero/fundaluri nu se măresc).
+- **Testat:** smoke test-ul a crescut de la 170 la **174 de verificări** — un chip sintetic `div > img + strat` își deschide mărirea la hover pe strat, mărirea folosește poza de sub el, un chip **real** de jucător generat din aplicație face zoom, iar panoul se închide la `mouseout`. `data-check` a crescut la **101** (prezența `resolveImg`/`directImg`). Storage 7, economy 6.
 
 ## Modificări în v10.44.0 (noiembrie 2026) — zoom pe fotografii și portretul ales doar din Profil
 

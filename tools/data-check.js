@@ -428,6 +428,9 @@ check('onboarding-ul nu mai are pas de alegere a portretului',
   !html.includes('_smSP') && !html.includes('avatar:{photoId:'));
 check('zoom la hover: panoul de mărire e prezent pentru orice fotografie',
   html.includes('id="sm-zoom-js"') && html.includes('sm-zoom-panel') && html.includes('mouseover'));
+check('zoom-ul găsește poza și de sub stratul decorativ (jucători fără fotografie)',
+  html.includes('function resolveImg(t){') && html.includes('function directImg(el){') &&
+    html.includes('var up = directImg(t.parentElement);'));
 check('zoom-ul respectă echipamentele fără hover și mișcarea redusă',
   html.includes('(hover: none)') && html.includes('prefers-reduced-motion:reduce'));
 
