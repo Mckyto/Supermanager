@@ -579,15 +579,13 @@ check('viewport: zoom-out blocat, ca pagina să nu mai fie micșorată ca să î
     html.includes('viewport-fit=cover') && !html.includes('user-scalable=no'));
 check('viewport: zoom-in rămâne permis (accesibilitate, maximum-scale=5)',
   html.includes('maximum-scale=5'));
-check('layout: html/body/#root au lățime fixată pe ecran, fără depășire pe orizontală',
-  html.includes('html{width:100%;max-width:100%;overflow-x:hidden}') &&
-    html.includes('body,#root{width:100%;max-width:100%}') &&
-    html.includes('#root{display:flex;flex-direction:column;min-height:100vh}') &&
-    html.includes('.sm-app-shell{width:100%;max-width:100%}') &&
-    html.includes('.sm-app-shell{flex:1 0 auto}'));
+const inlineCss = (html.match(/<style[^>]*>[\s\S]*?<\/style>/g) || []).join('\n');
+check('scroll: html/body/#root nu au overflow ascuns (ar bloca derularea pe telefon)',
+  !/(^|[},])\s*(html|body|#root)\s*\{[^}]*overflow(-[xy])?\s*:\s*hidden/.test(inlineCss));
+check('scroll: #root nu e forțat la flex/înălțime fixă (conținutul lung trebuie să curgă)',
+  !/(^|[},])\s*#root\s*\{[^}]*(display\s*:\s*flex|height\s*:|min-height\s*:)/.test(inlineCss));
 check('layout: conținutul principal are min-w-0 și nu poate împinge pagina',
-  html.includes('.sm-main-stage{width:100%;max-width:100%;min-width:0}') &&
-    html.includes('sm-main-stage max-w-7xl w-full mx-auto px-4 py-5 flex-1 min-w-0'));
+  html.includes('sm-main-stage max-w-7xl w-full mx-auto px-4 py-5 flex-1 min-w-0'));
 check('header: bara de butoane se împachetează în loc să iasă din ecran',
   html.includes('.sm-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.375rem;min-width:0;max-width:100%}') &&
     html.includes('r.jsxs("div",{className:"sm-toolbar text-xs"') &&
