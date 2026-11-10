@@ -119,6 +119,76 @@ async function scenarioTabs() {
   }
 }
 
+async function scenarioRosterFilters() {
+  console.log('\n3c. Lotul: filtre rapide și sortare');
+  const before = app.errors.length;
+  if (!app.click(/Lot, Tabla XI/)) return fail('tab-ul Lot există');
+  await app.sleep(600);
+  if (!app.click(/Lot Complet/)) return fail('sub-tab-ul Lot Complet există');
+  await app.sleep(700);
+
+  const grid = app.document.querySelector('[data-sm-roster]');
+  const cards = () => [...(app.document.querySelector('[data-sm-roster]') || { children: [] }).children];
+  const count = () => {
+    const el = app.document.querySelector('[data-sm-count]');
+    return el ? Number(el.getAttribute('data-sm-count')) : NaN;
+  };
+  check('lotul are grilă de jucători cu contor', !!grid && Number.isFinite(count()), `${count()} jucători`);
+  const total = cards().length;
+  check('contorul arată tot lotul la pornire', count() === total && total >= 18, `${count()} / ${total}`);
+
+  // filtrare pe poziție
+  const gk = app.click(/^Portari$/);
+  await app.sleep(400);
+  const gkCount = cards().length;
+  check('filtrarea pe poziție (Portari) reduce lista', gk && gkCount > 0 && gkCount < total, `${gkCount} portari din ${total}`);
+
+  // filtru rapid: până în 21 de ani
+  const youngBtn = app.document.querySelector('[data-sm-flag="young"]');
+  if (youngBtn) youngBtn.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  await app.sleep(400);
+  const ages = cards().map((c) => Number((c.textContent || '').match(/(\d{2}) ani/)?.[1] || 0));
+  check(
+    'filtrul „Până în 21" lasă doar jucători de maximum 21 de ani',
+    ages.length > 0 && ages.every((a) => a > 0 && a <= 21),
+    `${ages.length} jucători: ${ages.join(', ')}`
+  );
+  check('filtrul rapid apare ca activ', youngBtn && youngBtn.getAttribute('aria-pressed') === 'true');
+
+  // înapoi la tot lotul, apoi sortare după vârstă (crescător)
+  const noneFlag = app.document.querySelector('[data-sm-flag="none"]');
+  if (noneFlag) noneFlag.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
+  app.click(/^Toți$/);
+  await app.sleep(500);
+  check('„Toți" readuce lotul complet', cards().length === total, `${cards().length} / ${total}`);
+
+  const select = app.document.querySelector('[data-sm-sort]');
+  if (select) {
+    select.value = 'age';
+    select.dispatchEvent(new app.window.Event('change', { bubbles: true }));
+    await app.sleep(400);
+  }
+  const sorted = cards().map((c) => Number((c.textContent || '').match(/(\d{2}) ani/)?.[1] || 0));
+  check(
+    'sortarea după vârstă pune cei mai tineri primii',
+    sorted.length > 1 && sorted.every((a, i) => i === 0 || sorted[i - 1] <= a),
+    sorted.slice(0, 6).join(', ')
+  );
+
+  // reset
+  if (app.click(/^Resetează$/)) {
+    await app.sleep(500);
+    check('resetul readuce tot lotul', cards().length === total && count() === total, `${cards().length} / ${total}`);
+    check(
+      'resetul readuce sortarea după OVR',
+      app.document.querySelector('[data-sm-sort]').getAttribute('data-sm-sort') === 'ovr'
+    );
+  } else {
+    fail('butonul Resetează există');
+  }
+  check('fără erori la filtrele din lot', app.errors.length === before, app.errors[before]);
+}
+
 async function scenarioClubCoaches() {
   console.log('\n3b. Chipurile antrenorilor din clasament');
   const before = app.errors.length;
@@ -905,6 +975,25 @@ async function scenarioFaces() {
     bandOf(17) === 'y' && bandOf(19) === 'y' && bandOf(27) === 'p' && bandOf(35) === 'v' && bandOf(34) === 'v',
     `17→${bandOf(17)} 19→${bandOf(19)} 27→${bandOf(27)} 35→${bandOf(35)}`);
 
+  const rosterSample = [
+    { id: 'a', name: 'Andrei', pos: 'GK', ovr: 72, age: 31, value: 800000, contractYears: 1, morale: 55 },
+    { id: 'b', name: 'Bogdan', pos: 'CB', ovr: 81, age: 24, value: 3200000, contractYears: 3, morale: 88 },
+    { id: 'c', name: 'Cristi', pos: 'CM', ovr: 68, age: 19, value: 450000, contractYears: 2, morale: 70 },
+    { id: 'd', name: 'Dan', pos: 'ST', ovr: 77, age: 27, value: 2100000, contractYears: 1, morale: 92, injuredWeeks: 2 },
+  ];
+  if (fx.rosterView) {
+    check('lotul implicit e sortat după OVR, descrescător', fx.rosterView(rosterSample, {}).map((p) => p.ovr).join(',') === '81,77,72,68');
+    check('sortarea după vârstă urcă de la cel mai tânăr', fx.rosterView(rosterSample, { sort: 'age' }).map((p) => p.age).join(',') === '19,24,27,31');
+    check('sortarea după cotă coboară de la cel mai valoros', fx.rosterView(rosterSample, { sort: 'value' }).map((p) => p.id).join(',') === 'b,d,a,c');
+    check('filtrul „contract < 1 an" lasă doar ultimul an', fx.rosterView(rosterSample, { flag: 'expiring' }).map((p) => p.id).sort().join(',') === 'a,d');
+    check('filtrul „morală < 60" găsește jucătorii nemulțumiți', fx.rosterView(rosterSample, { flag: 'morale' }).map((p) => p.id).join(',') === 'a');
+    check('filtrul „indisponibili" găsește accidentații', fx.rosterView(rosterSample, { flag: 'unfit' }).map((p) => p.id).join(',') === 'd');
+    check('filtrul „până în 21" lasă doar juniorii', fx.rosterView(rosterSample, { flag: 'young' }).map((p) => p.id).join(',') === 'c');
+    const original = rosterSample.map((p) => p.id).join(',');
+    fx.rosterView(rosterSample, { sort: 'value' });
+    check('sortarea nu modifică lista originală', rosterSample.map((p) => p.id).join(',') === original);
+  }
+
   const coachIds = fx.coaches ? fx.coaches() : [];
   check('biblioteca de portrete de antrenor are 24 de intrări', coachIds.length === 24, `${coachIds.length}`);
   const coachAssets = coachIds.map((id) => (fx.coachSrc ? fx.coachSrc(id) : ''));
@@ -963,6 +1052,7 @@ async function scenarioPersistence() {
     await scenarioBoot();
     await scenarioOnboarding();
     await scenarioTabs();
+    await scenarioRosterFilters();
     await scenarioClubCoaches();
     await scenarioFacilities();
     await scenarioProfile();
