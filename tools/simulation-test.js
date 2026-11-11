@@ -11,15 +11,15 @@ assert(!html.includes('children:"🎬 Highlights 3D"'));
 assert(html.includes('pe.step(ve,A)'));
 console.log('7/7 verificări radio și radar OK');
 
-const start = html.indexOf('function _smRadioImportant('), end = html.indexOf('function Qb(', start);
-assert(start >= 0 && end > start);
-const important = new Function(html.slice(start,end) + ';return _smRadioImportant')();
-for (const type of ['goal','chance','save','red_card','yellow_card','card']) assert(important({type}), type);
-assert(important({type:'shot', emotion:'big_chance'}));
-assert(!important({type:'shot', text:'Șut de la distanță'}));
-assert(!important({type:'pass'}));
-assert(html.includes('children:"Faze importante"'));
-console.log('filtru radio: categorii și pase OK');
+const radioStart = html.indexOf('Le==="radio"?r.jsx("section",{"data-sm-radio"');
+const radioEnd = html.indexOf(':r.jsx(Ix,{engine:De.current', radioStart);
+assert(radioStart >= 0 && radioEnd > radioStart);
+const radio = html.slice(radioStart, radioEnd);
+assert(radio.includes('se.liveCommentary.text'));
+assert(radio.includes('"aria-live":"polite"'));
+assert(!radio.includes('se.events') && !radio.includes('button'));
+assert(html.includes('Le!=="radio"&&Pe&&se.liveCommentary?.text'));
+console.log('radio: doar subtitrarea live, fără listă de evenimente OK');
 
 const coachStart = html.indexOf('function _smScoldDetail('), coachEnd = html.indexOf('typeof window<"u"&&(window.__smPhone=',coachStart);
 assert(coachStart >= 0 && coachEnd > coachStart);

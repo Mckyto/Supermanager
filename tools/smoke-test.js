@@ -372,14 +372,27 @@ async function scenarioMatch() {
   check('modul Radio Live înlocuiește Highlights 3D', app.click(/Radio Live/) && !app.labels().some(label => /Highlights 3D/.test(label)));
   await app.sleep(500);
   const radio = app.document.querySelector('[data-sm-radio]');
-  check('Radio Live afișează evenimente reale fără teren 3D', !!radio && /Comentariu de meci/.test(radio.textContent) && !!radio.querySelector('[aria-live]'));
-  check('filtrul Radio se poate activa', app.click(/^Faze importante$/));
-  await app.sleep(200);
-  check('filtrul Radio marchează alegerea și afișează o stare goală la nevoie', !!app.document.querySelector('[data-sm-radio] button[aria-pressed="true"]') && /Faze importante/.test(app.document.querySelector('[data-sm-radio] button[aria-pressed="true"]').textContent));
-  app.click(/^Toate fazele$/);
+  check('Radio Live afișează doar subtitrarea, fără lista fazelor', !!radio && !!radio.querySelector('[aria-live]') && !radio.querySelector('button') && !/Comentariu de meci|Faze importante/.test(radio.textContent));
+  check('subtitrarea radio folosește comentariul motorului', radio && radio.textContent === (app.window.__smEngine.getSnapshot().liveCommentary?.text || 'În așteptarea comentariului live…'));
+  // Forțăm toate suprapunerile care pot acoperi subtitrarea, fără a modifica motorul.
+  const radioEngine = app.window.__smEngine;
+  const originalSnapshot = radioEngine.getSnapshot;
+  radioEngine.getSnapshot = function () {
+    return {...originalSnapshot.call(this), phase:'LIVE', minute:80, score:{home:0,away:0},
+      banner:'BANNER TEST', replay:{active:true,speed:0.7},
+      tvBroadcastCard:{kind:'CARD',cardColor:'RED',min:80,playerName:'JUCĂTOR TEST',clubShort:'TST'},
+      activeTouchlineDilemma:{title:'DECIZIE TEST',text:'Test',options:[]},
+      liveCommentary:{text:'SUBTITRARE TEST',min:80}};
+  };
+  await app.sleep(600);
+  const pitch = app.document.querySelector('[data-sm-radio]')?.parentElement;
+  check('radio nu suprapune bannere, replay, cartonașe sau alte controale peste subtitrare', !!pitch && pitch.textContent.trim() === 'SUBTITRARE TEST' && !pitch.querySelector('[data-sm-replay], [data-sm-vignette], button'));
   app.click(/2D Tactic/);
-  await app.sleep(300);
-  check('revenirea la 2D păstrează motorul meciului', !app.document.querySelector('[data-sm-radio]') && !!app.window.__smEngine);
+  await app.sleep(500);
+  check('suprapunerile rămân disponibile în 2D', !!app.document.querySelector('[data-sm-replay]') && /BANNER TEST/.test(app.text()) && /JUCĂTOR TEST/.test(app.text()));
+  radioEngine.getSnapshot = originalSnapshot;
+  await app.sleep(800);
+  check('revenirea la 2D păstrează motorul meciului' , !app.document.querySelector('[data-sm-radio]') && !!app.window.__smEngine);
   // viteză maximă ca testul să dureze puțin
   app.click(/^8x$/);
 
