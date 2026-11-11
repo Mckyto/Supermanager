@@ -187,8 +187,8 @@ check('simulare: avertizează înainte de etapa individuală și simularea în b
   html.includes('_smConfirmSim(d.phoneMessages,d.currentRound)') && html.includes('_smConfirmSim(messages,roundRef.current,!0)'));
 check('telefon: reproșurile țin cont de mesaj, încredere și importanță',
   html.includes('function _smScoldDetail(') && html.includes('importance:_smScoldDetail('));
-check('radio: filtrul de faze importante folosește evenimentele motorului',
-  html.includes('function _smRadioImportant(') && html.includes('children:"Faze importante"'));
+check('radio: afișează subtitrarea live fără lista fazelor',
+  html.includes('Le==="radio"?r.jsx("section",{"data-sm-radio"') && html.includes('children:se.liveCommentary?.text&&!se.liveCommentary?.silentVoice?se.liveCommentary.text'));
 
 // 13. Oferta e corelată cu valoarea ȘI cu performanța (meci + sezon)
 check(

@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.1)
+# SuperManager 26/27 — Ediția Supremă (v10.55.2)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,10 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## v10.55.2 — Radio doar cu subtitrare
+
+- În Radio Live, zona de simulare afișează doar comentariul live sub formă de subtitrare, fără istoricul fazelor sau filtrul radio. Subtitrarea rămâne vizibilă în Radio chiar dacă este dezactivată în celelalte moduri; bannerele, reluarea și graficele TV nu o mai acoperă. Scorul, comenzile, pauza și modurile 2D/3D rămân disponibile.
 
 ## v10.55.1 — avertismente, Radio și reproșuri personalizate
 
