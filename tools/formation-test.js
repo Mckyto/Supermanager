@@ -28,5 +28,12 @@ check('schimbarea formației păstrează titularii și îi ordonează după post
  const pick=Zi(players,'4-2-1-3',true);const starters=pick.starters.map(id=>players.find(p=>p.id===id));const reordered=Ex(starters,'4-3-3');assert.equal(reordered.length,11);assert.equal(new Set(reordered).size,11);
  const slots=Qi['4-3-3'].slots;const playerAt=role=>players.find(p=>p.id===reordered[slots.findIndex(s=>s.role===role)]);assert.equal(playerAt('RB').name,'Valentin Crețu');assert.equal(playerAt('LB').name,'Risto Radunović');
 });
+check('regula U21 înlocuiește un jucător de pe postul potrivit, nu fundașul dreapta',()=>{
+ const slots=Qi['4-2-3-1'].slots;
+ const squad=slots.map((slot,i)=>({id:'s'+i,name:'Titular '+i,pos:({CDM:'DM',CAM:'AM'}[slot.role]||slot.role),role:({CDM:'DM',CAM:'AM'}[slot.role]||slot.role),linePos:slot.pos,ovr:i===1?73:80,fitness:95,morale:80,age:28,shooting:70,passing:70}));
+ squad.push({id:'junior',name:'Junior',pos:'CM',role:'CM',linePos:'MF',ovr:65,fitness:95,morale:80,age:19,isU21:true,shooting:65,passing:65});
+ const result=Zi(squad,'4-2-3-1',true);const index=result.starters.indexOf('junior');
+ assert(index>=0);assert.equal(slots[index].pos,'MF');assert.equal(result.starters[1],'s1');
+});
 check('tabla folosește rolul și coordonata aceluiași slot, inclusiv după rocada jucătorilor',()=>{assert(html.includes('Ge=(Qi[e]?.slots||Qi["4-3-3"].slots).map(I=>({role:I.role,x:50+(I.y||0)*1.45'));assert(html.includes('children:$e.role}),SA(I.name)'));});
 console.log(`${count}/${count} verificări formații OK (${Object.keys(Qi).length} sisteme)`);
