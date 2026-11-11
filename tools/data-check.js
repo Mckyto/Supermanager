@@ -183,6 +183,13 @@ check('radio: înlocuiește highlights, dar păstrează motorul și comenzile de
   html.includes('children:"📻 Radio Live"') && html.includes('pe.step(ve,A)') &&
     !html.includes('children:"🎬 Highlights 3D"'));
 
+check('simulare: avertizează înainte de etapa individuală și simularea în bloc',
+  html.includes('_smConfirmSim(d.phoneMessages,d.currentRound)') && html.includes('_smConfirmSim(messages,roundRef.current,!0)'));
+check('telefon: reproșurile țin cont de mesaj, încredere și importanță',
+  html.includes('function _smScoldDetail(') && html.includes('importance:_smScoldDetail('));
+check('radio: filtrul de faze importante folosește evenimentele motorului',
+  html.includes('function _smRadioImportant(') && html.includes('children:"Faze importante"'));
+
 // 13. Oferta e corelată cu valoarea ȘI cu performanța (meci + sezon)
 check(
   'taxa ofertei crește cu nota din meci, golurile și randamentul sezonului',

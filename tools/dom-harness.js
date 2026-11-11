@@ -174,6 +174,7 @@ async function launch({ bootTimeout = 20000, seed = null } = {}) {
     virtualConsole,
     beforeParse: (window) => {
       installBrowserStubs(window);
+      window.confirm = () => true;
       // Seed util pentru testele de storage: pornim aplicația cu o salvare deja existentă.
       if (seed) for (const [key, value] of Object.entries(seed)) window.localStorage.setItem(key, value);
     },
