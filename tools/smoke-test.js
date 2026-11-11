@@ -373,6 +373,10 @@ async function scenarioMatch() {
   await app.sleep(500);
   const radio = app.document.querySelector('[data-sm-radio]');
   check('Radio Live afișează evenimente reale fără teren 3D', !!radio && /Comentariu de meci/.test(radio.textContent) && !!radio.querySelector('[aria-live]'));
+  check('filtrul Radio se poate activa', app.click(/^Faze importante$/));
+  await app.sleep(200);
+  check('filtrul Radio marchează alegerea și afișează o stare goală la nevoie', !!app.document.querySelector('[data-sm-radio] button[aria-pressed="true"]') && /Faze importante/.test(app.document.querySelector('[data-sm-radio] button[aria-pressed="true"]').textContent));
+  app.click(/^Toate fazele$/);
   app.click(/2D Tactic/);
   await app.sleep(300);
   check('revenirea la 2D păstrează motorul meciului', !app.document.querySelector('[data-sm-radio]') && !!app.window.__smEngine);
@@ -709,11 +713,20 @@ async function scenarioPhone() {
     } catch { return null; }
   };
   const before = app.errors.length;
-  // avansează o etapă cu simularea rapidă (nu bulk), ca mesajele neansweruite să învețească
+  // Confirmarea poate opri simularea înainte de a expira mesajele.
+  const previous = read(), originalConfirm = app.window.confirm;
+  const pending = (previous?.phoneMessages || []).filter(m => !m.replied && !m.expired && !m.scolding && m.roundGenerated === previous.currentRound);
+  let warned = '';
+  app.window.confirm = text => { warned = text; return false; };
+  app.click(/Simulare Rapidă Etapă/);
+  await app.sleep(300);
+  check('anularea avertismentului păstrează etapa și mesajele', pending.length > 0 && /mesaj/.test(warned) && read()?.currentRound === previous?.currentRound);
+  app.window.confirm = () => true;
   if (app.click(/Simulare Rapidă Etapă/)) {
     await app.sleep(1500);
     if (app.click(/Continuă|Închide|OK/)) await app.sleep(800);
   }
+  app.window.confirm = originalConfirm;
   const career = read();
   const messages = (career && career.phoneMessages) || [];
   const expired = messages.filter((m) => m.expired && m.taxPaid > 0);
@@ -778,7 +791,14 @@ async function scenarioBulkSim() {
   const start = read();
   check('bara de simulare e vizibilă', app.labels().some((l) => l === 'Tur') && app.labels().some((l) => l === 'Sezon'));
 
+  const originalConfirm = app.window.confirm;
+  let warning = '';
+  app.window.confirm = text => { warning = text; return false; };
   if (!app.click((l) => l === 'Tur')) return fail('butonul Tur există');
+  await app.sleep(300);
+  check('simularea în bloc avertizează și poate fi anulată', /mesaj/.test(warning) && read()?.currentRound === start?.currentRound);
+  app.window.confirm = () => true;
+  app.click((l) => l === 'Tur');
   let career = null;
   for (let i = 0; i < 60; i += 1) {
     await app.sleep(500);
@@ -790,6 +810,7 @@ async function scenarioBulkSim() {
     !!career && career.currentRound >= 15,
     `${start ? start.currentRound : '?'} → ${career ? career.currentRound : '?'}`
   );
+  app.window.confirm = originalConfirm;
   const news = ((career && career.newsFeed) || []).map((n) => n.text).join(' | ');
   check('raportul simulării apare în știri', /SIMULARE ETAPE/.test(news), (news.match(/SIMULARE ETAPE[^|]{0,60}/) || [''])[0]);
   check(

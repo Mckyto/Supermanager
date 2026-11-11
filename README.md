@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.0)
+# SuperManager 26/27 — Ediția Supremă (v10.55.1)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,13 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## v10.55.1 — avertismente, Radio și reproșuri personalizate
+
+- Înainte de simularea unei etape sau a mai multor etape, dacă există mesaje care așteaptă răspuns, apare o confirmare cu numărul lor și riscul expirării. Poți anula și deschide telefonul sau continua. Simularea în bloc avertizează și că mesajele noi pot expira pe parcurs.
+- Radio Live are filtre pentru toate fazele sau doar goluri, ocazii mari, parade și cartonașe. Filtrarea nu modifică meciul, viteza ori scorul.
+- Reproșurile folosesc contextul mesajului (transfer, nemulțumire sau mesaj personal), încrederea în relație și ignorările repetate. Mesajele importante sunt marcate, iar regulile existente pentru consecințe rămân neschimbate.
+- Teste pentru confirmare/anulare, simulare în bloc, filtrul radio și personalizarea reproșurilor.
 
 ## v10.55.0 — Radio Live și mesaje cu termen
 
