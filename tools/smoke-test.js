@@ -154,7 +154,17 @@ async function scenarioRosterFilters() {
   rb = slot('RB'); lb = slot('LB');
   check('după rocada titularilor, etichetele aparțin postului iar jucătorii chiar schimbă flancul',
     !!rb && !!lb && rb.getAttribute('data-sm-slot-player')===lbId && lb.getAttribute('data-sm-slot-player')===rbId && left(lb)<50 && left(rb)>50);
-  if (rb && lb) {rb.click(); await app.sleep(150); lb.click();}
+  const warnings = app.document.querySelector('[data-sm-position-warnings]');
+  check('rocada greșită afișează avertisment și marchează postul pe tablă', !!warnings && !!app.document.querySelector('[data-sm-position-fit="out"]'));
+  const suggested = warnings?.querySelector('button');
+  if (suggested) {
+    const beforeIds=[...app.document.querySelectorAll('[data-sm-slot-player]')].map(el=>el.getAttribute('data-sm-slot-player'));
+    suggested.click(); await app.sleep(300);
+    const afterIds=[...app.document.querySelectorAll('[data-sm-slot-player]')].map(el=>el.getAttribute('data-sm-slot-player'));
+    check('sugestia de rezervă efectuează înlocuirea', afterIds.some((id,i)=>id!==beforeIds[i]));
+  } else fail('sugestia de rezervă este disponibilă');
+  check('banca explică prioritizarea fără a ascunde lotul', /primele șapte rezerve/.test(app.text()));
+  app.click(/Auto-Selecție Optimă XI/);
   await app.sleep(250);
   if (previousFormation && previousFormation !== '4-2-1-3') app.click(new RegExp(`^${previousFormation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`));
   await app.sleep(300);
@@ -411,6 +421,16 @@ async function scenarioMatch() {
   const engine = app.window.__smEngine;
   check('motorul de meci e expus pentru teste', !!engine);
   if (engine) {
+    // Schimbarea formației live reașază titularii fără a schimba persoanele sau starea lor.
+    const roles = ['GK','RB','CB','CB','LB','DM','DM','AM','RW','LW','ST'];
+    const shuffled = roles.map((pos,i)=>({id:'test-'+i,pos,role:pos,linePos:pos==='GK'?'GK':['RB','CB','LB'].includes(pos)?'DF':['DM','AM'].includes(pos)?'MF':'FW',ovr:75,fitness:95,morale:80,redCard:i===2}));
+    [shuffled[1],shuffled[10]]=[shuffled[10],shuffled[1]];
+    const fakeMatch = {homeFormation:'4-3-3',homePlayers:shuffled};
+    engine.setFormation.call(fakeMatch,'home','4-2-3-1');
+    check('schimbarea formației live repoziționează titularii după post și păstrează eliminarea', fakeMatch.homePlayers.every((p,i)=>p.pos===roles[i]) && fakeMatch.homePlayers.find(p=>p.id==='test-2').redCard && new Set(fakeMatch.homePlayers.map(p=>p.id)).size===11);
+    [fakeMatch.homePlayers[1],fakeMatch.homePlayers[10]]=[fakeMatch.homePlayers[10],fakeMatch.homePlayers[1]];
+    engine.setFormation.call(fakeMatch,'home','4-2-3-1');
+    check('resetarea aceleiași formații păstrează alegerile manuale', fakeMatch.homePlayers[1].id==='test-10');
     // Motor separat: exercităm metodele reale fără să alterăm meciul în curs.
     const makeDecisionEngine = () => {
       const e = Object.create(Object.getPrototypeOf(engine));

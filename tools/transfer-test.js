@@ -4,7 +4,7 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 const html = fs.readFileSync('public/index.html', 'utf8');
 function between(a,b) { const start=html.indexOf(a),end=html.indexOf(b,start); assert(start>=0&&end>start); return html.slice(start,end); }
-const code = between('const RA=[','function TA(') + '\n' + between('function hr(', 'const yh=') + '\nthis.api={_smFeeBounds,_smBuyerFits,_smWageMax,_smCounter,EA,hr};';
+const code = between('const _SM_KNOWN_POSITIONS=', 'function Fn(') + '\n' + between('const RA=[','function TA(') + '\n' + between('function hr(', 'const yh=') + '\nthis.api={_smFeeBounds,_smBuyerFits,_smWageMax,_smCounter,EA,hr};';
 const ctx = {}; vm.runInNewContext(code, ctx); const { _smFeeBounds:bounds,_smBuyerFits:fits,_smWageMax:wageMax,_smCounter:counter,EA,hr }=ctx.api;
 const p={id:'udrea',name:'Udrea',pos:'GK',ovr:66,value:500000,wage:5000,age:25};
 const club=(id,reputation,ovr,budget=10000000)=>({id,reputation,budget,players:[{pos:'GK',ovr}]});
