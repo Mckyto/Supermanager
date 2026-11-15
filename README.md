@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.3)
+# SuperManager 26/27 — Ediția Supremă (v10.55.4)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -126,6 +126,15 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Calitate 3D adaptivă.** Bucla de randare măsoară media ultimelor 24 de cadre și coboară pe trepte: pixel ratio 1.35 → 1.12 → 1.0, ceață mai densă (draw distance mai mic), iar publicul instanțiat se animă la 12 Hz în loc de 20 Hz pe treapta minimă. Revenirea se face doar sub 12.5 ms/cadru, ca să nu „pompeze”.
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
+
+## v10.55.4 — poziții și bancă echilibrată
+
+- Selecția automată maximizează titularii pe postul principal, apoi folosește posturile secundare cunoscute și poziții apropiate, respectând U21 și disponibilitatea. Schimbarea formației în meci rearanjează titularii, fără a schimba jucătorii.
+- Tabla semnalează titularii în afara posturilor cunoscute și poate propune o rezervă aptă; sugestiile păstrează regula U21. Posturile secundare cunoscute sunt afișate la rezerve.
+- Selecția automată ordonează primele șapte rezerve pentru acoperirea posturilor, incluzând un portar dacă este disponibil. Restul lotului rămâne accesibil; o selecție manuală nu este suprascrisă.
+- Au fost controlate loturile generate pentru cele șase echipe europene suplimentare și patru naționale: toți cei 170 de jucători au o poziție de referință, nu una atribuită automat după indice. Pentru alte cluburi, pozițiile secundare sunt disponibile numai acolo unde există o referință.
+- **Surse și limitări:** baza de poziții folosește în principal [date FC 24 din SoFIFA](https://github.com/Jatinkanara21/FC_26/blob/main/data/fc24_players.csv) și un [eșantion FC 26](https://github.com/prashantghimire/sofifa-web-scraper/blob/main/player_stats.csv), completate cu verificări individuale pentru numele lipsă. Datele din jocurile EA sunt o referință istorică, nu o confirmare independentă sau în timp real a poziției actuale; posturile secundare pot fi incomplete sau se pot schimba. Cluburile și transferurile nu au fost actualizate în acest pas.
+- Testele acoperă 34 de echipe și 20 de formații. Salvările existente păstrează titularii și ordinea aleasă: folosește „Auto-Selecție Optimă XI” pentru a recalcula echipa și ordinea băncii.
 
 ## v10.55.3 — selecția juniorului U21
 
