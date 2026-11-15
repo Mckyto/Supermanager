@@ -836,11 +836,11 @@ async function scenarioBulkSim() {
   for (let i = 0; i < 60; i += 1) {
     await app.sleep(500);
     career = read();
-    if (career && career.currentRound >= 15) break;
+    if (career && (!app.labels().includes('Stop')) && (career.currentRound >= 16 || /demitere/i.test(app.text()))) break;
   }
   check(
-    'simularea avansează etapele până la tur',
-    !!career && career.currentRound >= 15,
+    'simularea joacă turul sau se oprește la demitere',
+    !!career && (career.currentRound >= 16 && career.calendar.find(r => r.roundNumber === 15)?.fixtures.every(f => f.played) || /demitere/i.test(app.text())),
     `${start ? start.currentRound : '?'} → ${career ? career.currentRound : '?'}`
   );
   app.window.confirm = originalConfirm;

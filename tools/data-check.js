@@ -385,8 +385,8 @@ check(
   html.includes('SIMULARE ETAPE ') && html.includes('Simulare Rapidă')
 );
 check(
-  'simularea oprește evenimentele și modalurile în timpul rulării',
-  html.includes('if(!_smBulkActive&&Math.random()<No){') && html.includes('return _smBulkActive||setTimeout(()=>{Se({oldClubName:Re.name')
+  'simularea oprește evenimentele, dar respectă demiterea',
+  html.includes('if(!_smBulkActive&&Math.random()<No){') && html.includes('return _smBulkActive&&(_smBulkStopOnSack=!0),setTimeout(()=>{Se({oldClubName:Re.name')
 );
 
 // 24. Biblioteca de fețe generate + avatarul cinematic (v10.41.0)
