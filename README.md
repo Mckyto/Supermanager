@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.4)
+# SuperManager 26/27 — Ediția Supremă (v10.55.5)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -14,10 +14,15 @@ tools/
   smoke-test.js         ← testele automate (`npm test`)
   storage-test.js       ← autosalvare + migrarea carierelor vechi
   economy-test.js       ← masa salarială vs buget, salariul antrenorului
+  career-test.js        ← simularea turului și a sezonului, demiterea și trecerea în sezonul următor
   face-library.json      ← specificația celor 80 de fețe de jucător
   coach-library.json     ← specificația celor 24 de portrete de antrenor
   build-icons.sh        ← regenerează iconițele din assets/icon-source.png
 ```
+
+## Simulare rapidă
+
+„Tur” include etapa 15, iar etapa aleasă numeric este inclusă. „Sezon” parcurge campionatul până la final, inclusiv play-off/play-out; cupele se simulează separat. Simularea se oprește dacă managerul este demis. Mesajele ignorate expiră și produc consecințe.
 
 ## Rulare
 
@@ -127,7 +132,7 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
 
-## v10.55.4 — poziții și bancă echilibrată
+## v10.55.5 — poziții și bancă echilibrată
 
 - Selecția automată maximizează titularii pe postul principal, apoi folosește posturile secundare cunoscute și poziții apropiate, respectând U21 și disponibilitatea. Schimbarea formației în meci rearanjează titularii, fără a schimba jucătorii.
 - Tabla semnalează titularii în afara posturilor cunoscute și poate propune o rezervă aptă; sugestiile păstrează regula U21. Posturile secundare cunoscute sunt afișate la rezerve.
