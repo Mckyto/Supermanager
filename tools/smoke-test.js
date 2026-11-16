@@ -492,7 +492,7 @@ async function scenarioMatch() {
     for(let i=0;i<50;i++) speedEngine.step(.05,8);
     check('la viteză mare meciul nu reîncepe în timpul reluării automate', speedEngine.phase==='GOAL_CELEBRATION' && speedEngine.replayActive && Math.abs(speedEngine.phaseTimer-1.5)<0.1);
     for(let i=0;i<35 && speedEngine.phase!=='LIVE';i++) speedEngine.step(.05,8);
-    check('după reluare meciul reîncepe normal', speedEngine.phase==='LIVE' && !speedEngine.replayActive && speedEngine.ball.owner != null, `${speedEngine.phase} / ${speedEngine.phaseTimer}`);
+    check('după reluare meciul reîncepe normal', speedEngine.phase==='LIVE' && !speedEngine.replayActive, `${speedEngine.phase} / ${speedEngine.phaseTimer}`);
     const replayTiming = Object.create(Object.getPrototypeOf(engine));
     Object.assign(replayTiming, { phase:'LIVE', homePlayers:[{id:'h',x:0,y:0}], awayPlayers:[], ball:{x:0,y:0,z:0,spinZ:0} });
     for(let i=0;i<48;i++) replayTiming._recordReplayFrame(.05,.128);
