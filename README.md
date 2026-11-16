@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.8)
+# SuperManager 26/27 — Ediția Supremă (v10.55.9)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -29,6 +29,10 @@ Korenica este extremă stânga (și poate juca AM/CM/RW), Miculescu extremă dre
 Formula de referință este cea din FCSB–Corvinul (7 noiembrie 2026), **4-2-3-1**: Târnovanu; Labonne, Dawa, Duarte, Stancu; Muhar, Radunović; Miculescu, Boutoutaou, Korenica; Drăguș ([echipa de start](https://www.sport.ro/liga-1/gigi-becali-in-tribune-la-meciul-fcsb-corvinul-cum-a-fost-surprins.html)). Este o fotografie a unui meci, nu o promisiune că FCSB va folosi mereu același 11. Auto-selecția folosește această referință doar pentru FCSB în 4-2-3-1, cu înlocuiri pentru indisponibilitate, oboseală mare sau un transfer mult mai valoros și respectând U21.
 
 Salvările existente păstrează titularii, rezervele și sistemul ales manual. Butonul „FCSB • 4-2-3-1 actual” aplică explicit formula de referință; „Auto-Selecție Optimă XI” păstrează formația aleasă. Numărul 7 al lui Korenica se actualizează doar dacă este liber.
+
+## v10.55.9 — analiză și instrucțiuni de meci
+
+Tabla arată statistici reale, starea jucătorilor și, când există o rezervă potrivită, o propunere opțională de schimbare. Instrucțiunile individuale schimbă poziționarea sau raza de presing și consumul de energie; alegerea este manuală. La final sunt trei observații și un sfat prudent pentru meciul următor, bazat pe partida tocmai jucată, nu pe date inventate despre adversar. Bara compactă păstrează scorul și comenzile accesibile pe mobil. Motorul nu înregistrează zona pierderilor de minge, deci aceasta nu este estimată.
 
 ## Tabla de la pauză
 
