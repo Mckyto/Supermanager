@@ -89,6 +89,8 @@ async function newCareer(seed) {
     [player.pos, player.linePos] = legacy[player.name]; player.role = player.pos;
     if (player.name === 'Meriton Korenica') player.number = 9;
   }
+  oldFcsb.formation = '4-3-3';
+  [oldFcsb.lineupIds.starters[1], oldFcsb.lineupIds.starters[2]] = [oldFcsb.lineupIds.starters[2], oldFcsb.lineupIds.starters[1]];
   const originalLineup = JSON.stringify(oldFcsb.lineupIds);
   const migratedApp = await launch({ seed: { [slotKey(1)]: JSON.stringify(oldFcsb) } });
   await migratedApp.sleep(1300);
@@ -98,6 +100,7 @@ async function newCareer(seed) {
   check('salvarea FCSB veche primește posturile corectate', Object.entries(corrected).every(([name,pos]) => migratedSquad.find(p => p.name === name)?.pos === pos));
   check('numărul lui Korenica se corectează când este liber', migratedSquad.find(p => p.name === 'Meriton Korenica')?.number === 7);
   check('migrarea păstrează selecția manuală de titulari și rezerve', JSON.stringify(migrated.lineupIds) === originalLineup);
+  check('migrarea nu schimbă sistemul ales manual', migrated.formation === '4-3-3');
   check('migrarea lotului nu produce erori', migratedApp.errors.length === 0, migratedApp.errors[0]);
   migratedApp.close();
 
