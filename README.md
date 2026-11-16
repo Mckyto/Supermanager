@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.10)
+# SuperManager 26/27 — Ediția Supremă (v10.55.11)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -17,6 +17,7 @@ tools/
   career-test.js        ← simularea turului și a sezonului, demiterea și trecerea în sezonul următor
   gameplay-test.js      ← meci complet în motor, schimbări, scor și statistici
   halftime-test.js      ← tabla de pauză, deplasare, radio și limită schimbări
+  dialogue-test.js      ← interlocutor, decizii și consecințe în evenimente și conferințe
   face-library.json      ← specificația celor 80 de fețe de jucător
   coach-library.json     ← specificația celor 24 de portrete de antrenor
   build-icons.sh        ← regenerează iconițele din assets/icon-source.png
@@ -29,6 +30,10 @@ Korenica este extremă stânga (și poate juca AM/CM/RW), Miculescu extremă dre
 Formula de referință este cea din FCSB–Corvinul (7 noiembrie 2026), **4-2-3-1**: Târnovanu; Labonne, Dawa, Duarte, Stancu; Muhar, Radunović; Miculescu, Boutoutaou, Korenica; Drăguș ([echipa de start](https://www.sport.ro/liga-1/gigi-becali-in-tribune-la-meciul-fcsb-corvinul-cum-a-fost-surprins.html)). Este o fotografie a unui meci, nu o promisiune că FCSB va folosi mereu același 11. Auto-selecția folosește această referință doar pentru FCSB în 4-2-3-1, cu înlocuiri pentru indisponibilitate, oboseală mare sau un transfer mult mai valoros și respectând U21.
 
 Salvările existente păstrează titularii, rezervele și sistemul ales manual. Butonul „FCSB • 4-2-3-1 actual” aplică explicit formula de referință; „Auto-Selecție Optimă XI” păstrează formația aleasă. Numărul 7 al lui Korenica se actualizează doar dacă este liber.
+
+## v10.55.11 — dialoguri lizibile pe mobil
+
+În evenimente și conferințe, interlocutorul rămâne vizibil deasupra dialogului, cu portret atunci când există unul corespunzător. Jucătorii implicați sunt identificați separat. Deciziile sunt așezate orizontal și se pot parcurge prin glisare; textul lung nu este trunchiat, iar panoul se derulează vertical când este nevoie.
 
 ## v10.55.10 — mesaje corecte și o singură bară de scor
 
