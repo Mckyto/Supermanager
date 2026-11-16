@@ -683,10 +683,39 @@ async function scenarioMatch() {
   check('nicio decizie în timpul meciului', !decizieInMeci, decizieInMeci || 'curat');
   check('pauza nu cere decizii', !!halftimeText && !DECIZII.test(halftimeText));
   if (halftimeText) {
+    const board = app.document.querySelector('[data-sm-halftime-board]');
+    const side = engine.userSide;
+    const team = () => side === 'home' ? engine.homePlayers : engine.awayPlayers;
+    const bench = () => side === 'home' ? engine.homeBench : engine.awayBench;
+    check('la pauză apare tabla cu titularii și rezervele echipei controlate', !!board && board.querySelectorAll('[data-sm-halftime-player]').length === team().length && board.querySelectorAll('[data-sm-halftime-bench]').length === bench().length);
+    const beforeScore = JSON.stringify(engine.score), pair = team().filter(p => !p.redCard && p.pos !== 'GK').slice(0,2);
+    if (board && pair.length === 2) {
+      const [first,second] = pair, firstAnchor = [first.anchorX,first.anchorY], secondAnchor = [second.anchorX,second.anchorY];
+      board.querySelector(`[data-sm-halftime-player="${first.id}"]`).click();
+      await app.sleep(120);
+      board.querySelector(`[data-sm-halftime-player="${second.id}"]`).click();
+      await app.sleep(150);
+      check('rocada de pe tabla de pauză schimbă pozițiile reale în motor', first.anchorX===secondAnchor[0] && first.anchorY===secondAnchor[1] && second.anchorX===firstAnchor[0] && second.anchorY===firstAnchor[1]);
+      const target = team().find(p => !p.redCard && p.pos!=='GK'), reserve = bench().find(p=>p.pos!=='GK'), used = engine.subsUsed[side];
+      if (target && reserve) {
+        board.querySelector(`[data-sm-halftime-player="${target.id}"]`).click();
+        await app.sleep(120);
+        board.querySelector(`[data-sm-halftime-bench="${reserve.id}"]`).click();
+        await app.sleep(150);
+        check('schimbarea de la pauză este efectuată în meci și consumă o rezervă', team().some(p=>p.id===reserve.id) && !team().some(p=>p.id===target.id) && engine.subsUsed[side]===used+1);
+      } else fail('există titular și rezervă pentru testul schimbării');
+      const system = board.querySelector('select[aria-label="Sistem de joc la pauză"]');
+      if (system) {
+        system.value='4-4-2'; system.dispatchEvent(new app.window.Event('change',{bubbles:true}));
+        await app.sleep(150);
+        check('sistemul schimbat la pauză ajunge în motor', (side==='home'?engine.homeFormation:engine.awayFormation)==='4-4-2' && JSON.stringify(engine.score)===beforeScore);
+      } else fail('există selectorul de sistem la pauză');
+    } else fail('tabla are titulari pentru rocadă');
     if (app.click(/Începe Repriza a Doua/)) {
       await app.sleep(2500);
       const afterResume = liveMinute();
       check('repriza a doua reia jocul', afterResume === null || afterResume >= 45, `${afterResume}'`);
+      check('schimbările făcute la pauză rămân active în repriza a doua', (side==='home'?engine.homeFormation:engine.awayFormation)==='4-4-2' && engine.subsUsed[side]>=1 && !app.document.querySelector('[data-sm-halftime-board]'));
 
       // până la fluierul final, ca să verificăm reacția jucătorului
       let finalText = null;
