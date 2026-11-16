@@ -1,4 +1,4 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.6)
+# SuperManager 26/27 — Ediția Supremă (v10.55.7)
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -25,7 +25,9 @@ tools/
 
 Korenica este extremă stânga (și poate juca AM/CM/RW), Miculescu extremă dreapta (și ST/LW), iar João Paulo mijlocaș defensiv (și LB/CM). Am corectat și posturile lui Ofri Arad, Luca Stancu și Mihai Toma. Surse: [FotMob — lotul FCSB](https://www.fotmob.com/en-GB/teams/9723/squad), [João Paulo](https://www.playmakerstats.com/player/joao-paulo/652265), [Luca Stancu](https://www.gsp.ro/fotbal/liga-1/fcsb-transfer-luca-stancu-superliga-963354.html) și [Miculescu](https://www.transfermarkt.com/david-miculescu/profil/spieler/614800). Posturile sunt orientative: titularii reali pot varia de la meci la meci.
 
-Salvările existente primesc corecțiile pentru posturile vechi cunoscute, fără a schimba titularii sau rezervele alese manual. Pentru reașezarea automată pe noile posturi se poate folosi „Auto-Selecție Optimă XI”. Numărul 7 al lui Korenica se actualizează doar dacă este liber.
+Formula de referință este cea din FCSB–Corvinul (7 noiembrie 2026), **4-2-3-1**: Târnovanu; Labonne, Dawa, Duarte, Stancu; Muhar, Radunović; Miculescu, Boutoutaou, Korenica; Drăguș ([echipa de start](https://www.sport.ro/liga-1/gigi-becali-in-tribune-la-meciul-fcsb-corvinul-cum-a-fost-surprins.html)). Este o fotografie a unui meci, nu o promisiune că FCSB va folosi mereu același 11. Auto-selecția folosește această referință doar pentru FCSB în 4-2-3-1, cu înlocuiri pentru indisponibilitate, oboseală mare sau un transfer mult mai valoros și respectând U21.
+
+Salvările existente păstrează titularii, rezervele și sistemul ales manual. Butonul „FCSB • 4-2-3-1 actual” aplică explicit formula de referință; „Auto-Selecție Optimă XI” păstrează formația aleasă. Numărul 7 al lui Korenica se actualizează doar dacă este liber.
 
 ## Reluarea golului
 
@@ -143,7 +145,7 @@ Orice alt hosting static merge la fel (Netlify, Vercel, Cloudflare Pages, S3): s
 - **Randarea se oprește când tabul e ascuns** (economie de baterie și CPU), iar la revenire ceasul nu sare — delta e oricum plafonat la 50 ms.
 - Instrumentat în jsdom: 15.7 → 14.7 substeps/cadru la 8x pe un cadru sănătos, cu plafon dur la 16 în loc de 36 când cadrele se lungesc.
 
-## v10.55.6 — poziții și bancă echilibrată
+## v10.55.7 — poziții și bancă echilibrată
 
 - Selecția automată maximizează titularii pe postul principal, apoi folosește posturile secundare cunoscute și poziții apropiate, respectând U21 și disponibilitatea. Schimbarea formației în meci rearanjează titularii, fără a schimba jucătorii.
 - Tabla semnalează titularii în afara posturilor cunoscute și poate propune o rezervă aptă; sugestiile păstrează regula U21. Posturile secundare cunoscute sunt afișate la rezerve.

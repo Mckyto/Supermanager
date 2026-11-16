@@ -166,6 +166,14 @@ async function scenarioRosterFilters() {
   check('banca explică prioritizarea fără a ascunde lotul', /primele șapte rezerve/.test(app.text()));
   app.click(/Auto-Selecție Optimă XI/);
   await app.sleep(250);
+  check('auto-selecția păstrează sistemul ales manual', /Tabla Tactică — Primul 11 \(4-2-1-3\)/.test(app.text()));
+  check('formula FCSB actuală se poate aplica explicit și în salvările existente', app.click(/FCSB • 4-2-3-1 actual/));
+  await app.sleep(600);
+  const state = JSON.parse(app.window.localStorage.getItem('sm2627_career_slot_1') || 'null');
+  const club = state?.clubs.find(c=>c.id==='fcsb');
+  const expected = ['Ștefan Târnovanu','Ronny Labonne','Joyskim Dawa','André Duarte','Luca Stancu','Karlo Muhar','Risto Radunović','Aymen Boutoutaou','David Miculescu','Meriton Korenica','Denis Drăguș'];
+  const actual = (state?.lineupIds?.starters || []).map(id=>club?.players.find(p=>p.id===id)?.name);
+  check('formula actuală fixează sistemul 4-2-3-1 și titularii pe posturile potrivite', state?.formation==='4-2-3-1' && expected.every((name,i)=>actual[i]===name), actual.join(', '));
   if (previousFormation && previousFormation !== '4-2-1-3') app.click(new RegExp(`^${previousFormation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`));
   await app.sleep(300);
   if (!app.click(/Lot Complet/)) return fail('sub-tab-ul Lot Complet există');

@@ -32,6 +32,23 @@ check('FCSB: posturi principale și secundare documentate',()=>{
  assert.equal(byName('Meriton Korenica').number,7);
  for(const [name,positions] of Object.entries({'Meriton Korenica':['AM','CM','RW'],'David Miculescu':['ST','LW'],'Joao Paulo Fernandes':['LB','CM'],'Luca Stancu':['LB'],'Ofri Arad':['CB']})) for(const pos of positions) assert.equal(_smPositionFit(byName(name),pos),'secondary',name+' '+pos);
 });
+check('FCSB 4-2-3-1: formula de start din 7 noiembrie, pe sloturile corecte',()=>{
+ const result=Zi(players,'4-2-3-1',true,'fcsb');
+ assert.equal(fcsb.preferredFormation,'4-2-3-1');
+ assert.deepEqual(Array.from(result.starters,id=>players.find(p=>p.id===id).name), ['Ștefan Târnovanu','Ronny Labonne','Joyskim Dawa','André Duarte','Luca Stancu','Karlo Muhar','Risto Radunović','Aymen Boutoutaou','David Miculescu','Meriton Korenica','Denis Drăguș']);
+ assert(result.starters.some(id=>players.find(p=>p.id===id).isU21));
+});
+check('formula FCSB înlocuiește accidentați, suspendați și jucători plecați fără să încalce U21',()=>{
+ const variants=[players.map(p=>p.name==='Meriton Korenica'?{...p,injuredWeeks:2}:p),players.map(p=>p.name==='Luca Stancu'?{...p,suspendedMatches:1}:p),players.filter(p=>p.name!=='Denis Drăguș')];
+ for(const squad of variants){const pick=Zi(squad,'4-2-3-1',true,'fcsb'), starters=pick.starters.map(id=>squad.find(p=>p.id===id));assert.equal(starters.length,11);assert.equal(new Set(pick.starters).size,11);assert(starters.every(p=>!(p.injuredWeeks>0)&&!(p.suspendedMatches>0)));assert(starters.some(p=>p.isU21));}
+});
+check('referința FCSB nu fixează jucători obosiți sau inferiori unui nou transfer și nu afectează alte cluburi',()=>{
+ const tired=players.map(p=>p.name==='Ronny Labonne'?{...p,fitness:55}:p);
+ assert.notEqual(tired.find(p=>p.id===Zi(tired,'4-2-3-1',true,'fcsb').starters[1]).name,'Ronny Labonne');
+ const withStar=[...players,{id:'new-star',name:'Transfer Nou',pos:'RB',linePos:'DF',ovr:95,fitness:95,morale:80,age:25}];
+ assert.equal(Zi(withStar,'4-2-3-1',true,'fcsb').starters[1],'new-star');
+ assert.deepEqual(Array.from(Zi(players,'4-2-3-1',true,'other').starters),Array.from(Zi(players,'4-2-3-1',true).starters));
+});
 check('FCSB: auto-selecția 4-3-3 pune extremele pe flancurile lor și păstrează U21',()=>{
  const slots=Qi['4-3-3'].slots, pick=Zi(players,'4-3-3',true);
  const at=role=>players.find(p=>p.id===pick.starters[slots.findIndex(s=>s.role===role)]);
