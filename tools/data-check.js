@@ -247,7 +247,7 @@ check(
 // 18. Fluidență: simulare cu pas fix + calitate adaptivă în 3D
 check(
   'simularea are pas fix de 8 ms și plafon de timp simulat pe cadru',
-  html.includes('const _sSim=Math.min(s,.128),f=Math.max(1,Math.ceil(_sSim/.008)),m=_sSim/f;')
+  html.includes('const _sSim=Math.min(this.phase==="GOAL_CELEBRATION"&&this._replay?n:s,.128),f=Math.max(1,Math.ceil(_sSim/.008)),m=_sSim/f;')
 );
 check('nu mai există bucla de 36 de substeps (spirala de lag)', !html.includes('Math.min(36,Math.ceil(s/.008))'));
 check(
@@ -509,7 +509,7 @@ check('reluare: badge REPLAY peste teren, pentru 2D și 3D',
 check('reluare: 3D nu rulează animația de sărbătoare în timpul reluării',
   html.includes('ht.phase==="GOAL_CELEBRATION"&&!ht.replay?.active'));
 check('reluare: nu supraviețuiește pauzei sau fluierului final',
-  html.includes('this._replay=null,this.replayActive=!1;return'));
+  html.includes('this._replay=null,this._replayView=null,this.replayActive=!1;return'));
 
 // --- Antrenori cu chip real (v10.50) --------------------------------------
 check('antrenori: numele reale sunt în bundle pentru toate cele 24 de cluburi',

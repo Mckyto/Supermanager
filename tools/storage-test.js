@@ -81,6 +81,36 @@ async function newCareer(seed) {
   );
   await photoApp.close();
 
+  // Salvările vechi primesc posturile corectate, dar nu sunt rearanjate automat.
+  const oldFcsb = JSON.parse(raw);
+  const squad = oldFcsb.clubs.find(c => c.id === 'fcsb').players;
+  const legacy = { 'Meriton Korenica':['RW','FW'], 'David Miculescu':['LW','FW'], 'Joao Paulo Fernandes':['AM','MF'], 'Ofri Arad':['CB','DF'], 'Mihai Toma':['AM','MF'], 'Luca Stancu':['CM','MF'] };
+  for (const player of squad) if (legacy[player.name]) {
+    [player.pos, player.linePos] = legacy[player.name]; player.role = player.pos;
+    if (player.name === 'Meriton Korenica') player.number = 9;
+  }
+  const originalLineup = JSON.stringify(oldFcsb.lineupIds);
+  const migratedApp = await launch({ seed: { [slotKey(1)]: JSON.stringify(oldFcsb) } });
+  await migratedApp.sleep(1300);
+  const migrated = JSON.parse(migratedApp.window.localStorage.getItem(slotKey(1)));
+  const migratedSquad = migrated.clubs.find(c => c.id === 'fcsb').players;
+  const corrected = { 'Meriton Korenica':'LW', 'David Miculescu':'RW', 'Joao Paulo Fernandes':'DM', 'Ofri Arad':'DM', 'Mihai Toma':'LW', 'Luca Stancu':'RB' };
+  check('salvarea FCSB veche primește posturile corectate', Object.entries(corrected).every(([name,pos]) => migratedSquad.find(p => p.name === name)?.pos === pos));
+  check('numărul lui Korenica se corectează când este liber', migratedSquad.find(p => p.name === 'Meriton Korenica')?.number === 7);
+  check('migrarea păstrează selecția manuală de titulari și rezerve', JSON.stringify(migrated.lineupIds) === originalLineup);
+  check('migrarea lotului nu produce erori', migratedApp.errors.length === 0, migratedApp.errors[0]);
+  migratedApp.close();
+
+  const collision = JSON.parse(raw);
+  const cs = collision.clubs.find(c => c.id === 'fcsb').players;
+  cs.find(p => p.name === 'Meriton Korenica').number = 9;
+  cs.find(p => p.name === 'Luca Stancu').number = 7;
+  const collisionApp = await launch({seed:{[slotKey(1)]:JSON.stringify(collision)}});
+  await collisionApp.sleep(1300);
+  const after = JSON.parse(collisionApp.window.localStorage.getItem(slotKey(1))).clubs.find(c => c.id === 'fcsb').players;
+  check('numărul existent nu este duplicat în salvările personalizate', after.find(p => p.name === 'Meriton Korenica').number === 9 && after.find(p => p.name === 'Luca Stancu').number === 7);
+  collisionApp.close();
+
   console.log(`\n${passed} verificări OK, ${failed} eșuate`);
   process.exit(failed === 0 ? 0 : 1);
 })();
