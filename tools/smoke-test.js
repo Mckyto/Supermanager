@@ -407,8 +407,11 @@ async function scenarioMatch() {
   app.click(/^8x$/);
 
   const startMinute = liveMinute();
-  await app.sleep(3000);
-  const laterMinute = liveMinute();
+  let laterMinute = startMinute;
+  for (let i=0; i<12 && (laterMinute === null || laterMinute <= startMinute); i++) {
+    await app.sleep(500);
+    laterMinute = liveMinute();
+  }
   check(
     'ceasul meciului avansează',
     startMinute !== null && laterMinute !== null && laterMinute > startMinute,
@@ -463,6 +466,30 @@ async function scenarioMatch() {
       buffered = (engine._replayBuf || []).length;
     }
     check('motorul înregistrează faze pentru reluare', buffered >= 20, `${buffered} cadre`);
+    // Reluarea este o vedere separată: nu poate muta mingea sau jucătorii live.
+    const replayTest = Object.create(Object.getPrototypeOf(engine));
+    const hp = { id:'h', x:80, y:30, facing:1, vx:4, vy:2 };
+    const ap = { id:'a', x:25, y:20, facing:2, vx:-3, vy:1 };
+    Object.assign(replayTest, { homePlayers:[hp], awayPlayers:[ap], ball:{ x:90, y:34, z:1, vx:12, vy:3, spinZ:2, owner:hp }, _replay:{ t:0, delay:0, dur:3.1, frames:[{ids:['h','a'],p:[10,11,0,20,21,0],b:[15,16,0,0]},{ids:['a','h'],p:[40,41,0,30,31,0],b:[35,36,2,1]}] } });
+    const liveBefore = JSON.stringify({hp,ap,ball:replayTest.ball});
+    replayTest._tickReplay(1.55);
+    const view = replayTest._getRenderState();
+    check('reluarea nu modifică fizica sau posesia din motorul live', JSON.stringify({hp,ap,ball:replayTest.ball}) === liveBefore);
+    check('reluarea interpolează jucătorii după identitate și mingea doar pentru afișare', Math.abs(view.homePlayers[0].x-20)<0.001 && Math.abs(view.awayPlayers[0].x-30)<0.001 && Math.abs(view.ball.x-25)<0.001 && view.ball.owner===null);
+    replayTest._tickReplay(1.55);
+    check('la finalul reluării se revine la starea live nemodificată', replayTest._getRenderState() === replayTest && JSON.stringify({hp,ap,ball:replayTest.ball}) === liveBefore);
+    const speedEngine = new engine.constructor({ homeClub:engine.homeClub, awayClub:engine.awayClub, homeStarters:engine.homePlayers.map(p=>({...p})), awayStarters:engine.awayPlayers.map(p=>({...p})), weather:engine.weather });
+    speedEngine.phase='GOAL_CELEBRATION'; speedEngine.phaseTimer=4; speedEngine.lastConcededSide='away';
+    speedEngine._replay={t:0,delay:.5,dur:3.1,frames:[{ids:[],p:[],b:[0,0,0,0]},{ids:[],p:[],b:[0,0,0,0]}]};
+    for(let i=0;i<50;i++) speedEngine.step(.05,8);
+    check('la viteză mare meciul nu reîncepe în timpul reluării automate', speedEngine.phase==='GOAL_CELEBRATION' && speedEngine.replayActive && Math.abs(speedEngine.phaseTimer-1.5)<0.1);
+    for(let i=0;i<35 && speedEngine.phase!=='LIVE';i++) speedEngine.step(.05,8);
+    check('după reluare meciul reîncepe normal', speedEngine.phase==='LIVE' && !speedEngine.replayActive && speedEngine.ball.owner != null, `${speedEngine.phase} / ${speedEngine.phaseTimer}`);
+    const replayTiming = Object.create(Object.getPrototypeOf(engine));
+    Object.assign(replayTiming, { phase:'LIVE', homePlayers:[{id:'h',x:0,y:0}], awayPlayers:[], ball:{x:0,y:0,z:0,spinZ:0} });
+    for(let i=0;i<48;i++) replayTiming._recordReplayFrame(.05,.128);
+    replayTiming._startReplay();
+    check('reluarea rămâne cu încetinitor și afișează durata fizică reală la 8x', replayTiming._replay.frames.at(-1).t-replayTiming._replay.frames[0].t<=2.1 && replayTiming._replay.speed<1);
     engine._startReplay();
     await app.sleep(1100);
     check('reluarea pornește automat și apare badge-ul REPLAY', !!app.document.querySelector('[data-sm-replay]'));

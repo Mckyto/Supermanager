@@ -26,6 +26,18 @@ const rawStart=html.indexOf('const L2=[{id:"fcsb"');// Parse the complete club a
 function getArray(start){let depth=0,inString=false,escape=false;for(let i=start;i<html.length;i++){let c=html[i];if(inString){if(escape)escape=false;else if(c==='\\')escape=true;else if(c==='"')inString=false;continue}if(c==='"'){inString=true;continue}if(c==='[')depth++;if(c===']'&&--depth===0)return html.slice(start,i+1)}throw Error('unclosed')}
 const clubs=vm.runInNewContext('('+getArray(html.indexOf('[',rawStart))+')');const fcsb=clubs.find(c=>c.id==='fcsb');
 const players=fcsb.players.map((p,i)=>({...p,id:String(i),linePos:p.pos,pos:({CDM:'DM',CAM:'AM'}[p.role]||p.role||p.pos),role:({CDM:'DM',CAM:'AM'}[p.role]||p.role||p.pos),fitness:95,morale:80,isU21:!!p.u21,shooting:p.ovr,passing:p.ovr}));
+check('FCSB: posturi principale și secundare documentate',()=>{
+ const byName=name=>players.find(p=>p.name===name);
+ for(const [name,pos] of Object.entries({'Ștefan Târnovanu':'GK','Valentin Crețu':'RB','Joyskim Dawa':'CB','André Duarte':'CB','Ricardo Pădurariu':'LB','Karlo Muhar':'DM','Juri Cisotti':'CM','Joao Paulo Fernandes':'DM','Meriton Korenica':'LW','David Miculescu':'RW','Denis Drăguș':'ST','Ofri Arad':'DM','Luca Stancu':'RB','Mihai Toma':'LW'})) assert.equal(byName(name).pos,pos,name);
+ assert.equal(byName('Meriton Korenica').number,7);
+ for(const [name,positions] of Object.entries({'Meriton Korenica':['AM','CM','RW'],'David Miculescu':['ST','LW'],'Joao Paulo Fernandes':['LB','CM'],'Luca Stancu':['LB'],'Ofri Arad':['CB']})) for(const pos of positions) assert.equal(_smPositionFit(byName(name),pos),'secondary',name+' '+pos);
+});
+check('FCSB: auto-selecția 4-3-3 pune extremele pe flancurile lor și păstrează U21',()=>{
+ const slots=Qi['4-3-3'].slots, pick=Zi(players,'4-3-3',true);
+ const at=role=>players.find(p=>p.id===pick.starters[slots.findIndex(s=>s.role===role)]);
+ assert.equal(at('LW').name,'Meriton Korenica');assert.equal(at('RW').name,'David Miculescu');
+ assert.equal(at('ST').name,'Denis Drăguș');assert(pick.starters.some(id=>players.find(p=>p.id===id).isU21));
+});
 check('autoselecție FCSB: fundași laterali pe flancul lor în 4-2-1-3',()=>{
  const form=Qi['4-2-1-3'].slots, pick=Zi(players,'4-2-1-3',true);const playerAt=role=>players.find(p=>p.id===pick.starters[form.findIndex(s=>s.role===role)]);
  assert.equal(playerAt('RB').name,'Valentin Crețu');assert.equal(playerAt('LB').pos,'LB');
