@@ -210,10 +210,10 @@ check(
 check(
   'fereastra de decizie e un panou compact, nu full-screen',
   html.includes('max-w-2xl rounded-2xl overflow-hidden') &&
-    html.includes('max-h-[72vh]') &&
+    html.includes('.sm-vn-shell{max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);min-height:0}') &&
     !html.includes('max-w-4xl rounded-3xl overflow-hidden border-2')
 );
-check('invitația la decizie nu mai e o bandă uriașă de imagine', html.includes('relative h-24 sm:h-28 w-full overflow-hidden'));
+check('invitația la decizie nu mai e o bandă uriașă de imagine', html.includes('.sm-vn-banner{height:64px}') && html.includes('sm-vn-banner relative w-full overflow-hidden'));
 
 // 16. Mai puțină repetitivitate: texte cu variante alese aleator
 check(
