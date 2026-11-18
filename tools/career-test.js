@@ -31,6 +31,8 @@ async function simulate(app, button) {
     app.close();
     app = await launch({ seed: { [KEY]: JSON.stringify(initial) } });
     await waitUntil(app, () => /Centru Comandă/.test(app.text()), 'carieră încărcată');
+    // Cu echipele controlate, fixează generatorul: testul sezonului nu depinde de noroc sau demitere.
+    app.window.Math.random = () => .8;
     await simulate(app, 'Tur');
     let career = read(app);
     assert.equal(career.currentRound, 16);
