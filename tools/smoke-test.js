@@ -498,6 +498,8 @@ async function scenarioMatch() {
     for(let i=0;i<48;i++) replayTiming._recordReplayFrame(.05,.128);
     replayTiming._startReplay();
     check('reluarea rămâne cu încetinitor și afișează durata fizică reală la 8x', replayTiming._replay.frames.at(-1).t-replayTiming._replay.frames[0].t<=2.1 && replayTiming._replay.speed<1);
+    // Scenă controlată: nu depindem de pauza sau de o fază aleatorie din meciul live.
+    engine.phase = 'GOAL_CELEBRATION'; engine.phaseTimer = 4; engine.lastConcededSide = 'away';
     engine._startReplay();
     await app.sleep(1100);
     check('reluarea pornește automat și apare badge-ul REPLAY', !!app.document.querySelector('[data-sm-replay]'));

@@ -1,0 +1,59 @@
+/** Stiluri AI și urmări persistente, fără date fictive despre meciuri. */
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const {launch}=require('./dom-harness');
+const html=fs.readFileSync('public/index.html','utf8');
+const from=html.indexOf('function _smScheduleStoryFollowUp('),to=html.indexOf('function Qb(',from);
+assert(from>0&&to>from);
+const {schedule,resolve,style}=new Function(html.slice(from,to)+';return {schedule:_smScheduleStoryFollowUp,resolve:_smResolveStoryFollowUps,style:_smOpponentStyle}')();
+const career={season:'2026/2027',currentRound:1,userClubId:'club'};
+assert.equal(schedule({boardConf:2},career),null);
+const follow=schedule({boardConf:-5,lockerCohesion:2},career);
+assert.equal(follow.dueRound,2); assert.equal(follow.dimension,'board');
+const initial={...career,storyConsequences:[{eventId:'event',round:1,choice:'Susțin vestiarul',outcome:'Tensiune',followUp:follow}]};
+assert.equal(resolve(initial,1,'LOSS','0–1').reports.length,0);
+const solved=resolve(initial,2,'LOSS','0–1');
+assert.equal(solved.boardDelta,-2);assert.match(solved.reports[0].summary,/Susțin vestiarul/);assert.match(solved.reports[0].summary,/0–1/);
+assert.equal(solved.history[0].followUp.status,'resolved');
+assert.equal(resolve({...initial,storyConsequences:solved.history},3,'LOSS','0–1').reports.length,0);
+assert.equal(resolve({...initial,userClubId:'alt'},2,'LOSS','0–1').history[0].followUp.status,'cancelled');
+assert.equal(resolve({...initial,season:'2027/2028'},2,'LOSS','0–1').history[0].followUp.status,'cancelled');
+assert.equal(resolve(initial,2,'DRAW','1–1').boardDelta,0);
+const positive=schedule({lockerCohesion:6},career);
+assert.equal(resolve({...career,storyConsequences:[{eventId:'b',round:1,choice:'Alegere',outcome:'Calm',followUp:positive}]},2,'WIN','2–0').cohesionDelta,2);
+const profiles=new Set(Array.from({length:40},(_,i)=>style({id:`club${i}`}).id));assert.equal(profiles.size,4);
+const a=style({id:'x'}), b=style({id:'x'});a.tactics.passing='changed';assert.notEqual(b.tactics.passing,'changed');assert.equal(style({id:'x'}).id,b.id);
+console.log('  ✓ patru profiluri stabile, consecințe condiționate și aplicate o singură dată');
+
+const KEY='sm2627_career_slot_1';
+const wait=async(app,pred,label)=>{for(let i=0;i<150;i++){if(pred())return; if(app.errors.length)throw Error(app.errors.join('\n'));await app.sleep(100)}throw Error('Timeout: '+label)};
+(async()=>{
+ let app=await launch();
+ try{
+  assert(app.click(/Semnează Contractul/));await wait(app,()=>!!app.window.localStorage.getItem(KEY),'carieră inițială');
+  let data=JSON.parse(app.window.localStorage.getItem(KEY));data.manager.clubSharesPct=100;
+  const fixture=data.calendar.find(r=>r.roundNumber===data.currentRound).fixtures.find(f=>f.homeId===data.userClubId||f.awayId===data.userClubId);
+  if(fixture.homeId===data.userClubId)[fixture.homeId,fixture.awayId]=[fixture.awayId,fixture.homeId];
+  data.storyConsequences=[{eventId:'controlled',round:0,choice:'Păstrez echipa unită',outcome:'Sprijin în vestiar',followUp:{status:'pending',dimension:'locker',sign:1,dueRound:1,season:data.season,clubId:data.userClubId}}];
+  const club=data.clubs.find(c=>c.id===fixture.homeId),expected=style(club);
+  app.close();app=await launch({seed:{[KEY]:JSON.stringify(data)}});
+  assert(await app.waitFor(/Intră în Meci/,10000));
+  const box=app.document.querySelector('[data-sm-opponent-profile]');assert(box&&box.textContent.includes(expected.label));
+  assert(app.click(/Intră în Meci/));await wait(app,()=>!!app.window.__smEngine,'motor');
+  const engine=app.window.__smEngine;assert.equal(engine.userSide,'away');
+  for(const [key,val] of Object.entries(expected.tactics))assert.equal(engine.homeTactics[key],val,`tactică AI ${key}`);
+  assert.equal(engine.awayTactics.mentality,data.tactics.mentality,'tactica utilizatorului nu este suprascrisă');
+  app.close();app=await launch({seed:{[KEY]:JSON.stringify(data)}});
+  assert(await app.waitFor(/Intră în Meci/,10000));
+  const input=app.document.querySelector('input[aria-label="Etapa până la care simulezi"]'); assert(input);
+  Object.getOwnPropertyDescriptor(app.window.HTMLInputElement.prototype,'value').set.call(input,'1');
+  input.dispatchEvent(new app.window.Event('input',{bubbles:true})); await app.sleep(100);
+  assert.equal(Number(input.value),1); assert(app.click(label=>label==='▶'));
+  await wait(app,()=>JSON.parse(app.window.localStorage.getItem(KEY)).currentRound===2,'etapa simulată');await app.sleep(600);
+  const saved=JSON.parse(app.window.localStorage.getItem(KEY));const settled=saved.storyConsequences.find(x=>x.eventId==='controlled');
+  assert.equal(settled.followUp.status,'resolved');assert.equal(settled.followUp.result,saved.lastMatchContext.result);
+  assert(saved.decisionEchoes.some(x=>x.tag==='🔁 Ecoul deciziei'&&x.summary.includes('Păstrez echipa unită')));
+  assert.deepEqual(app.errors,[]);
+  console.log('  ✓ profil real aplicat adversarului în deplasare și ecou salvat după simulare');
+ }finally{app.close()}
+})().then(()=>process.exit(0),e=>{console.error(e);process.exit(1)});
