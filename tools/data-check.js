@@ -374,7 +374,7 @@ check(
 );
 check(
   'simularea folosește simulatorul de rezultate cu bonus numeric',
-  html.includes('_r=Pl(_h,_a,_h.id===d.userClubId?vt():0') && !html.includes('{bonus:vt()}')
+  html.includes('_r=_smQuickMatch(d,_h,_a,vt()+_L+_J,it.aiBoost+(d.preMatchOppBoostDelta||0))') && !html.includes('{bonus:vt()}')
 );
 check(
   'mesajele ignorate în simulare primesc aceleași consecințe',
