@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.29)
+# SuperManager 26/27 — Ediția Supremă (v10.55.30)
+
+**v10.55.30:** Discuții opționale la pauză cu impuls limitat, obiective pentru minutele confirmate în meciurile de campionat live și recorduri pentru sezoanele păstrate în arhivă.
 
 **v10.55.29:** Adversarul își ajustează tactica inițială la linia, presingul, lățimea și mentalitatea ta premeci; adaptările și compromisurile sunt afișate înaintea meciului și se aplică și în simularea rapidă.
 
