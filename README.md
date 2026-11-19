@@ -2,19 +2,19 @@
 
 **v10.55.29:** Adversarul își ajustează tactica inițială la linia, presingul, lățimea și mentalitatea ta premeci; adaptările și compromisurile sunt afișate înaintea meciului și se aplică și în simularea rapidă.
 
-**v10.55.29:** Plan condițional opțional pentru meciul live: o regulă de scor și minut aplică o singură schimbare tactică aleasă de manager. Nu se aplică în simularea rapidă și nu adaugă bonus automat.
+**v10.55.28:** Plan condițional opțional pentru meciul live: o regulă de scor și minut aplică o singură schimbare tactică aleasă de manager. Nu se aplică în simularea rapidă și nu adaugă bonus automat.
 
-**v10.55.29:** Până la trei obiective individuale urmăresc îmbunătățirile de atribut obținute prin antrenament din momentul alegerii, pentru clubul și sezonul curent, fără recompense automate.
+**v10.55.27:** Până la trei obiective individuale urmăresc îmbunătățirile de atribut obținute prin antrenament din momentul alegerii, pentru clubul și sezonul curent, fără recompense automate.
 
-**v10.55.29:** Arhivă locală pentru ultimele zece campionate complete încheiate de acum înainte: clasamentul final, lotul clubului la încheierea sezonului și comparația dintre ultimele două sezoane ale aceluiași club în aceeași ligă. Salvările vechi nu primesc istorice reconstruite.
+**v10.55.26:** Arhivă locală pentru ultimele zece campionate complete încheiate de acum înainte: clasamentul final, lotul clubului la încheierea sezonului și comparația dintre ultimele două sezoane ale aceluiași club în aceeași ligă. Salvările vechi nu primesc istorice reconstruite.
 
-**v10.55.29:** Infirmeria explică șansele tratamentelor și limitele recuperării. Recuperarea blândă nu mai creează o accidentare pentru un jucător doar obosit; o suspendare existentă rămâne separată.
+**v10.55.25:** Infirmeria explică șansele tratamentelor și limitele recuperării. Recuperarea blândă nu mai creează o accidentare pentru un jucător doar obosit; o suspendare existentă rămâne separată.
 
-**v10.55.29:** Reluările automate ale golurilor indică minutul, echipa și sursa fazei când motorul o cunoaște; sursa necunoscută este indicată explicit. Radio rămâne fără suprapuneri vizuale ale terenului.
+**v10.55.24:** Reluările automate ale golurilor indică minutul, echipa și sursa fazei când motorul o cunoaște; sursa necunoscută este indicată explicit. Radio rămâne fără suprapuneri vizuale ale terenului.
 
-**v10.55.29:** Jurnal informativ comun pentru promisiunile active față de jucători și partenere, deciziile de club și momentele de relație deja înregistrate; salvările vechi nu primesc istoric inventat.
+**v10.55.23:** Jurnal informativ comun pentru promisiunile active față de jucători și partenere, deciziile de club și momentele de relație deja înregistrate; salvările vechi nu primesc istoric inventat.
 
-**v10.55.29:** Condiții de arbitraj și meteo explicate înainte de meciul live, situație financiară recurentă estimativă și clasificarea prudentă a golurilor primite în rezumatul live. Simularea rapidă nu utilizează aceste condiții și nu oferă aceeași analiză a fazelor.
+**v10.55.22:** Condiții de arbitraj și meteo explicate înainte de meciul live, situație financiară recurentă estimativă și clasificarea prudentă a golurilor primite în rezumatul live. Simularea rapidă nu utilizează aceste condiții și nu oferă aceeași analiză a fazelor.
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
