@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.34)
+# SuperManager 26/27 — Ediția Supremă (v10.55.35)
 
-**v10.55.34:** În tactica premeci poți alege scheme de corner diferite pentru marginile terenului și, pentru loviturile libere apropiate, șut direct sau centrare. Se aplică în meciul live, nu în simularea rapidă; salvările vechi păstrează comportamentul automat.
+**v10.55.35:** Comparația ultimelor două sezoane arhivate include meciurile, victoriile, egalurile, înfrângerile și golurile din clasamentul final disponibil; în România, cifrele de meci și goluri se referă la faza finală.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
