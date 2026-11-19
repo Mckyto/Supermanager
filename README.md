@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.32)
+# SuperManager 26/27 — Ediția Supremă (v10.55.33)
+
+**v10.55.33:** Planul condițional live poate fi limitat la un interval de minute și declanșat indiferent de scor. După aplicare, tactica rămâne activă până la modificarea manuală.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
