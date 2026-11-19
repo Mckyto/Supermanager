@@ -320,7 +320,7 @@ check(
 );
 check(
   'o promisiune încălcată costă clubul 3 salarii',
-  html.includes('Re.budget-=Math.round(3*((Re.players.find(')
+  html.includes('Re.budget-=Math.round(3*(player?.wage||8e3))')
 );
 check(
   'starea șantierelor e migrată în salvările vechi',
@@ -456,17 +456,10 @@ check('portretul se poate schimba o singură dată',
   html.includes('photoChangeUsed') && html.includes('Portret blocat') && html.includes('singura schimbare de portret'));
 check('onboarding-ul nu mai are pas de alegere a portretului',
   !html.includes('_smSP') && !html.includes('avatar:{photoId:'));
-check('zoom la hover: panoul de mărire e prezent pentru orice fotografie',
-  html.includes('id="sm-zoom-js"') && html.includes('sm-zoom-panel') && html.includes('mouseover'));
-check('zoom-ul găsește poza și de sub stratul decorativ (jucători fără fotografie)',
-  html.includes('function resolveImg(t){') && html.includes('function directImg(el){') &&
-    html.includes('var up = directImg(t.parentElement);'));
-check('zoom-ul funcționează și pe touch (apăsare lungă)',
-  html.includes('"touchstart"') && html.includes('"touchend"') && html.includes('"touchmove"') && html.includes('380'));
-check('click pe o fotografie deschide un poster mărit, închis cu Escape',
-  html.includes('sm-photo-modal') && html.includes('sm-photo-caption') && html.includes('Escape'));
-check('posterul nu se deschide pentru pozele din butoane (nu fură click-ul)',
-  html.includes('function inControl(el){') && html.includes('button,a,[role=button],label,select'));
+check('zoom-ul automat pe fotografii a fost eliminat', !html.includes('id="sm-zoom-js"') && !html.includes('sm-zoom-panel'));
+check('profilul jucătorului afișează portret și atribute', html.includes('id="sm-player-profile-js"') && html.includes('data-sm-player') && html.includes('sm-player-profile-name'));
+check('cardul din lot deschide profilul cu un buton accesibil', html.includes('data-sm-profile-trigger') && html.includes('Deschide profilul lui'));
+check('profilul nu fură acțiunea celorlalte butoane', html.includes('target.closest("button,a,[role=button],label,select")'));
 check('sloturile de salvare afișează portretul antrenorului',
   html.includes('data-sm-slot-photo') && html.includes('coachId:_smCoachId({manager:n.manager||{}})'));
 check('mișcarea redusă e respectată', html.includes('prefers-reduced-motion:reduce'));
@@ -500,7 +493,7 @@ check('3D: portarul nu mai referențiează o variabilă inexistentă la tactical
 check('reluare: motorul înregistrează fazele pentru reluare',
   html.includes('_recordReplayFrame(e,t){') && html.includes('this._replayBuf||(this._replayBuf=[])'));
 check('reluare: pornește la gol și prelungește sărbătoarea cât să încapă',
-  html.includes('this._startReplay(),this.phase="GOAL_CELEBRATION"') &&
+  html.includes('this._startReplay({source:s?.side===e?s.source||null:null,side:e,minute:S,score:{...this.score}}),this.phase="GOAL_CELEBRATION"') &&
     html.includes('this.phaseTimer=Math.max(2.45,(this._replay?.delay||0)+(this._replay?.dur||0)+.4)'));
 check('reluare: snapshot-ul expune starea (badge + viteză + progres), oprită în pauză',
   html.includes('replay:this.replayActive&&this.phase!=="HALFTIME"') && html.includes('speed:this._replay?.speed||.7'));

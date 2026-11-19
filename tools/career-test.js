@@ -54,6 +54,7 @@ async function simulate(app, button) {
     assert(career.playoffSplitDone);
     assert(career.calendar.every(r => r.fixtures.every(f => f.played && Number.isFinite(f.homeGoals) && Number.isFinite(f.awayGoals))));
     assert.equal(career.careerStats.matches, 40);
+    const finalPlayers=career.clubs.find(c=>c.id===career.userClubId).players.map(p=>({id:p.id,name:p.name,ovr:p.ovr}));
     assert.match(app.text(), /Final de Sezon/);
     console.log('  ✓ sezonul include faza finală și toate rezultatele');
     assert(app.click(/Începe Sezonul Următor/));
@@ -63,13 +64,22 @@ async function simulate(app, button) {
     assert.equal(career.currentRound, 1);
     assert.equal(career.calendar.length, 30);
     assert(!career.playoffSplitDone);
+    assert.equal(career.seasonArchive.length,1);
+    const archive=career.seasonArchive[0];assert.equal(archive.season,initial.season);assert.equal(archive.clubId,initial.userClubId);assert.equal(archive.standings.length,16);assert.deepEqual(archive.squad.map(p=>({id:p.id,name:p.name,ovr:p.ovr})),finalPlayers);
+
     const saved = app.window.localStorage.getItem(KEY);
     app.close();
     app = await launch({ seed: { [KEY]: saved } });
     await waitUntil(app, () => /Centru Comandă/.test(app.text()), 'reîncărcare sezon nou');
     assert.equal(read(app).season, career.season);
     assert.equal(read(app).currentRound, 1);
+    const archivePanel=app.document.querySelector('[data-sm-season-archive]');assert(archivePanel);archivePanel.querySelector('summary').click();assert.match(archivePanel.textContent,/Clasament final/);assert.match(archivePanel.textContent,/Lot la finalul sezonului/);assert.match(archivePanel.textContent,/2026\/2027/);assert.equal(read(app).seasonArchive.length,1);
+
     console.log('  ✓ tranziția și reîncărcarea carierei funcționează');
+    const comparisonState=read(app);comparisonState.seasonArchive.unshift({...comparisonState.seasonArchive[0],season:'2025/2026'});
+    app.close();app=await launch({seed:{[KEY]:JSON.stringify(comparisonState)}});await waitUntil(app,()=>/Centru Comandă/.test(app.text()),'comparație arhivă');
+    const comparison=app.document.querySelector('[data-sm-season-comparison]');assert(comparison);assert.match(comparison.textContent,/2025\/2026/);assert.match(comparison.textContent,/2026\/2027/);assert.match(comparison.textContent,/puncte finale/);
+    console.log('  ✓ comparația afișează două sezoane din aceeași ligă și club');
     app.close();
     initial.boardConfidence = 0;
     initial.difficulty = 'hardcore';
