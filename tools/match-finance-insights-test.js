@@ -12,6 +12,8 @@ assert.equal(f.wages,20000);assert.equal(f.partners,35000);assert.equal(f.income
 assert.equal(finance({leagueCode:'EU'}, {players:[]}).base,1250000);
 const replaySource=new Function(extract('function _smReplaySource(','function _smConcededReview(')+';return _smReplaySource')();
 assert.equal(replaySource('CORNER'),'Corner');assert.equal(replaySource(null),'Sursă neînregistrată');assert.equal(replaySource('unexpected'),'Sursă neînregistrată');
+const nextFinance=new Function(extract('function _smNextFinanceRound(','function _SmFinanceSummary(')+';return _smNextFinanceRound')();
+const schedule={userClubId:'u',currentRound:5,calendar:[{roundNumber:12,fixtures:[{homeId:'u'}]},{roundNumber:4,fixtures:[{homeId:'u'}]},{roundNumber:8,fixtures:[{awayId:'u'}]}]};assert.equal(nextFinance(schedule),8);assert.equal(nextFinance({...schedule,currentRound:8,calendar:[{roundNumber:8,fixtures:[{homeId:'u',played:true}]}]}),null);assert.equal(nextFinance({...schedule,calendar:[]}),null);
 const review=new Function(extract('function _smConcededReview(','function _smSubAdvice(')+';return _smConcededReview')();
 let result=review({score:{home:1,away:3},goalLedger:[{side:'away',source:'CORNER'},{side:'away',source:'PENALTY'},{side:'home',source:'FREE_KICK'}]},'home');
 assert.equal(result.total,3);assert.equal(result.counts.corner,1);assert.equal(result.counts.penalty,1);assert.equal(result.counts.unknown,1);
@@ -21,7 +23,7 @@ const {launch}=require('./dom-harness');
 (async()=>{const app=await launch();try{
  assert(app.click(/Semnează Contractul/));assert(await app.waitFor(/Intră în Meci/,10000));
  const financePanel=app.document.querySelector('[data-sm-finance-summary]'),conditions=app.document.querySelector('[data-sm-match-conditions]');assert(financePanel&&conditions);assert.match(conditions.textContent,/Arbitraj simulat/);assert.match(conditions.textContent,/simularea rapidă nu folosește/);
- financePanel.querySelector('summary').click();assert.match(financePanel.textContent,/Sold recurent estimat/);assert.match(financePanel.textContent,/Nu include bilete/);
+ financePanel.querySelector('summary').click();assert.match(financePanel.textContent,/Sold recurent estimat/);assert.match(financePanel.textContent,/Nu include bilete/);assert.match(financePanel.querySelector('[data-sm-next-finance]').textContent,/etapa 4/);
  assert(app.click(/Intră în Meci/));assert(await app.waitFor(/Adrenalină pe Gazon|LIVE/,10000));const engine=app.window.__smEngine;
  assert.equal(engine.matchDNA.refereeStrictness,referee(engine.homeClub,engine.awayClub,engine.decisionContext.roundNumber,engine.decisionContext.pressStance).value);
  assert.deepEqual(app.errors,[]);console.log('  ✓ raportul și condițiile apar premeci și corespund motorului live');

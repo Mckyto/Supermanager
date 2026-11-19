@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.30)
+# SuperManager 26/27 — Ediția Supremă (v10.55.31)
+
+**v10.55.31:** Certificări simulate pentru praguri de meciuri și victorii conduse în sezonul curent, fără bonusuri; situația financiară arată următoarea regularizare din calendarul generat.
 
 **v10.55.30:** Discuții opționale la pauză cu impuls limitat, obiective pentru minutele confirmate în meciurile de campionat live și recorduri pentru sezoanele păstrate în arhivă.
 

@@ -25,9 +25,9 @@ Acesta este un inventar de lucru, nu o listă de funcții deja livrate. „Parț
 
 ## Club și carieră
 - [ ] Proiecte ale clubului cu obiective sportive măsurabile; identitatea clubului; cereri negociabile ale conducerii și obiective de sezon negociate.
-- [ ] Rapoarte financiare, costuri viitoare, organizarea deplasărilor și alegeri de carieră cu oferte distincte. Parțial: situația clubului estimează veniturile și costurile recurente la fiecare patru etape, fără tranzacțiile variabile; nu prezice bugetul viitor.
+- [ ] Rapoarte financiare, costuri viitoare, organizarea deplasărilor și alegeri de carieră cu oferte distincte. Parțial: situația clubului estimează veniturile și costurile recurente la fiecare patru etape, fără tranzacțiile variabile și indică următoarea regularizare din calendarul generat; nu prezice bugetul viitor.
 - [x] Obiective personale de campionat cu ținte alese de utilizator, progres bazat pe rezultate și fără recompense automate.
-- [ ] Licențe de antrenor cu cerințe practice; conferințe care urmăresc declarațiile anterioare.
+- [ ] Licențe de antrenor cu cerințe practice; conferințe care urmăresc declarațiile anterioare. Parțial: trei certificări simulate, neoficiale, urmăresc praguri de meciuri și victorii conduse în sezonul curent, fără bonusuri; nu există cursuri, licențe oficiale sau conferințe cu memorie.
 - [ ] Cronică de sezon, arhivă și recorduri, comparații între sezoane și vizualizarea loturilor/clasamentelor istorice; birou personalizat. Parțial: la tranziție se arhivează clasamentul final și lotul actual pentru cel mult 10 campionate complete; istoricul vechi nu este reconstruit, iar ultimele două sezoane arhivate pentru clubul și liga curentă pot fi comparate după loc și puncte. Recordurile de clasare și puncte sunt calculate doar din arhiva clubului și ligii actuale, nu din toată istoria sau exclusiv din mandatul managerului. Cronica și comparațiile extinse rămân de făcut.
 
 ## Interfață și transparență
