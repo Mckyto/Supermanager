@@ -78,6 +78,7 @@ async function simulate(app, button) {
     console.log('  ✓ tranziția și reîncărcarea carierei funcționează');
     const comparisonState=read(app);comparisonState.seasonArchive.unshift({...comparisonState.seasonArchive[0],season:'2025/2026'});
     app.close();app=await launch({seed:{[KEY]:JSON.stringify(comparisonState)}});await waitUntil(app,()=>/Centru Comandă/.test(app.text()),'comparație arhivă');
+    const records=app.document.querySelector('[data-sm-season-records]');assert(records);assert.match(records.textContent,/Recorduri ale clubului/);assert.match(records.textContent,/exclusiv rezultatele antrenorului/);
     const comparison=app.document.querySelector('[data-sm-season-comparison]');assert(comparison);assert.match(comparison.textContent,/2025\/2026/);assert.match(comparison.textContent,/2026\/2027/);assert.match(comparison.textContent,/puncte finale/);
     console.log('  ✓ comparația afișează două sezoane din aceeași ligă și club');
     app.close();

@@ -24,6 +24,11 @@ const KEY = 'sm2627_career_slot_1';
     assert(await app.waitFor(/Vestiar la Pauză/,10000));
     const board=app.document.querySelector('[data-sm-halftime-board]'); assert(board);
     assert.equal(app.document.querySelector('[data-sm-radio]')!==null,true);
+    const talk=board.querySelector('[data-sm-half-talk]');assert(talk);const base=engine._getTeamBonus('away');
+    const recommended=talk.textContent.includes('Recomandare: încurajare')?'Încurajează echipa':'Cere concentrare';
+    [...talk.querySelectorAll('button')].find(b=>b.textContent===recommended).click();await app.sleep(100);
+    assert.equal(engine.halfTalk.side,'away');assert.equal(engine.halfTalk.bonus,.2);assert.equal(engine._getTeamBonus('away'),base);assert.equal(engine.giveHalfTalk('away','focus'),null);assert(!talk.querySelector('button'));
+
     const lb=team.find(p=>p.slotRole==='LB'),rb=team.find(p=>p.slotRole==='RB');
     assert(lb&&rb);
     const get=p=>board.querySelector(`[data-sm-halftime-player="${p.id}"]`);
@@ -51,6 +56,7 @@ const KEY = 'sm2627_career_slot_1';
     assert.equal(engine.subsUsed.away,engine.maxSubs);
     assert(app.click(/Începe Repriza a Doua/)); await app.sleep(300);
     assert.equal(engine.half,2); assert.equal(valid.matchInstruction,'press'); assert(!app.document.querySelector('[data-sm-halftime-board]'));
+    assert(Math.abs(engine._getTeamBonus('away')-(base+.2))<1e-8);engine.minute=55;assert(Math.abs(engine._getTeamBonus('away')-base)<1e-8);
     assert.deepEqual(app.errors,[]);
     console.log('  ✓ pauză în deplasare: Radio, flancuri, eliminare, limita schimbărilor și repriza a doua');
   } finally { app.close(); }

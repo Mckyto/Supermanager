@@ -9,7 +9,9 @@ assert.equal(api.entry({...state,calendar:[]}),null);assert.equal(api.entry({...
 const ro={...state,leagueCode:'RO',clubs:state.clubs.map(c=>({...c,league:'RO'})),playoffSplitDone:true,playoffBonusPoints:{a:{startPts:9,group:'playoff'},b:{startPts:7,group:'playoff'}},calendar:[{phase:'regular',fixtures:[{homeId:'a',awayId:'b',homeGoals:8,awayGoals:0,played:true}]},{phase:'playoff_stage',fixtures:[{homeId:'a',awayId:'b',homeGoals:1,awayGoals:1,played:true}]}]};
 const row=api.entry(ro).standings[0];assert.equal(row.played,1);assert.equal(row.gf,1);assert.equal(row.pts,10);
 const history=Array.from({length:10},(_,i)=>({season:`${i}`,league:'EU',clubId:'a'}));assert.equal(api.append({...state,seasonArchive:history}).length,10);assert.equal(api.append({...state,seasonArchive:[entry]}).length,1);assert.equal(api.append({...state,calendar:[],seasonArchive:history}).length,10);
-const compare=new Function(extract('function _smSeasonComparison(','function _SmSeasonArchive(')+';return _smSeasonComparison')();
+const compare=new Function(extract('function _smSeasonComparison(','function _smArchiveRecords(')+';return _smSeasonComparison')();
 const first={...entry,season:'2025/2026'},second={...entry,season:'2026/2027'},other={...entry,season:'2027/2028',clubId:'b'};
 assert.equal(compare({...state,seasonArchive:[first] }),null);assert.deepEqual(compare({...state,seasonArchive:[first,other,second]}).map(x=>x.season),['2025/2026','2026/2027']);assert.equal(compare({...state,leagueCode:'RO',seasonArchive:[first,second]}),null);
+const records=new Function(extract('function _smArchiveRecords(','function _SmSeasonArchive(')+';return _smArchiveRecords')();
+assert.equal(records({...state,seasonArchive:[]}),null);const record=records({...state,seasonArchive:[first,other,second]});assert.equal(record.seasons,2);assert.equal(record.rank.value,1);assert.equal(record.points.value,3);assert.deepEqual(record.points.seasons,['2025/2026','2026/2027']);assert.equal(records({...state,leagueCode:'RO',seasonArchive:[first,second]}),null);
 console.log('  ✓ arhivă limitată și independentă: doar campionate complete, cu punctele fazei finale corecte');
