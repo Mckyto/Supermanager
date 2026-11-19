@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.31)
+# SuperManager 26/27 — Ediția Supremă (v10.55.32)
+
+**v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
 **v10.55.31:** Certificări simulate pentru praguri de meciuri și victorii conduse în sezonul curent, fără bonusuri; situația financiară arată următoarea regularizare din calendarul generat.
 
