@@ -1,0 +1,19 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const html=fs.readFileSync('public/index.html','utf8');
+const extract=(start,end)=>{let a=html.indexOf(start),b=html.indexOf(end,a);assert(a>=0&&b>a);return html.slice(a,b)};
+const journal=new Function('_smNotificationItems','Xs',extract('function _smDecisionJournal(','function _SmDecisionJournal(')+';return _smDecisionJournal')(()=>[{id:'phone-1'},{id:'player-1'},{id:'date-s'},{id:'facility-1'}],[{id:'s',name:'Sofia'}]);
+const state={storyConsequences:Array.from({length:15},(_,i)=>({round:i+1,choice:'Decizie '+i,outcome:'Rezultat',followUp:i===14?{status:'pending',dueRound:16}:null})),relationships:{s:{relationshipJournal:Array.from({length:7},(_,i)=>({round:i+1,text:'Moment '+i}))},empty:{}}};
+const original=JSON.stringify(state),data=journal(state);assert.equal(JSON.stringify(state),original);assert.deepEqual(data.notices.map(x=>x.id),['player-1','date-s']);assert.equal(data.stories.length,12);assert.equal(data.stories[0].choice,'Decizie 14');assert.equal(data.relationships[0].entries.length,5);assert.equal(data.relationships[0].name,'Sofia');assert.equal(journal({}).stories.length,0);
+console.log('  ✓ jurnalul citește promisiunile și istoricul disponibil fără a modifica salvarea');
+const {launch}=require('./dom-harness'),KEY='sm2627_career_slot_1';
+(async()=>{let app=await launch();try{
+ assert(app.click(/Semnează Contractul/));await app.sleep(800);const career=JSON.parse(app.window.localStorage.getItem(KEY)),round=career.currentRound;
+ career.playerPromises=[{id:'j1',playerId:career.lineupIds.starters[0],playerName:'Jucător Test',promiseText:'Titularizare',dueRound:round+1}];
+ career.relationships.sofia={...career.relationships.sofia,initiated:true,datePromiseDeadlineRound:round+1,relationshipJournal:[{round,kind:'date',text:'Întâlnire de test.'}]};
+ career.storyConsequences=[{round,choice:'Decizie test',outcome:'Rezultat test',followUp:{status:'resolved',resolvedRound:round,delta:2}},{round,choice:'Test viitor',outcome:'Așteptare',followUp:{status:'pending',dueRound:round+1}},{round,choice:'Test anulat',outcome:'Schimbare',followUp:{status:'cancelled'}}];
+ app.close();app=await launch({seed:{[KEY]:JSON.stringify(career)}});await app.sleep(500);const panel=app.document.querySelector('[data-sm-decision-journal]');assert(panel);panel.querySelector('summary').click();assert.match(panel.textContent,/Jucător Test/);assert.match(panel.textContent,/Sofia Munteanu/);assert.match(panel.textContent,/Întâlnire de test/);assert.match(panel.textContent,/Decizie test/);assert.match(panel.textContent,/Ecou evaluat.*\+2%/);assert.match(panel.textContent,/Ecou în așteptare/);assert.match(panel.textContent,/Ecou anulat/);assert.match(panel.textContent,/nu este o arhivă completă/);
+ [...panel.querySelectorAll('button')].find(b=>b.textContent==='Deschide relația').click();await app.sleep(300);assert.match(app.document.querySelector('[data-sm-relationship-journal]').textContent,/Sofia Munteanu/);
+ app.close();app=await launch({seed:{[KEY]:JSON.stringify(career)}});await app.sleep(500);const second=app.document.querySelector('[data-sm-decision-journal]');second.querySelector('summary').click();
+ [...second.querySelectorAll('button')].find(b=>b.textContent==='Deschide promisiunile').click();await app.sleep(300);assert.match(app.text(),/Jucător Test/);assert.deepEqual(app.errors,[]);
+ console.log('  ✓ jurnalul afișează datele după reîncărcare și deschide promisiunile');
+ }finally{app.close()}})().then(()=>process.exit(0),e=>{console.error(e);process.exit(1)});

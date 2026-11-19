@@ -188,6 +188,36 @@ async function scenarioRosterFilters() {
   check('lotul are grilă de jucători cu contor', !!grid && Number.isFinite(count()), `${count()} jucători`);
   const total = cards().length;
   check('contorul arată tot lotul la pornire', count() === total && total >= 18, `${count()} / ${total}`);
+  const insights = app.document.querySelector('[data-sm-squad-insights]');
+  const compare = insights?.querySelectorAll('select');
+  if (compare?.length === 2 && compare[0].options.length > 2) {
+    compare[0].value = compare[0].options[1].value;
+    compare[0].dispatchEvent(new app.window.Event('change', {bubbles:true}));
+    compare[1].value = compare[1].options[2].value;
+    compare[1].dispatchEvent(new app.window.Event('change', {bubbles:true}));
+    await app.sleep(150);
+    check('comparația folosește cei doi jucători selectați', !!insights.querySelector('table') && insights.textContent.includes(compare[0].selectedOptions[0].textContent.split(' • ')[0]) && insights.textContent.includes(compare[1].selectedOptions[0].textContent.split(' • ')[0]));
+    check('rotația explică recomandările fără schimbări automate', insights.textContent.includes('nu schimbă echipa'));
+  } else fail('comparația permite selectarea a doi jucători');
+  const profileTrigger = grid.querySelector('[data-sm-profile-trigger]');
+  const playerNode = profileTrigger?.querySelector('[data-sm-player]');
+  const player = playerNode ? JSON.parse(playerNode.dataset.smPlayer) : null;
+  profileTrigger?.click();
+  let profile = app.document.getElementById('sm-player-profile');
+  check('cardul jucătorului deschide profilul corect', !!profile && !!player && profile.textContent.includes(player.name) && profile.textContent.includes('OVR '+player.ovr));
+  check('profilul arată portretul și atributele', !!profile?.querySelector('img,svg') && profile.textContent.includes('Viteză:'));
+  app.document.dispatchEvent(new app.window.KeyboardEvent('keydown', {key:'Escape',bubbles:true}));
+  check('Escape închide profilul și revine la card', !app.document.getElementById('sm-player-profile') && app.document.activeElement === profileTrigger);
+  profileTrigger?.click();profile=app.document.getElementById('sm-player-profile');
+  profile?.querySelector('button')?.click();
+  check('butonul închide profilul fără schimbarea lotului', !app.document.getElementById('sm-player-profile') && cards().length === total);
+  const second = cards()[1]?.querySelector('[data-sm-profile-trigger]');
+  const secondPlayer = second && JSON.parse(second.querySelector('[data-sm-player]').dataset.smPlayer);
+  second?.click(); profile=app.document.getElementById('sm-player-profile');
+  check('fiecare card deschide propriul profil', !!secondPlayer && secondPlayer.id !== player.id && profile?.textContent.includes(secondPlayer.name));
+  profile?.querySelector('button')?.click();
+
+
 
   // filtrare pe poziție
   const gk = app.click(/^Portari$/);
@@ -500,9 +530,10 @@ async function scenarioMatch() {
     check('reluarea rămâne cu încetinitor și afișează durata fizică reală la 8x', replayTiming._replay.frames.at(-1).t-replayTiming._replay.frames[0].t<=2.1 && replayTiming._replay.speed<1);
     // Scenă controlată: nu depindem de pauza sau de o fază aleatorie din meciul live.
     engine.phase = 'GOAL_CELEBRATION'; engine.phaseTimer = 4; engine.lastConcededSide = 'away';
-    engine._startReplay();
+    engine._startReplay({source:'CORNER',side:'home',minute:23,score:{...engine.score}});
     await app.sleep(1100);
     check('reluarea pornește automat și apare badge-ul REPLAY', !!app.document.querySelector('[data-sm-replay]'));
+    check('reluarea explică sursa fazei fără a afirma cauzalitate', /Corner.*23.*nu cauza golului/.test(app.document.querySelector('[data-sm-replay-context]')?.textContent||''));
     const snap = engine.getSnapshot();
     check(
       'reluarea e marcată în snapshot (viteză + progres)',
@@ -520,6 +551,7 @@ async function scenarioMatch() {
       if (!app.document.querySelector('[data-sm-replay]')) ended = true;
     }
     check('reluarea se termină singură și meciul reia', ended);
+    check('indiciul reluării dispare la revenirea live', !app.document.querySelector('[data-sm-replay-context]'));
 
     // v10.53.0 — eroarea de prim control (pasă rapidă + tehnică slabă)
     const weak = engine.homePlayers[5];
@@ -729,6 +761,9 @@ async function scenarioMatch() {
       }
       check('meciul ajunge la fluierul final', !!finalText);
       if (finalText) {
+        const review=app.document.querySelector('[data-sm-conceded-review]');
+        const conceded=engine.score[side==='home'?'away':'home'];
+        check('analiza prudentă a golurilor primite apare la final', !!review && review.textContent.includes(`Goluri primite: ${conceded}`) && review.textContent.includes('sursă'));
         app.click(/Continuă în Carieră/);
         await app.sleep(2500);
         const reaction = (app.text().match(/🗣️[^]{0,220}/) || [])[0] || '';
@@ -1083,88 +1118,14 @@ async function scenarioProfile() {
     fail('butonul Schimbă portretul există');
   }
 
-  await app.sleep(300);
-  const zoomTarget = app.document.querySelector('img[alt="Portret antrenor"]') || app.document.querySelector('img');
-  if (!zoomTarget) {
-    fail('există o fotografie de mărit în Profil');
-    return;
-  }
-  const zoomSrc = zoomTarget.getAttribute('src');
-  zoomTarget.dispatchEvent(new app.window.MouseEvent('mouseover', { bubbles: true }));
-  await app.sleep(320);
-  const zoom = app.document.getElementById('sm-zoom-panel');
-  check('hover pe fotografie deschide o mărire', !!zoom && zoom.style.opacity === '1', zoom ? `${zoom.style.width}×${zoom.style.height}` : 'fără panou');
-  check(
-    'mărirea arată exact aceeași fotografie',
-    !!zoom && !!zoom.querySelector('img') && zoom.querySelector('img').getAttribute('src') === zoomSrc
-  );
-  zoomTarget.dispatchEvent(new app.window.MouseEvent('mouseout', { bubbles: true }));
-  await app.sleep(250);
-  check('mărirea dispare când mouse-ul pleacă', !zoom || zoom.style.opacity === '0');
-
-  // Regresie: jucătorii fără fotografie au un strat decorativ peste <img>,
-  // deci hover-ul lovește un <div>, nu poza. Zoom-ul trebuie să meargă și așa.
-  const chip = app.document.createElement('div');
-  chip.style.cssText = 'position:relative;width:40px;height:40px;border-radius:9999px;overflow:hidden';
-  const chipImg = app.document.createElement('img');
-  chipImg.setAttribute('src', zoomSrc);
-  chipImg.setAttribute('alt', 'Jucător fără fotografie');
-  chipImg.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top';
-  const chipShade = app.document.createElement('div');
-  chipShade.setAttribute('aria-hidden', 'true');
-  chipShade.style.cssText = 'position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, rgba(255,255,255,.12), rgba(0,0,0,.45))';
-  chip.appendChild(chipImg);
-  chip.appendChild(chipShade);
-  app.document.body.appendChild(chip);
-
-  chipShade.dispatchEvent(new app.window.MouseEvent('mouseover', { bubbles: true }));
-  await app.sleep(320);
-  const zoomShade = app.document.getElementById('sm-zoom-panel');
-  check(
-    'hover pe stratul de peste poză (jucători fără fotografie) deschide mărirea',
-    !!zoomShade && zoomShade.style.opacity === '1',
-    zoomShade ? `${zoomShade.style.width}×${zoomShade.style.height}` : 'fără panou'
-  );
-  check(
-    'mărirea folosește poza de sub strat',
-    !!zoomShade && !!zoomShade.querySelector('img') && zoomShade.querySelector('img').getAttribute('src') === zoomSrc
-  );
-
-  const hasDirectImg = (el) => [...(el.children || [])].some((c) => c.tagName === 'IMG');
-  const realShade = [...app.document.querySelectorAll('div[aria-hidden="true"]')].find((d) => {
-    const st = d.style;
-    return st && st.position === 'absolute' && d.parentElement && hasDirectImg(d.parentElement);
-  });
-  if (realShade) {
-    realShade.dispatchEvent(new app.window.MouseEvent('mouseover', { bubbles: true }));
-    await app.sleep(320);
-    check('chip-ul real de jucător generat face zoom la hover', !!zoomShade && zoomShade.style.opacity === '1');
+  const coachPhoto = app.document.querySelector('img[alt="Portret antrenor"]');
+  if (coachPhoto) {
+    coachPhoto.dispatchEvent(new app.window.MouseEvent('mouseover', { bubbles: true }));
+    coachPhoto.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true }));
+    await app.sleep(200);
+    check('fotografiile obișnuite nu deschid zoom sau profil', !app.document.getElementById('sm-zoom-panel') && !app.document.getElementById('sm-player-profile'));
   }
 
-  chipShade.dispatchEvent(new app.window.MouseEvent('mouseout', { bubbles: true }));
-  await app.sleep(250);
-  check('mărirea se închide după hover pe strat', !zoomShade || zoomShade.style.opacity === '0');
-  chip.remove();
-
-  // click pe o poză care nu e buton → poster mare
-  const posterSource = app.document.querySelector('img[alt="Portret antrenor"]');
-  if (posterSource) {
-    posterSource.dispatchEvent(new app.window.MouseEvent('click', { bubbles: true, cancelable: true }));
-    await app.sleep(300);
-    const photoModal = app.document.getElementById('sm-photo-modal');
-    check('click pe fotografie deschide posterul mărit', !!photoModal && photoModal.style.display === 'flex');
-    check(
-      'posterul arată aceeași imagine și descrierea ei',
-      !!photoModal && !!photoModal.querySelector('img') &&
-        photoModal.querySelector('img').getAttribute('src') === posterSource.getAttribute('src') &&
-        /Portret antrenor/.test((app.document.getElementById('sm-photo-caption') || {}).textContent || '')
-    );
-    app.document.dispatchEvent(new app.window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-    await app.sleep(300);
-    check('Escape închide posterul', !photoModal || photoModal.style.display === 'none');
-  } else {
-    fail('există o fotografie pe care se poate face click');
-  }
 }
 
 async function scenarioCupSim() {

@@ -1,0 +1,28 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const html=fs.readFileSync('public/index.html','utf8');
+const extract=(a,b)=>{const i=html.indexOf(a),j=html.indexOf(b,i);assert(i>=0&&j>i);return html.slice(i,j)};
+const referee=new Function(extract('function _smRefereeInfo(','function _SmMatchConditions(')+';return _smRefereeInfo')();
+const home={name:'Acasă'},away={name:'Deplasare'},seed=4*37+home.name.length*13+away.name.length*19;
+const expected=(stance)=>Math.max(.65,Math.min(1.42,.82+seed%11/22+(stance==='referee_pressure'?-.14:stance==='aggressive'||stance==='high_pressure'?.16:0)));
+for(const stance of ['balanced','referee_pressure','high_pressure','aggressive'])assert.equal(referee(home,away,4,stance).value,expected(stance));
+const finance=new Function('_smFacUpkeep',extract('function _smFinanceSummary(','function _SmFinanceSummary(')+';return _smFinanceSummary')(()=>1000);
+const rel={bianca:{initiated:true,affection:55,trust:55},natalia:{initiated:true,affection:54,trust:90}};
+let f=finance({leagueCode:'RO',relationships:rel,activeShirtSponsor:{monthlyBase:10000}},{budget:500000,players:[{wage:12000},{wage:8000}]});
+assert.equal(f.wages,20000);assert.equal(f.partners,35000);assert.equal(f.income,190000);assert.equal(f.balance,169000);
+assert.equal(finance({leagueCode:'EU'}, {players:[]}).base,1250000);
+const replaySource=new Function(extract('function _smReplaySource(','function _smConcededReview(')+';return _smReplaySource')();
+assert.equal(replaySource('CORNER'),'Corner');assert.equal(replaySource(null),'Sursă neînregistrată');assert.equal(replaySource('unexpected'),'Sursă neînregistrată');
+const review=new Function(extract('function _smConcededReview(','function _smSubAdvice(')+';return _smConcededReview')();
+let result=review({score:{home:1,away:3},goalLedger:[{side:'away',source:'CORNER'},{side:'away',source:'PENALTY'},{side:'home',source:'FREE_KICK'}]},'home');
+assert.equal(result.total,3);assert.equal(result.counts.corner,1);assert.equal(result.counts.penalty,1);assert.equal(result.counts.unknown,1);
+assert.equal(review({score:{home:0,away:0}},'home').counts.unknown,0);
+console.log('  ✓ arbitrajul și finanțele folosesc formulele jocului; golurile fără date rămân neclasificate');
+const {launch}=require('./dom-harness');
+(async()=>{const app=await launch();try{
+ assert(app.click(/Semnează Contractul/));assert(await app.waitFor(/Intră în Meci/,10000));
+ const financePanel=app.document.querySelector('[data-sm-finance-summary]'),conditions=app.document.querySelector('[data-sm-match-conditions]');assert(financePanel&&conditions);assert.match(conditions.textContent,/Arbitraj simulat/);assert.match(conditions.textContent,/simularea rapidă nu folosește/);
+ financePanel.querySelector('summary').click();assert.match(financePanel.textContent,/Sold recurent estimat/);assert.match(financePanel.textContent,/Nu include bilete/);
+ assert(app.click(/Intră în Meci/));assert(await app.waitFor(/Adrenalină pe Gazon|LIVE/,10000));const engine=app.window.__smEngine;
+ assert.equal(engine.matchDNA.refereeStrictness,referee(engine.homeClub,engine.awayClub,engine.decisionContext.roundNumber,engine.decisionContext.pressStance).value);
+ assert.deepEqual(app.errors,[]);console.log('  ✓ raportul și condițiile apar premeci și corespund motorului live');
+ }finally{app.close()}})().then(()=>process.exit(0),e=>{console.error(e);process.exit(1)});

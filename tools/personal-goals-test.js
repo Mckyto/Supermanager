@@ -1,0 +1,21 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const html=fs.readFileSync('public/index.html','utf8'),start=html.indexOf('const _SM_PERSONAL_GOALS='),end=html.indexOf('function _SmPersonalGoals(',start);
+const {stats,valid}=new Function(html.slice(start,end)+';return {stats:_smPersonalGoalStats,valid:_smPersonalGoalValid}')();
+const career={userClubId:'a',season:'s1',calendar:[{fixtures:[{id:'1',played:true,homeId:'a',awayId:'b',homeGoals:2,awayGoals:0},{id:'2',played:true,homeId:'b',awayId:'a',homeGoals:1,awayGoals:1},{id:'3',played:true,homeId:'b',awayId:'c',homeGoals:3,awayGoals:0},{id:'4',played:false,homeId:'a',awayId:'b',homeGoals:null,awayGoals:null}]},{fixtures:[{id:'1',played:true,homeId:'a',awayId:'b',homeGoals:2,awayGoals:0},{id:'5',played:true,homeId:'b',awayId:'a',homeGoals:2,awayGoals:0}]}]};
+assert.deepEqual(stats(career),{wins:1,points:4,goals:3,cleanSheets:1,matches:3});
+assert(valid({clubId:'a',season:'s1',type:'wins',target:3},career));assert(!valid({clubId:'a',season:'s2',type:'wins',target:3},career));assert(!valid({clubId:'a',season:'s1',type:'wins',target:0},career));assert(!valid({clubId:'a',season:'s1',type:'other',target:3},career));
+console.log('  ✓ obiectivele citesc rezultate reale ale clubului, fără meciuri duplicate sau neîncheiate');
+const {launch}=require('./dom-harness');const KEY='sm2627_career_slot_1';
+(async()=>{let app=await launch();try{
+ assert(app.click(/Semnează Contractul/));await app.sleep(800);
+ let panel=app.document.querySelector('[data-sm-personal-goals]');assert(panel);panel.querySelector('summary').click();
+ const input=panel.querySelector('input'),select=panel.querySelector('select');assert(input&&select);
+ Object.getOwnPropertyDescriptor(app.window.HTMLInputElement.prototype,'value').set.call(input,'2');input.dispatchEvent(new app.window.Event('input',{bubbles:true}));await app.sleep(100);
+ assert(app.click(/^Adaugă obiectiv$/));await app.sleep(500);let state=JSON.parse(app.window.localStorage.getItem(KEY));assert.equal(state.personalGoals.length,1);assert.equal(state.personalGoals[0].target,2);assert.equal(state.personalGoals[0].type,'wins');
+ assert.match(panel.textContent,/Victorii în campionat: 0 \/ 2/);assert(app.click(/^Adaugă obiectiv$/));await app.sleep(150);assert.match(panel.textContent,/Există deja/);
+ const club=state.userClubId;let counted=0;for(const round of state.calendar){const f=round.fixtures.find(f=>f.homeId===club||f.awayId===club);if(!f)continue;f.played=true;f.homeGoals=f.homeId===club?2:0;f.awayGoals=f.awayId===club?2:0;if(++counted===2)break}state.currentRound=3;
+ app.close();app=await launch({seed:{[KEY]:JSON.stringify(state)}});await app.sleep(500);panel=app.document.querySelector('[data-sm-personal-goals]');assert(panel);panel.querySelector('summary').click();await app.sleep(100);assert.match(panel.textContent,/Victorii în campionat: 2 \/ 2 • Îndeplinit/);
+ assert.equal(JSON.parse(app.window.localStorage.getItem(KEY)).personalGoals[0].target,2);
+ const remove=panel.querySelector('[aria-label="Șterge obiectivul Victorii în campionat"]');assert(remove);remove.click();await app.sleep(450);assert.equal(JSON.parse(app.window.localStorage.getItem(KEY)).personalGoals.length,0);
+ assert.deepEqual(app.errors,[]);console.log('  ✓ obiectivul se creează, persistă, reflectă rezultatele și se poate șterge');
+ }finally{app.close()}})().then(()=>process.exit(0),e=>{console.error(e);process.exit(1)});

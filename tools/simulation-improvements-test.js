@@ -31,7 +31,7 @@ console.log('  ✓ simularea rapidă respectă titularii, disponibilitatea, cond
  const select=panel.querySelector('select');assert(select.options.length>1);select.value=select.options[1].value;select.dispatchEvent(new app.window.Event('change',{bubbles:true}));await app.sleep(100);
  const target=engine[engine.userSide==='home'?'homePlayers':'awayPlayers'].find(p=>String(p.id)===select.value);assert(target&&!target.redCard&&target.pos!=='GK');
  const btn=[...panel.querySelectorAll('button')].find(b=>b.textContent==='Apasă');assert(btn);btn.click();await app.sleep(100);assert.equal(target.matchInstruction,'press');assert.equal(btn.getAttribute('aria-pressed'),'true');
- engine.events.unshift({min:engine.minute,type:'goal',text:'Gol de test'});await app.sleep(550);assert(app.document.querySelector('[data-sm-key-moment]')?.textContent.includes('Gol de test'));
+ engine.phase='GOAL_CELEBRATION';engine.phaseTimer=30;engine._replay=null;engine.events=[{min:engine.minute,type:'goal',text:'Gol de test'}];await app.sleep(550);assert(app.document.querySelector('[data-sm-key-moment]')?.textContent.includes('Gol de test'));
  assert(app.click(/Radio Live/));await app.sleep(100);assert(!app.document.querySelector('[data-sm-key-moment]'));assert(app.document.querySelector('[data-sm-radio]'));
  assert.deepEqual(app.errors,[]);console.log('  ✓ instrucțiune individuală live, moment real și radio doar cu subtitrare');
  }finally{app.close()}})().then(()=>process.exit(0),e=>{console.error(e);process.exit(1)});

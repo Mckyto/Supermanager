@@ -1,4 +1,16 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.13)
+# SuperManager 26/27 — Ediția Supremă (v10.55.27)
+
+**v10.55.27:** Până la trei obiective individuale urmăresc îmbunătățirile de atribut obținute prin antrenament din momentul alegerii, pentru clubul și sezonul curent, fără recompense automate.
+
+**v10.55.27:** Arhivă locală pentru ultimele zece campionate complete încheiate de acum înainte: clasamentul final, lotul clubului la încheierea sezonului și comparația dintre ultimele două sezoane ale aceluiași club în aceeași ligă. Salvările vechi nu primesc istorice reconstruite.
+
+**v10.55.27:** Infirmeria explică șansele tratamentelor și limitele recuperării. Recuperarea blândă nu mai creează o accidentare pentru un jucător doar obosit; o suspendare existentă rămâne separată.
+
+**v10.55.27:** Reluările automate ale golurilor indică minutul, echipa și sursa fazei când motorul o cunoaște; sursa necunoscută este indicată explicit. Radio rămâne fără suprapuneri vizuale ale terenului.
+
+**v10.55.27:** Jurnal informativ comun pentru promisiunile active față de jucători și partenere, deciziile de club și momentele de relație deja înregistrate; salvările vechi nu primesc istoric inventat.
+
+**v10.55.27:** Condiții de arbitraj și meteo explicate înainte de meciul live, situație financiară recurentă estimativă și clasificarea prudentă a golurilor primite în rezumatul live. Simularea rapidă nu utilizează aceste condiții și nu oferă aceeași analiză a fazelor.
 
 Joc de management fotbalistic pentru SuperLiga 2026/27, livrat ca **o singură pagină HTML autonomă**: React 18 + Tailwind, cu tot bundle-ul (inclusiv fotografiile jucătorilor în `base64`) inline. Nu face **nicio cerere externă** — funcționează complet offline și se instalează pe telefon ca aplicație.
 
@@ -20,10 +32,49 @@ tools/
   dialogue-test.js      ← interlocutor, decizii și consecințe în evenimente și conferințe
   variety-test.js       ← profiluri tactice și ecoul deciziilor în carieră
   simulation-improvements-test.js ← simulare rapidă, faze și indicații live
+  earned-progress-test.js ← progresul antrenamentului și condițiile de deblocare
+  squad-insights-test.js ← comparație și sugestii de rotație
+  relationship-journal-test.js ← termene, întâlniri și jurnalul relației
+  player-promises-test.js ← minute, titularizare și promisiuni
+  lineup-presets-test.js ← formule salvate și validarea lotului
+  personal-goals-test.js ← progresul obiectivelor personale
+  notification-center-test.js ← termene și navigarea din notificări
   face-library.json      ← specificația celor 80 de fețe de jucător
   coach-library.json     ← specificația celor 24 de portrete de antrenor
   build-icons.sh        ← regenerează iconițele din assets/icon-source.png
 ```
+
+## Centrul de notificări
+
+Centrul de Comandă grupează mesajele fără răspuns, promisiunile față de jucători și partenere și șantierele active după termen. Butoanele deschid telefonul, persoana sau secțiunea relevantă; vizualizarea nu răspunde și nu schimbă automat cariera. Mesajele expirate sau deja rezolvate nu sunt afișate ca active.
+
+## Obiective personale
+
+În Centrul de Comandă poți urmări până la trei obiective pentru clubul și sezonul curent: victorii, puncte câștigate pe teren, goluri, meciuri fără gol primit sau meciuri disputate în campionat. Progresul este calculat din rezultate, inclusiv dinaintea stabilirii obiectivului sau a preluării clubului; punctele nu includ înjumătățirea din play-off. Nu se acordă recompense și nu se aplică penalizări.
+
+## Formule salvate
+
+În Lot / Tabla XI sunt disponibile trei formule per club: Campionat, Cupă și Rotație. Ele păstrează formația, titularii, ordinea rezervelor și executanții, dar nu modifică tactica. Aplicarea este blocată dacă un titular a plecat, este indisponibil sau dacă formula nu respectă postul de portar ori regula U21. Rezervele plecate sunt ignorate, iar jucătorii noi sunt adăugați la finalul băncii. Salvările vechi nu sunt modificate până când alegi să salvezi o formulă.
+
+## Promisiuni și minute jucate
+
+La meciurile live, raportul păstrează și jucătorii înlocuiți, și rezervele intrate, inclusiv golurile, cartonașele și minutele nominale (rotunjite, fără a aduna prelungirile). Promisiunile de minute pot fi respectate de o rezervă intrată; promisiunile de titularizare cer un loc în primul 11. Ele se verifică în fiecare etapă până la termen și se amână dacă jucătorul e indisponibil. Dacă părăsește lotul, se închid fără penalizare. Simularea rapidă consideră că joacă titularii selectați, fără să inventeze schimbări. Rezultatele apar în știri.
+
+## Jurnalul relației
+
+În Viață & Relații, jurnalul fiecărei partenere afișează cererea sau promisiunea de întâlnire activă și termenul, apoi păstrează ultimele 20 de momente înregistrate de la această versiune. O întâlnire respectă angajamentul; după termen, consecința deja existentă se aplică o singură dată. Salvările vechi păstrează ultima decizie cunoscută, fără inventarea unui istoric.
+
+## Comparație și rotație
+
+În Lot Complet poți compara doi jucători și primi sugestii informative pentru titularii indisponibili sau sub 75% condiție. Sugestiile caută rezerve disponibile pe post și respectă regula U21 pentru România; nu schimbă automat echipa. Indicatorii neînregistrați sunt afișați ca indisponibili. Lista extinsă de idei și stadiul ei sunt în `docs/plan-idei.md`.
+
+## Profilul jucătorului
+
+În Lot Complet, apasă pe numele sau portretul unui jucător pentru profilul său, cu portret mărit, atribute și informații disponibile. Portretele jucătorilor din afara butoanelor pot fi apăsate și în alte ecrane; comenzile de tactică și transfer își păstrează funcția. Profilul se închide prin buton, Escape sau apăsând în afara lui. Zoom-ul automat pe fotografii a fost eliminat; zoom-ul browserului rămâne disponibil.
+
+## Claritate și progres
+
+În 3D, camera Co-Op TV este presetul inițial, un cerc galben indică purtătorul, iar textul de sub simulare identifică posesia. Reluările și mingea liberă sunt indicate separat. Întâlnirile includ discuții adaptate încrederii și energiei, cu alegeri și consecințe; capitolul final cere trei întâlniri, 80 afecțiune și 75 încredere. Salvările și relațiile deja oficializate rămân intacte. La antrenamentul individual, OVR crește doar când este câștigată efectiv o îmbunătățire relevantă; facilitățile de nivel 3–4 cer acum și cinci meciuri de campionat înainte de a evalua clasamentul. Facilitățile deja obținute nu sunt retrase.
 
 ## Posturile FCSB
 
