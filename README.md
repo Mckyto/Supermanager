@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.38)
+# SuperManager 26/27 — Ediția Supremă (v10.55.39)
 
-**v10.55.38:** Contextul premeci compară punctele actuale ale celor două echipe și arată efectul aritmetic al victoriei, egalului sau înfrângerii, fără a prezice clasamentul sau calificarea.
+**v10.55.39:** Activitățile comunitare includ întâlniri opționale cu suporterii adaptate rezultatului din etapa precedentă de campionat; costurile, efectele și limita comună de frecvență sunt explicate înainte de confirmare.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
