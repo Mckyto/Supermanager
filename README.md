@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.40)
+# SuperManager 26/27 — Ediția Supremă (v10.55.41)
 
-**v10.55.40:** Pregătirea premeci include forma clubului în cel mult cinci meciuri de campionat înregistrate în calendarul sezonului curent, inclusiv adversarii și scorurile.
+**v10.55.41:** Poți începe un proiect sportiv opțional cu țintă de 1–3 victorii în următoarele trei meciuri de campionat deja programate. Progresul se bazează pe rezultate înregistrate, fără recompense sau penalizări.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
