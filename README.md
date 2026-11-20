@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.35)
+# SuperManager 26/27 — Ediția Supremă (v10.55.36)
 
-**v10.55.35:** Comparația ultimelor două sezoane arhivate include meciurile, victoriile, egalurile, înfrângerile și golurile din clasamentul final disponibil; în România, cifrele de meci și goluri se referă la faza finală.
+**v10.55.36:** Arhiva compară loturile de final ale ultimelor două sezoane pentru același club și campionat: jucători prezenți în ambele, doar în lotul nou sau doar în cel vechi. Nu reprezintă un istoric al transferurilor.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
