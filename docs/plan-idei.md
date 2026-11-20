@@ -24,7 +24,7 @@ Acesta este un inventar de lucru, nu o listă de funcții deja livrate. „Parț
 - [ ] Evenimente comunitare și interacțiuni cu suporterii. Parțial: activitățile opționale au costuri și efecte explicite, cu limită comună de una la patru etape; trei întâlniri cu suporterii apar în etapa următoare în funcție de rezultatul înregistrat în campionat. Nu există încă evenimente contextuale variate pentru alte situații.
 
 ## Club și carieră
-- [ ] Proiecte ale clubului cu obiective sportive măsurabile; identitatea clubului; cereri negociabile ale conducerii și obiective de sezon negociate.
+- [ ] Proiecte ale clubului cu obiective sportive măsurabile; identitatea clubului; cereri negociabile ale conducerii și obiective de sezon negociate. Parțial: un proiect opțional urmărește o țintă de 1–3 victorii în următoarele trei meciuri deja programate, fără recompense sau consecințe. Nu reprezintă un acord cu conducerea; proiectele extinse, identitatea și negocierile rămân de făcut.
 - [ ] Rapoarte financiare, costuri viitoare, organizarea deplasărilor și alegeri de carieră cu oferte distincte. Parțial: situația clubului estimează veniturile și costurile recurente la fiecare patru etape, fără tranzacțiile variabile și indică următoarea regularizare din calendarul generat; nu prezice bugetul viitor.
 - [x] Obiective personale de campionat cu ținte alese de utilizator, progres bazat pe rezultate și fără recompense automate.
 - [ ] Licențe de antrenor cu cerințe practice; conferințe care urmăresc declarațiile anterioare. Parțial: trei certificări simulate, neoficiale, urmăresc praguri de meciuri și victorii conduse în sezonul curent, fără bonusuri; nu există cursuri, licențe oficiale sau conferințe cu memorie.
