@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.42)
+# SuperManager 26/27 — Ediția Supremă (v10.55.43)
 
-**v10.55.42:** Proiectul sportiv opțional poate urmări victorii, puncte câștigate pe teren sau meciuri fără gol primit în trei partide de campionat programate. Progresul folosește rezultate înregistrate, fără recompense sau penalizări.
+**v10.55.43:** Jurnalul de decizii păstrează activitățile comunitare noi, cu sezon, club, cost și efectul efectiv asupra suporterilor; activitățile vechi nu sunt reconstruite.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
