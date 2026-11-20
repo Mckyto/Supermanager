@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.37)
+# SuperManager 26/27 — Ediția Supremă (v10.55.38)
 
-**v10.55.37:** Rezumatul premeci afișează jucătorii accidentați sau suspendați și titularii disponibili cu condiție sub 70%. Este informativ și nu modifică echipa sau rezultatul.
+**v10.55.38:** Contextul premeci compară punctele actuale ale celor două echipe și arată efectul aritmetic al victoriei, egalului sau înfrângerii, fără a prezice clasamentul sau calificarea.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
