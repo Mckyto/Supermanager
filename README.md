@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.65)
+# SuperManager 26/27 — Ediția Supremă (v10.55.66)
 
-**v10.55.65:** Negocierile de cumpărare afișează refuzurile și condițiile înregistrate anterior pentru același club și jucător, fără a modifica rezultatul negocierilor; jurnalul afișează refuzurile recente ale clubului.
+**v10.55.66:** Proiectele sportive pot urmări meciurile fără înfrângere sau cu gol marcat, pe baza rezultatelor de campionat confirmate, fără recompense sau penalizări.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
