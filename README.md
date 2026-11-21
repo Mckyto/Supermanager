@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.44)
+# SuperManager 26/27 — Ediția Supremă (v10.55.45)
 
-**v10.55.44:** Proiectele sportive opționale pot avea durata de trei sau cinci meciuri de campionat deja programate. Țintele se adaptează duratei, iar proiectele existente rămân compatibile.
+**v10.55.45:** Înaintea meciului poți consulta rezultatele directe înregistrate în campionatul curent și în sezoanele arhivate de acum înainte. Istoricul mai vechi nu este inventat și nu influențează simularea.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
