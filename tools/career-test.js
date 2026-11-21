@@ -25,6 +25,7 @@ async function simulate(app, button) {
     assert(app.click(/Semnează Contractul/));
     await waitUntil(app, () => !!read(app), 'salvare inițială');
     const initial = read(app);
+    initial.manager.isRomaniaSelector=true;initial.manager.ntFixtures=[{id:"nt-1",homeId:"romania_nt",awayId:"nt_suedia",played:true,homeGoals:2,awayGoals:1},{id:"nt-2",homeId:"nt_elvetia",awayId:"romania_nt",played:false}];
     initial.manager.clubSharesPct = 100; // pragul de demitere de 8, fără a dezactiva mecanica
     initial.difficulty = "normal";
     initial.calendarDomesticCup = false; // Acest test acoperă simularea campionatului fără opriri de cupă.
@@ -69,6 +70,7 @@ async function simulate(app, button) {
     await app.sleep(500);
     career = read(app);
     assert.equal(career.currentRound, 1);
+    assert.equal(career.manager.ntFixtures.length,4);assert(career.manager.ntFixtures.every(f=>!f.played));assert.equal(career.ntSeasonHistory.length,1);assert.equal(career.ntSeasonHistory[0].season,initial.season);assert.equal(career.ntSeasonHistory[0].matches.length,1);assert.equal(career.ntSeasonHistory[0].matches[0].homeGoals,2);assert.equal(career.ntSeasonHistory[0].matches[0].played,true);
     const growthNext=career.clubs.find(c=>c.id===career.userClubId).players.find(p=>p.id===growthPlayer.id);assert(growthNext);assert(growthNext.ovr<=74,'tranziția nu depășește limita sezonului precedent');
     const renewed=career.clubs.flatMap(c=>c.players).find(p=>p.id===aiStar.id);assert(renewed);assert(renewed.contractYears>=2);assert(!career.marketPool.some(p=>p.id===aiStar.id),'starul AI rămâne sub contract');
     assert.equal(career.calendar.length, 30);
