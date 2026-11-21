@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.76)
+# SuperManager 26/27 — Ediția Supremă (v10.55.77)
 
-**v10.55.76:** Liberii semnați pe cel puțin doi ani pot fi revânduți după etapa echivalentă din sezonul următor, pentru 75–80% din cotă.
+**v10.55.77:** Programul de campionat afișează date și zile, cu weekenduri rezervate pauzelor internaționale; cupele și naționala nu sunt încă sincronizate.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
