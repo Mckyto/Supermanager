@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.55)
+# SuperManager 26/27 — Ediția Supremă (v10.55.56)
 
-**v10.55.55:** Proiectul sportiv opțional poate urmări golurile marcate în trei sau cinci meciuri de campionat programate, fără recompense sau penalizări.
+**v10.55.56:** Activități opționale cu suporterii după trei victorii sau trei înfrângeri consecutive de campionat, cu costuri și efecte explicite.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
