@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.75)
+# SuperManager 26/27 — Ediția Supremă (v10.55.76)
 
-**v10.55.75:** Cluburile AI prelungesc mai des contractele tinerilor și păstrează jucătorii de peste 80 OVR, limitând noii jucători liberi de top.
+**v10.55.76:** Liberii semnați pe cel puțin doi ani pot fi revânduți după etapa echivalentă din sezonul următor, pentru 75–80% din cotă.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
