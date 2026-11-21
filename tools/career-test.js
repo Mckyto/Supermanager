@@ -29,6 +29,7 @@ async function simulate(app, button) {
     initial.difficulty = "normal";
     const otherClub=initial.clubs.find(c=>c.id!==initial.userClubId);initial.loanedOutPlayers=[{id:'test-loan-return',name:'Împrumut Altfel',age:20,isU21:true,ovr:70,contractYears:0,loanOriginalContractYears:3,onLoan:true,originClubId:otherClub.id,loanFromClubId:otherClub.id},{id:'test-loan-expire',name:'Contract Expirat',age:25,ovr:75,contractYears:0,loanOriginalContractYears:1,onLoan:true,originClubId:initial.userClubId,loanFromClubId:initial.userClubId}];
     initial.clubs.forEach(c => c.players.forEach(p => { p.ovr = c.id === initial.userClubId ? 99 : 30; }));
+    const growthPlayer=initial.clubs.find(c=>c.id===initial.userClubId).players.find(p=>p.id===initial.lineupIds.starters[1]);Object.assign(growthPlayer,{age:19,isU21:true,ovr:70,contractYears:4,potential:95});
     app.close();
     app = await launch({ seed: { [KEY]: JSON.stringify(initial) } });
     await waitUntil(app, () => /Centru Comandă/.test(app.text()), 'carieră încărcată');
@@ -56,6 +57,7 @@ async function simulate(app, button) {
     assert(career.calendar.every(r => r.fixtures.every(f => f.played && Number.isFinite(f.homeGoals) && Number.isFinite(f.awayGoals))));
     assert.equal(career.careerStats.matches, 40);
     const finalPlayers=career.clubs.find(c=>c.id===career.userClubId).players.map(p=>({id:p.id,name:p.name,ovr:p.ovr}));
+    const growthFinal=finalPlayers.find(p=>p.id===growthPlayer.id);assert(growthFinal.ovr<=74);
     assert.match(app.text(), /Final de Sezon/);
     console.log('  ✓ sezonul include faza finală și toate rezultatele');
     assert(app.click(/Începe Sezonul Următor/));
@@ -63,6 +65,7 @@ async function simulate(app, button) {
     await app.sleep(500);
     career = read(app);
     assert.equal(career.currentRound, 1);
+    const growthNext=career.clubs.find(c=>c.id===career.userClubId).players.find(p=>p.id===growthPlayer.id);assert(growthNext);assert(growthNext.ovr<=74,'tranziția nu depășește limita sezonului precedent');
     assert.equal(career.calendar.length, 30);
     assert(!career.playoffSplitDone);
     const other=career.clubs.find(c=>c.id===otherClub.id),returned=other.players.find(p=>p.id==='test-loan-return');assert(returned);assert.equal(returned.contractYears,2);assert.equal(returned.onLoan,false);assert(!career.clubs.find(c=>c.id===career.userClubId).players.some(p=>p.id==='test-loan-return'));assert(!career.lineupIds.bench.includes('test-loan-return'));assert(career.marketPool.some(p=>p.id==='test-loan-expire'&&p.freeAgent));assert.equal(career.loanedOutPlayers.length,0);

@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.72)
+# SuperManager 26/27 — Ediția Supremă (v10.55.73)
 
-**v10.55.72:** Profilul afișează posturile secundare, iar cumpărările respectă limita OVR în funcție de media lotului sau limita pentru jucători liberi.
+**v10.55.73:** Creșterile OVR permanente sunt limitate pe sezon: maximum 4 puncte pentru tineri cu OVR mic și 2 pentru ceilalți; salvările vechi nu sunt reduse retroactiv.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
