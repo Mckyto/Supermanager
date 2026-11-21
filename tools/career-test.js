@@ -60,12 +60,15 @@ async function simulate(app, button) {
     const growthFinal=finalPlayers.find(p=>p.id===growthPlayer.id);assert(growthFinal.ovr<=74);
     assert.match(app.text(), /Final de Sezon/);
     console.log('  ✓ sezonul include faza finală și toate rezultatele');
+    const aiStar=career.clubs.find(c=>c.id!==career.userClubId).players[0];Object.assign(aiStar,{age:31,ovr:85,contractYears:1});
+    app.close();app=await launch({seed:{[KEY]:JSON.stringify(career)}});await waitUntil(app,()=>/Final de Sezon/.test(app.text()),'final pentru expirări');app.window.Math.random=()=>.8;
     assert(app.click(/Începe Sezonul Următor/));
     await waitUntil(app, () => read(app)?.season !== initial.season, 'sezon nou');
     await app.sleep(500);
     career = read(app);
     assert.equal(career.currentRound, 1);
     const growthNext=career.clubs.find(c=>c.id===career.userClubId).players.find(p=>p.id===growthPlayer.id);assert(growthNext);assert(growthNext.ovr<=74,'tranziția nu depășește limita sezonului precedent');
+    const renewed=career.clubs.flatMap(c=>c.players).find(p=>p.id===aiStar.id);assert(renewed);assert(renewed.contractYears>=2);assert(!career.marketPool.some(p=>p.id===aiStar.id),'starul AI rămâne sub contract');
     assert.equal(career.calendar.length, 30);
     assert(!career.playoffSplitDone);
     const other=career.clubs.find(c=>c.id===otherClub.id),returned=other.players.find(p=>p.id==='test-loan-return');assert(returned);assert.equal(returned.contractYears,2);assert.equal(returned.onLoan,false);assert(!career.clubs.find(c=>c.id===career.userClubId).players.some(p=>p.id==='test-loan-return'));assert(!career.lineupIds.bench.includes('test-loan-return'));assert(career.marketPool.some(p=>p.id==='test-loan-expire'&&p.freeAgent));assert.equal(career.loanedOutPlayers.length,0);

@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.74)
+# SuperManager 26/27 — Ediția Supremă (v10.55.75)
 
-**v10.55.74:** Țintele apropiate de nivelul maxim și jucătorii liberi cer salarii și prime de instalare mai mari, afișate înaintea semnării.
+**v10.55.75:** Cluburile AI prelungesc mai des contractele tinerilor și păstrează jucătorii de peste 80 OVR, limitând noii jucători liberi de top.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 

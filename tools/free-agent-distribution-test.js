@@ -1,0 +1,12 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const html=fs.readFileSync('public/index.html','utf8');
+const start=html.indexOf('function _smAiRenewExpiring('),end=html.indexOf('function TA(',start);
+assert(start>=0&&end>start);
+const renew=new Function(html.slice(start,end)+';return _smAiRenewExpiring')();
+assert.equal(renew({ovr:81},32,false,()=>.999),true);
+assert.equal(renew({ovr:80},30,false,()=>.899),true);
+assert.equal(renew({ovr:80},30,false,()=>.9),false);
+assert.equal(renew({ovr:80},31,false,()=>0),false);
+assert.equal(renew({ovr:90},25,true,()=>0),false);
+assert.equal(renew({ovr:90,onLoan:true},25,false,()=>0),false);
+console.log('  ✓ expirări AI: staruri păstrate, tineri rar liberi; utilizatorul și împrumuturile rămân independente');
