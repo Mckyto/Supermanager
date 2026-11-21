@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.62)
+# SuperManager 26/27 — Ediția Supremă (v10.55.63)
 
-**v10.55.62:** Planurile condiționale live pot reveni opțional după interval la setările anterioare, fără a suprascrie modificările ulterioare.
+**v10.55.63:** Situația financiară semnalează contractele și împrumuturile apropiate de încheiere, pe baza duratei înregistrate și a salariilor curente.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
