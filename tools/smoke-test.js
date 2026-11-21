@@ -1139,7 +1139,7 @@ async function scenarioCupSim() {
   const text = app.text();
   check('bara de simulare în cupe e vizibilă', /Simulare în cupe/.test(text) && app.errors.length === before);
   check('butonul „Simulează runda de cupă" există', /Simulează runda de cupă/.test(text));
-  check('butonul „Simulează tot parcursul european" există', /Simulează tot parcursul european/.test(text));
+  check('butonul „Simulează meciul european disponibil" există', /Simulează meciul european disponibil/.test(text));
   if (app.click(/Centru Comandă/)) await app.sleep(500);
 }
 

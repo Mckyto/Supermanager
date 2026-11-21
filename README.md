@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.77)
+# SuperManager 26/27 — Ediția Supremă (v10.55.78)
 
-**v10.55.77:** Programul de campionat afișează date și zile, cu weekenduri rezervate pauzelor internaționale; cupele și naționala nu sunt încă sincronizate.
+**v10.55.78:** Cupele generate progresează prin runde deblocate, cu rezultate, calificări și trofee; calendarul dintre competiții rămâne nesincronizat.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
