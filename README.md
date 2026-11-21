@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.69)
+# SuperManager 26/27 — Ediția Supremă (v10.55.70)
 
-**v10.55.69:** Cronica sezonului separă rezultatele arhivate de acasă și din deplasare și calculează punctele câștigate pe teren.
+**v10.55.70:** Poți înscrie un jucător liber la o probă informativă plătită și colecta atributele exacte după o etapă; nu sunt simulate meciuri sau antrenamente.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
