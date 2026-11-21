@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.49)
+# SuperManager 26/27 — Ediția Supremă (v10.55.50)
 
-**v10.55.49:** După descoperirea preferinței, momentele personale includ un răspuns adaptat personajului și pot menționa momentul ales anterior, dacă a fost înregistrat. Nu modifică statisticile sau promisiunile.
+**v10.55.50:** Istoricul analizei defensive păstrează sursele înregistrate ale golurilor primite în meciurile live de campionat încheiate de acum înainte. Simulările rapide și meciurile vechi nu sunt reconstruite.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
