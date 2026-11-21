@@ -934,14 +934,15 @@ async function scenarioBulkSim() {
   app.window.confirm = () => true;
   app.click((l) => l === 'Tur');
   let career = null;
+  const cupDue = c => { const cup=c?.nationalCup,stage=cup?.stages?.[cup.stageIndex];return !!(c?.calendarDomesticCup&&stage&&!cup.eliminated&&!cup.winnerId&&c.currentRound>=stage.unlockRound&&cup.currentTies?.some(f=>!f.played&&f.scheduledDate&&(f.homeId===c.userClubId||f.awayId===c.userClubId))) };
   for (let i = 0; i < 60; i += 1) {
     await app.sleep(500);
     career = read();
-    if (career && (!app.labels().includes('Stop')) && (career.currentRound >= 16 || /demitere/i.test(app.text()))) break;
+    if (career && (!app.labels().includes('Stop')) && (career.currentRound >= 16 || /demitere/i.test(app.text()) || cupDue(career))) break;
   }
   check(
-    'simularea joacă turul sau se oprește la demitere',
-    !!career && (career.currentRound >= 16 && career.calendar.find(r => r.roundNumber === 15)?.fixtures.every(f => f.played) || /demitere/i.test(app.text())),
+    'simularea joacă turul sau se oprește la demitere / cupă',
+    !!career && (career.currentRound >= 16 && career.calendar.find(r => r.roundNumber === 15)?.fixtures.every(f => f.played) || /demitere/i.test(app.text()) || cupDue(career)),
     `${start ? start.currentRound : '?'} → ${career ? career.currentRound : '?'}`
   );
   app.window.confirm = originalConfirm;

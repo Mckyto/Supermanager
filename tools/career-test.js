@@ -27,6 +27,7 @@ async function simulate(app, button) {
     const initial = read(app);
     initial.manager.clubSharesPct = 100; // pragul de demitere de 8, fără a dezactiva mecanica
     initial.difficulty = "normal";
+    initial.calendarDomesticCup = false; // Acest test acoperă simularea campionatului fără opriri de cupă.
     const otherClub=initial.clubs.find(c=>c.id!==initial.userClubId);initial.loanedOutPlayers=[{id:'test-loan-return',name:'Împrumut Altfel',age:20,isU21:true,ovr:70,contractYears:0,loanOriginalContractYears:3,onLoan:true,originClubId:otherClub.id,loanFromClubId:otherClub.id},{id:'test-loan-expire',name:'Contract Expirat',age:25,ovr:75,contractYears:0,loanOriginalContractYears:1,onLoan:true,originClubId:initial.userClubId,loanFromClubId:initial.userClubId}];
     initial.clubs.forEach(c => c.players.forEach(p => { p.ovr = c.id === initial.userClubId ? 99 : 30; }));
     const growthPlayer=initial.clubs.find(c=>c.id===initial.userClubId).players.find(p=>p.id===initial.lineupIds.starters[1]);Object.assign(growthPlayer,{age:19,isU21:true,ovr:70,contractYears:4,potential:95});
