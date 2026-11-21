@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.82)
+# SuperManager 26/27 — Ediția Supremă (v10.55.83)
+
+**v10.55.83:** Formatele vechi ale cupei interne și cupelor europene sunt din nou accesibile din salvări, cu statistici pentru meciurile nou disputate și cluburile cu lot persistent; meciurile deja jucate nu sunt reconstruite.
 
 **v10.55.82:** Profilul afișează statistici individuale pe sezon și competiție, iar media notelor poate influența OVR în limita sezonieră. Datele se colectează de acum înainte; notele simulate sunt estimate. Sunt acoperite campionatul activ, U21 și meciurile speciale ale utilizatorului, precum și meciurile AI din formatele noi de cupă internă și Europa, pentru cluburile cu lot persistent. Formatele vechi de cupă, echipele externe și competițiile altor ligi nu sunt complet acoperite.
 

@@ -13,6 +13,8 @@ let capped={id:'c',age:29,ovr:72,ovrGrowth:{season:2026,limit:2,gained:2}};for(l
 let unrated={id:'u',age:25,ovr:70};for(let i=0;i<5;i++)unrated=record(unrated,2026,'Cupă',{minutesPlayed:90},false);assert.equal(unrated.ovr,70);assert.equal(unrated.competitionStats[2026]['Cupă'].rated,0);
 for(let year=2000;year<2015;year++)unrated=record(unrated,year,'Cupă',{minutesPlayed:1},false);assert(unrated.competitionStats[2000]);
 let r=quick([{id:'a',pos:'ST'},{id:'b',pos:'CM'}],[{type:'GOAL',teamId:'x',scorerId:'a',assistId:'b'}],'x',1,0);assert.equal(r[0].goals,1);assert.equal(r[1].assists,1);
+const youthStart=html.indexOf('function $A('),youthEnd=html.indexOf('function VA(',youthStart);assert(youthStart>=0&&youthEnd>youthStart);const simulateYouth=new Function('zA','jA','dv','vh','GA','_smOvrGrowth','_smRecordPlayerCompetition',html.slice(youthStart,youthEnd)+';return $A')(()=>()=>0.5,()=>({homeGoals:3,awayGoals:0}),()=>70,(v,min,max)=>Math.max(min,Math.min(max,v)),x=>x,(x)=>({player:x,delta:0}),record);
+const youth=[{id:'g',pos:'GK',ovr:70},{id:'d1',pos:'CB',ovr:70},{id:'d2',pos:'CB',ovr:70}];const yr=simulateYouth({calendar:[{roundNumber:1,fixtures:[{id:'y',homeId:'a',awayId:'b'}]}],roundNumber:1,userClubId:'a',userSquad:youth,clubs:[{id:'a'},{id:'b'}],season:2026});assert.equal(yr.userSquad.reduce((n,p)=>n+(p.competitionStats?.[2026]?.['Campionat U21']?.goals||0),0),3);assert.equal(yr.userSquad[0].competitionStats[2026]['Campionat U21'].cleanSheets,1);
 console.log('  ✓ statistici pe competiții, minute, note, OVR și rapoarte simulate');
 
 const {launch}=require('./dom-harness'),KEY='sm2627_career_slot_1',read=app=>JSON.parse(app.window.localStorage.getItem(KEY));
