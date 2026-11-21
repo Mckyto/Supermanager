@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.66)
+# SuperManager 26/27 — Ediția Supremă (v10.55.67)
 
-**v10.55.66:** Proiectele sportive pot urmări meciurile fără înfrângere sau cu gol marcat, pe baza rezultatelor de campionat confirmate, fără recompense sau penalizări.
+**v10.55.67:** Piața afișează intervale preliminare pentru atributele jucătorilor neobservați; scoutingul plătit deblochează imediat valorile exacte.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
