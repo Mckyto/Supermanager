@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.60)
+# SuperManager 26/27 — Ediția Supremă (v10.55.61)
 
-**v10.55.60:** Arhiva include o cronică a rezultatelor de campionat disponibile pentru fiecare sezon, cu bilanț și rezultate extreme.
+**v10.55.61:** În meciurile live poți configura două reguli tactice condiționale independente, cu prioritate clară când se declanșează în același minut.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
