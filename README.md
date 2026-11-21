@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.83)
+# SuperManager 26/27 — Ediția Supremă (v10.55.84)
+
+**v10.55.84:** Ecranul principal scoate în față următorul meci sau cupa prioritară, grupează rapoartele și obiectivele și simplifică navigarea mobilă. Limita de timp CI este extinsă pentru suita completă.
 
 **v10.55.83:** Formatele vechi ale cupei interne și cupelor europene sunt din nou accesibile din salvări, cu statistici pentru meciurile nou disputate și cluburile cu lot persistent; meciurile deja jucate nu sunt reconstruite.
 
