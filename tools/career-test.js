@@ -55,6 +55,7 @@ async function simulate(app, button) {
     assert.equal(career.calendar.length, 40);
     assert(career.playoffSplitDone);
     assert(career.calendar.every(r => r.fixtures.every(f => f.played && Number.isFinite(f.homeGoals) && Number.isFinite(f.awayGoals))));
+    assert(career.calendar.every(r => r.fixtures.every(f => /^\d{4}-\d{2}-\d{2}$/.test(f.scheduledDate))), "date persistente pentru tur, retur și play-off/play-out");
     assert.equal(career.careerStats.matches, 40);
     const finalPlayers=career.clubs.find(c=>c.id===career.userClubId).players.map(p=>({id:p.id,name:p.name,ovr:p.ovr}));
     const growthFinal=finalPlayers.find(p=>p.id===growthPlayer.id);assert(growthFinal.ovr<=74);
@@ -73,7 +74,7 @@ async function simulate(app, button) {
     assert(!career.playoffSplitDone);
     const other=career.clubs.find(c=>c.id===otherClub.id),returned=other.players.find(p=>p.id==='test-loan-return');assert(returned);assert.equal(returned.contractYears,2);assert.equal(returned.onLoan,false);assert(!career.clubs.find(c=>c.id===career.userClubId).players.some(p=>p.id==='test-loan-return'));assert(!career.lineupIds.bench.includes('test-loan-return'));assert(career.marketPool.some(p=>p.id==='test-loan-expire'&&p.freeAgent));assert.equal(career.loanedOutPlayers.length,0);
     assert.equal(career.seasonArchive.length,1);
-    const archive=career.seasonArchive[0];assert.equal(archive.season,initial.season);assert.equal(archive.clubId,initial.userClubId);assert.equal(archive.standings.length,16);assert.deepEqual(archive.squad.map(p=>({id:p.id,name:p.name,ovr:p.ovr})),finalPlayers);
+    const archive=career.seasonArchive[0];assert(archive.matchHistory.every(m=>m.scheduledDate), "datele programate sunt arhivate");assert.equal(archive.season,initial.season);assert.equal(archive.clubId,initial.userClubId);assert.equal(archive.standings.length,16);assert.deepEqual(archive.squad.map(p=>({id:p.id,name:p.name,ovr:p.ovr})),finalPlayers);
 
     const saved = app.window.localStorage.getItem(KEY);
     app.close();
