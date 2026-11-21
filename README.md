@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.53)
+# SuperManager 26/27 — Ediția Supremă (v10.55.54)
 
-**v10.55.53:** Programările personale opționale apar în centrul de notificări și în jurnal, cu acces direct la relația potrivită și explicații despre energie, termen și disponibilitate.
+**v10.55.54:** Jurnalul include monitorizările informative ale revenirii pentru clubul și sezonul curente, cu progres și stare.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
