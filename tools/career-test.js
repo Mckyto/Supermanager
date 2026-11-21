@@ -27,6 +27,7 @@ async function simulate(app, button) {
     const initial = read(app);
     initial.manager.clubSharesPct = 100; // pragul de demitere de 8, fără a dezactiva mecanica
     initial.difficulty = "normal";
+    const otherClub=initial.clubs.find(c=>c.id!==initial.userClubId);initial.loanedOutPlayers=[{id:'test-loan-return',name:'Împrumut Altfel',age:20,isU21:true,ovr:70,contractYears:0,loanOriginalContractYears:3,onLoan:true,originClubId:otherClub.id,loanFromClubId:otherClub.id},{id:'test-loan-expire',name:'Contract Expirat',age:25,ovr:75,contractYears:0,loanOriginalContractYears:1,onLoan:true,originClubId:initial.userClubId,loanFromClubId:initial.userClubId}];
     initial.clubs.forEach(c => c.players.forEach(p => { p.ovr = c.id === initial.userClubId ? 99 : 30; }));
     app.close();
     app = await launch({ seed: { [KEY]: JSON.stringify(initial) } });
@@ -64,6 +65,7 @@ async function simulate(app, button) {
     assert.equal(career.currentRound, 1);
     assert.equal(career.calendar.length, 30);
     assert(!career.playoffSplitDone);
+    const other=career.clubs.find(c=>c.id===otherClub.id),returned=other.players.find(p=>p.id==='test-loan-return');assert(returned);assert.equal(returned.contractYears,2);assert.equal(returned.onLoan,false);assert(!career.clubs.find(c=>c.id===career.userClubId).players.some(p=>p.id==='test-loan-return'));assert(!career.lineupIds.bench.includes('test-loan-return'));assert(career.marketPool.some(p=>p.id==='test-loan-expire'&&p.freeAgent));assert.equal(career.loanedOutPlayers.length,0);
     assert.equal(career.seasonArchive.length,1);
     const archive=career.seasonArchive[0];assert.equal(archive.season,initial.season);assert.equal(archive.clubId,initial.userClubId);assert.equal(archive.standings.length,16);assert.deepEqual(archive.squad.map(p=>({id:p.id,name:p.name,ovr:p.ovr})),finalPlayers);
 
