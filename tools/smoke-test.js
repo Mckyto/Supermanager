@@ -922,6 +922,11 @@ async function scenarioBulkSim() {
     } catch { return null; }
   };
   const before = app.errors.length;
+  app.click(/Centru Comandă/);
+  await app.sleep(300);
+  const bulkGroup = app.document.querySelector('[data-sm-bulk-group]');
+  if (bulkGroup && !bulkGroup.open) bulkGroup.querySelector('summary').click();
+  await app.sleep(100);
   const start = read();
   check('bara de simulare e vizibilă', app.labels().some((l) => l === 'Tur') && app.labels().some((l) => l === 'Sezon'));
 

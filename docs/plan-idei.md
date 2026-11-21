@@ -33,7 +33,7 @@ Acesta este un inventar de lucru, nu o listă de funcții deja livrate. „Parț
 ## Interfață și transparență
 - [x] Centru de notificări cu mesaje active, promisiuni, șantiere și acces la secțiunile relevante.
 - [ ] Jurnal unificat al deciziilor și promisiunilor active din toate sistemele. Parțial: jurnalul comun afișează promisiunile active față de jucători și partenere, monitorizările revenirii și proiectul sportiv pentru clubul și sezonul curente, până la opt refuzuri recente de transfer ale clubului actual, ultimele decizii de club, momentele înregistrate în relații și până la 12 dintre ultimele 20 de activități comunitare înregistrate de acum înainte, cu cost și efect real; nu include toate sistemele și nu reconstruiește istoricul salvărilor vechi.
-- [ ] Ecran principal mai aerisit, navigare mobilă simplificată, carduri și dialoguri mai lizibile, progres clar, dimensiune de text și contrast reglabile.
+- [ ] Ecran principal mai aerisit, navigare mobilă simplificată, carduri și dialoguri mai lizibile, progres clar, dimensiune de text și contrast reglabile. Parțial: ecranul principal începe cu următoarea acțiune și afișează prioritatea cupei când blochează campionatul; rapoartele și obiectivele sunt grupate în secțiuni extensibile. Bara mobilă are patru destinații principale și meniul „Mai mult”; simularea în bloc nu mai este duplicată în antet. Restul ecranelor, reglajele de text/contrast și verificarea vizuală pe dispozitive rămân de făcut.
 - [ ] Verificare vizuală și interacțiuni pe telefon și desktop, inclusiv 2D, 3D, Radio și pauză; jsdom nu înlocuiește WebGL sau testarea mobilă reală.
 
 ## Solicitări Mădălin — lot, evoluție, calendar și mercato
