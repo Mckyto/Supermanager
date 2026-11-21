@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.67)
+# SuperManager 26/27 — Ediția Supremă (v10.55.68)
 
-**v10.55.67:** Piața afișează intervale preliminare pentru atributele jucătorilor neobservați; scoutingul plătit deblochează imediat valorile exacte.
+**v10.55.68:** Istoricul golurilor primite însumează sursele din rapoartele live afișate, fără a deduce cauzalitate sau a reconstrui meciuri lipsă.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
