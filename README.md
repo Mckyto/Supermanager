@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.80)
+# SuperManager 26/27 — Ediția Supremă (v10.55.81)
 
-**v10.55.80:** Semifinalele și finala europeană nou generate se programează la mijlocul săptămânii; rezultatele europene disponibile se păstrează în arhiva sezonului.
+**v10.55.81:** Rundele de cupă internă nou generate sunt programate miercurea, evită suprapunerile cu Europa și sunt arhivate la finalul sezonului.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
