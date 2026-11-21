@@ -20,7 +20,7 @@ Acesta este un inventar de lucru, nu o listă de funcții deja livrate. „Parț
 
 ## Relații și viață personală
 - [ ] Promisiuni urmărite cu termene și consecințe, jurnal de relație și conversații care țin cont de trecut. Parțial: cererile/promisiunile de întâlnire au termen, consecință unică și jurnal pentru momentele noi; alte tipuri de promisiuni și conversații mai variate rămân de făcut.
-- [ ] Preferințe de comunicare descoperite treptat, momente fără recompense obligatorii, calendar personal influențat de deplasări și oboseală. Parțial: există o vizită comunitară opțională fără recompense; preferințele și calendarul personal rămân de făcut.
+- [ ] Preferințe de comunicare descoperite treptat, momente fără recompense obligatorii, calendar personal influențat de deplasări și oboseală. Parțial: există o vizită comunitară și momente opționale în relațiile inițiate, fără cost sau recompensă; acestea nu înlocuiesc întâlnirile sau promisiunile. Preferințele și calendarul personal rămân de făcut.
 - [ ] Evenimente comunitare și interacțiuni cu suporterii. Parțial: activitățile opționale au costuri și efecte explicite, cu limită comună de una la patru etape; trei întâlniri cu suporterii apar în etapa următoare în funcție de rezultatul înregistrat în campionat. Nu există încă evenimente contextuale variate pentru alte situații.
 
 ## Club și carieră
