@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.64)
+# SuperManager 26/27 — Ediția Supremă (v10.55.65)
 
-**v10.55.64:** Registrul de împrumuturi trimise arată datele disponibile, iar tranziția sezonului returnează jucătorii la clubul de origine sau îi eliberează la expirarea contractului.
+**v10.55.65:** Negocierile de cumpărare afișează refuzurile și condițiile înregistrate anterior pentru același club și jucător, fără a modifica rezultatul negocierilor; jurnalul afișează refuzurile recente ale clubului.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
