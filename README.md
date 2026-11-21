@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.84)
+# SuperManager 26/27 — Ediția Supremă (v10.55.85)
+
+**v10.55.85:** Meciurile naționalei folosesc programul salvat, lotul selectat sau unul automat și adversari disponibili, cu statistici live/simulate și istoric la tranziția sezonului. Etapele naționalei sunt simulate și nu sunt încă sincronizate cu pauzele internaționale.
 
 **v10.55.84:** Ecranul principal scoate în față următorul meci sau cupa prioritară, grupează rapoartele și obiectivele și simplifică navigarea mobilă. Limita de timp CI este extinsă pentru suita completă.
 
