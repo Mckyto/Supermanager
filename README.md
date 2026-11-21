@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.51)
+# SuperManager 26/27 — Ediția Supremă (v10.55.52)
 
-**v10.55.51:** Poți monitoriza revenirea a până la trei jucători accidentați, urmărind două etape fără accidentare după recuperare. Monitorizarea este informativă și nu modifică riscurile sau selecția.
+**v10.55.52:** Calendarul personal permite programarea unui moment opțional într-o etapă cu meci de campionat acasă. Confirmarea cere minimum 30% energie, fără cost, consum sau efect asupra promisiunilor.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
