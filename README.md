@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.48)
+# SuperManager 26/27 — Ediția Supremă (v10.55.49)
 
-**v10.55.48:** Două momente personale în etape diferite dezvăluie treptat preferința de comunicare exprimată de fiecare personaj. Indiciile sunt informative, fără efecte asupra statisticilor sau opțiunilor de dialog.
+**v10.55.49:** După descoperirea preferinței, momentele personale includ un răspuns adaptat personajului și pot menționa momentul ales anterior, dacă a fost înregistrat. Nu modifică statisticile sau promisiunile.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
