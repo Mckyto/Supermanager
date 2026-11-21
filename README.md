@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.50)
+# SuperManager 26/27 — Ediția Supremă (v10.55.51)
 
-**v10.55.50:** Istoricul analizei defensive păstrează sursele înregistrate ale golurilor primite în meciurile live de campionat încheiate de acum înainte. Simulările rapide și meciurile vechi nu sunt reconstruite.
+**v10.55.51:** Poți monitoriza revenirea a până la trei jucători accidentați, urmărind două etape fără accidentare după recuperare. Monitorizarea este informativă și nu modifică riscurile sau selecția.
 
 **v10.55.32:** Activități comunitare opționale cu costuri și efecte vizibile, inclusiv o vizită fără recompense. Există o limită de o activitate la patru etape pentru fiecare club și sezon.
 
