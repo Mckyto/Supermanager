@@ -11,6 +11,7 @@
  * Nu testează grafica/WebGL/audio — doar că jocul pornește și logica rulează.
  */
 const { launch } = require('./dom-harness.js');
+const resolveSupercup = require('./resolve-supercup-fixture');
 
 const SKIP_MATCH = process.argv.includes('--no-match');
 
@@ -78,6 +79,7 @@ async function scenarioOnboarding() {
 
   if (!click(/Semnează Contractul/)) return fail('butonul „Semnează Contractul" există');
   pass('butonul „Semnează Contractul" apăsat');
+  await resolveSupercup(app);
 
   const ok = await app.waitFor(/Pulsul SuperLigii/, 10000);
   check('dashboard-ul se încarcă', ok);

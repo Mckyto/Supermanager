@@ -1,3 +1,4 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 /** Teste pentru simulare rapidă, variația tactică și comenzile live. */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -25,7 +26,7 @@ const cross=new Function(extract('function _smCrossRate(', 'class hM{')+';return
 const moment=new Function(extract('function _smKeyMoment(', 'function Qb(')+';return _smKeyMoment')();assert.equal(moment([{type:'pass',text:'Pasă'},{type:'goal',text:'Gol',min:9}]).text,'Gol');assert.equal(moment([{type:'pass',text:'Pasă'}]),null);
 console.log('  ✓ simularea rapidă respectă titularii, disponibilitatea, condiția și tactica; faze pe flancuri');
 (async()=>{const app=await launch();try{
- assert(app.click(/Semnează Contractul/));assert(await app.waitFor(/Intră în Meci/,10000));assert(app.document.querySelector('[data-sm-quick-explanation]'));
+ assert(app.click(/Semnează Contractul/));await resolveSupercup(app);assert(await app.waitFor(/Intră în Meci/,10000));assert(app.document.querySelector('[data-sm-quick-explanation]'));
  assert(app.click(/Intră în Meci/));assert(await app.waitFor(/Adrenalină pe Gazon|LIVE/,10000));const engine=app.window.__smEngine;engine.phase='LIVE';
  assert(app.click(label=>label==='Tactică'));await app.sleep(150);const panel=app.document.querySelector('[data-sm-live-instructions]');assert(panel);
  const select=panel.querySelector('select');assert(select.options.length>1);select.value=select.options[1].value;select.dispatchEvent(new app.window.Event('change',{bubbles:true}));await app.sleep(100);

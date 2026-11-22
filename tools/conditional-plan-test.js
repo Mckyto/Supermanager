@@ -1,6 +1,7 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 const assert=require('node:assert/strict'),{launch}=require('./dom-harness');
 (async()=>{const app=await launch();try{
- assert(app.click(/Semnează Contractul/));assert(await app.waitFor(/Intră în Meci/,10000));assert(app.click(/Intră în Meci/));assert(await app.waitFor(/Adrenalină pe Gazon|LIVE/,10000));
+ assert(app.click(/Semnează Contractul/));await resolveSupercup(app);assert(await app.waitFor(/Intră în Meci/,10000));assert(app.click(/Intră în Meci/));assert(await app.waitFor(/Adrenalină pe Gazon|LIVE/,10000));
  const live=app.window.__smEngine,make=side=>new live.constructor({homeClub:live.homeClub,awayClub:live.awayClub,homeStarters:live.homePlayers.map(p=>({...p})),awayStarters:live.awayPlayers.map(p=>({...p})),userSide:side});
  const game=make('away');game.phase='LIVE';game.half=2;game.minute=59;game.score.home=1;game.score.away=0;const orig={...game.awayTactics};
  assert.equal(game.setConditionalPlan('home','losing',60,'chase'),false);assert.equal(game.setConditionalPlan('away','losing',0,'chase'),false);assert.equal(game.setConditionalPlan('away','losing',60,'constructor'),false);assert(game.setConditionalPlan('away','losing',60,'chase'));
