@@ -1,3 +1,4 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 const assert=require('node:assert/strict'),fs=require('node:fs');
 const html=fs.readFileSync('public/index.html','utf8'),start=html.indexOf('function _smPlayerPromiseResult('),end=html.indexOf('function _smRotationOptions(',start);
 const resolve=new Function(html.slice(start,end)+';return _smPlayerPromiseResult')();
@@ -12,7 +13,7 @@ assert.equal(resolve({kind:'minutes',dueRound:5},{...c,minutes:0}).status,'broke
 console.log('  ✓ promisiunile disting minutele de titularizare și amână indisponibilitatea');
 const {launch}=require('./dom-harness');const KEY='sm2627_career_slot_1';
 (async()=>{let app=await launch();try{
- assert(app.click(/Semnează Contractul/));await app.sleep(800);const base=JSON.parse(app.window.localStorage.getItem(KEY));base.manager.clubSharesPct=100;
+ assert(app.click(/Semnează Contractul/));await resolveSupercup(app);await app.sleep(800);const base=JSON.parse(app.window.localStorage.getItem(KEY));base.manager.clubSharesPct=100;
  const club=base.clubs.find(c=>c.id===base.userClubId),starter=base.lineupIds.starters.find(id=>club.players.find(p=>p.id===id)),bench=base.lineupIds.bench.find(id=>club.players.find(p=>p.id===id&&p.injuredWeeks===0&&p.suspendedMatches===0));
  assert(starter&&bench);const sp=club.players.find(p=>p.id===starter),bp=club.players.find(p=>p.id===bench);
  base.playerPromises=[{id:'test-start',playerId:starter,playerName:sp.name,promiseText:'Titularizare',kind:'start',dueRound:base.currentRound},{id:'test-bench',playerId:bench,playerName:bp.name,promiseText:'Minute',kind:'minutes',dueRound:base.currentRound}];

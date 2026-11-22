@@ -1,3 +1,4 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 /** Test UI în deplasare, cu Radio Live și situații limită pe tabla de pauză. */
 const assert = require('node:assert/strict');
 const { launch } = require('./dom-harness');
@@ -5,7 +6,7 @@ const KEY = 'sm2627_career_slot_1';
 (async () => {
   let app = await launch();
   try {
-    assert(app.click(/Semnează Contractul/));
+    assert(app.click(/Semnează Contractul/));await resolveSupercup(app);
     assert(await app.waitFor(/Intră în Meci/, 10000));
     await app.sleep(800);
     const career=JSON.parse(app.window.localStorage.getItem(KEY));

@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.85)
+# SuperManager 26/27 — Ediția Supremă (v10.55.86)
+
+**v10.55.86:** Naționala are meciuri în pauzele internaționale simulate în carierele și sezoanele noi. Cupele nou generate evită săptămânile rezervate, iar meciurile deblocate sunt ordonate cronologic; un meci al naționalei poate fi omis fără rezultat. Salvările vechi își păstrează programul până la sezonul următor; Supercupa României este programată cu o săptămână înaintea primei etape și trebuie disputată înainte de avansare; rezultatele disponibile sunt arhivate. După eliminarea utilizatorului, rundele noi ale cupei continuă automat la etapele programate, iar câștigătoarea și toate rezultatele disponibile se păstrează în arhivă. Din sezonul următor participă campioana și câștigătoarea cunoscută a cupei; dacă aceasta lipsește sau a câștigat și campionatul, este folosită vicecampioana. Când utilizatorul nu participă, meciul este simulat automat. Primul sezon rămâne simplificat.
 
 **v10.55.85:** Meciurile naționalei folosesc programul salvat, lotul selectat sau unul automat și adversari disponibili, cu statistici live/simulate și istoric la tranziția sezonului. Etapele naționalei sunt simulate și nu sunt încă sincronizate cu pauzele internaționale.
 

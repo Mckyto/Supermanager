@@ -1,3 +1,4 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 const assert=require('node:assert/strict'),fs=require('node:fs');
 const html=fs.readFileSync('public/index.html','utf8'),start=html.indexOf('function _smOvrGrowth('),end=html.indexOf('function _smResetSeasonPlayer(',start);
 const {record,apply,quick}=new Function(html.slice(start,end)+';return {record:_smRecordPlayerCompetition,apply:_smApplyPlayerReports,quick:_smQuickPlayerReport}')();
@@ -19,7 +20,7 @@ console.log('  ✓ statistici pe competiții, minute, note, OVR și rapoarte sim
 
 const {launch}=require('./dom-harness'),KEY='sm2627_career_slot_1',read=app=>JSON.parse(app.window.localStorage.getItem(KEY));
 (async()=>{let app=await launch();try{
- assert(app.click(/Semnează Contractul/));await app.sleep(600);let seed=read(app);seed.calendarDomesticCup=false;seed.boardConfidence=100;seed.manager.clubSharesPct=100;const user=seed.clubs.find(c=>c.id===seed.userClubId);for(const c of seed.clubs)for(const p of c.players)p.ovr=c.id===seed.userClubId?90:30;app.close();app=await launch({seed:{[KEY]:JSON.stringify(seed)}});await app.sleep(500);app.window.Math.random=()=>.3;assert(app.click(x=>x==='Tur'));
+ assert(app.click(/Semnează Contractul/));await resolveSupercup(app);await app.sleep(600);let seed=read(app);seed.calendarDomesticCup=false;seed.boardConfidence=100;seed.manager.clubSharesPct=100;const user=seed.clubs.find(c=>c.id===seed.userClubId);for(const c of seed.clubs)for(const p of c.players)p.ovr=c.id===seed.userClubId?90:30;app.close();app=await launch({seed:{[KEY]:JSON.stringify(seed)}});await app.sleep(500);app.window.Math.random=()=>.3;assert(app.click(x=>x==='Tur'));
  let state;for(let i=0;i<300;i++){await app.sleep(100);state=read(app);if(state.currentRound>=16&&!app.labels().includes('Stop'))break}assert.equal(state.currentRound,16);
  const round=state.calendar.find(r=>r.roundNumber===1),fixture=round.fixtures.find(f=>f.homeId===state.userClubId||f.awayId===state.userClubId);assert(Array.isArray(fixture.events));
  for(const c of state.clubs){for(const p of c.players){const stats=p.competitionStats?.[state.season]?.Campionat;if(!stats)continue;assert(Number.isFinite(p.fitness));assert(stats.apps>0);}}

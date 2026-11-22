@@ -1,3 +1,4 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 const assert=require('node:assert/strict'),fs=require('node:fs');
 const html=fs.readFileSync('public/index.html','utf8'),start=html.indexOf('function _smTrainingGoals('),end=html.indexOf('function _SmTrainingGoals(',start);assert(start>=0&&end>start);
 const {list,add,remove}=new Function(html.slice(start,end)+';return {list:_smTrainingGoals,add:_smTrainingGoalAdd,remove:_smTrainingGoalRemove}')();
@@ -7,7 +8,7 @@ assert.equal(add(state,2,1),state);assert.equal(add(state,3,1),state);assert.equ
 console.log('  ✓ obiectivele individuale au bază sezonieră, validare și nu modifică lotul');
 const {launch}=require('./dom-harness'),KEY='sm2627_career_slot_1';
 (async()=>{let app=await launch();try{
- assert(app.click(/Semnează Contractul/));await app.sleep(800);const data=JSON.parse(app.window.localStorage.getItem(KEY)),club=data.clubs.find(c=>c.id===data.userClubId),p=club.players.find(p=>p.age<=31&&p.ovr<95);assert(p);
+ assert(app.click(/Semnează Contractul/));await resolveSupercup(app);await app.sleep(800);const data=JSON.parse(app.window.localStorage.getItem(KEY)),club=data.clubs.find(c=>c.id===data.userClubId),p=club.players.find(p=>p.age<=31&&p.ovr<95);assert(p);
  p.individualTrainingImprovements=2;p.individualTrainingProgress=5;p.individualTrainingSessions=1;p.injuredWeeks=0;p.suspendedMatches=0;data.individualTrainingPlans={...data.individualTrainingPlans,[p.id]:'goalkeeping'};data.manager.clubSharesPct=100;data.boardConfidence=100;
  app.close();app=await launch({seed:{[KEY]:JSON.stringify(data)}});await app.sleep(500);app.window.Math.random=()=>.8;let panel=app.document.querySelector('[data-sm-training-goals]');assert(panel);panel.querySelector('summary').click();const select=panel.querySelector('select');select.value=String(p.id);select.dispatchEvent(new app.window.Event('change',{bubbles:true}));await app.sleep(100);const button=[...panel.querySelectorAll('button')].find(b=>b.textContent==='Adaugă obiectiv individual');assert(!button.disabled);button.click();await app.sleep(600);let saved=JSON.parse(app.window.localStorage.getItem(KEY));assert.equal(saved.trainingGoals[0].baseline,2);assert.match(panel.textContent,/0\/1 îmbunătățiri/);
  const savedBefore=app.window.localStorage.getItem(KEY);app.close();app=await launch({seed:{[KEY]:savedBefore}});await app.sleep(500);app.window.Math.random=()=>.8;panel=app.document.querySelector('[data-sm-training-goals]');panel.querySelector('summary').click();assert.match(panel.textContent,/0\/1 îmbunătățiri/);

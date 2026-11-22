@@ -1,3 +1,4 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 /** Stiluri AI și urmări persistente, fără date fictive despre meciuri. */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -30,7 +31,7 @@ const wait=async(app,pred,label)=>{for(let i=0;i<150;i++){if(pred())return; if(a
 (async()=>{
  let app=await launch();
  try{
-  assert(app.click(/Semnează Contractul/));await wait(app,()=>!!app.window.localStorage.getItem(KEY),'carieră inițială');
+  assert(app.click(/Semnează Contractul/));await resolveSupercup(app);await wait(app,()=>!!app.window.localStorage.getItem(KEY),'carieră inițială');
   let data=JSON.parse(app.window.localStorage.getItem(KEY));data.manager.clubSharesPct=100;
   const fixture=data.calendar.find(r=>r.roundNumber===data.currentRound).fixtures.find(f=>f.homeId===data.userClubId||f.awayId===data.userClubId);
   if(fixture.homeId===data.userClubId)[fixture.homeId,fixture.awayId]=[fixture.awayId,fixture.homeId];

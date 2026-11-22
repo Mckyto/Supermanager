@@ -1,3 +1,4 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 const assert=require('node:assert/strict'),fs=require('node:fs');
 const html=fs.readFileSync('public/index.html','utf8');
 const extract=(a,b)=>{const i=html.indexOf(a),j=html.indexOf(b,i);assert(i>=0&&j>i);return html.slice(i,j)};
@@ -22,7 +23,7 @@ assert.equal(review({score:{home:0,away:0}},'home').counts.unknown,0);
 console.log('  ✓ arbitrajul și finanțele folosesc formulele jocului; golurile fără date rămân neclasificate');
 const {launch}=require('./dom-harness');
 (async()=>{const app=await launch();try{
- assert(app.click(/Semnează Contractul/));assert(await app.waitFor(/Intră în Meci/,10000));
+ assert(app.click(/Semnează Contractul/));await resolveSupercup(app);assert(await app.waitFor(/Intră în Meci/,10000));
  const financePanel=app.document.querySelector('[data-sm-finance-summary]'),conditions=app.document.querySelector('[data-sm-match-conditions]');assert(financePanel&&conditions);assert.match(conditions.textContent,/Arbitraj simulat/);assert.match(conditions.textContent,/simularea rapidă nu folosește/);
  financePanel.querySelector('summary').click();assert.match(financePanel.textContent,/Sold recurent estimat/);assert.match(financePanel.textContent,/Nu include bilete/);assert.match(financePanel.querySelector('[data-sm-next-finance]').textContent,/etapa 4/);
  const KEY='sm2627_career_slot_1',career=JSON.parse(app.window.localStorage.getItem(KEY)),club=career.clubs.find(c=>c.id===career.userClubId),p=club.players[0];p.name='Contract Test';p.contractYears=1;p.wage=12345;p.onLoan=true;p.originClubId='origin';const seeded=await launch({seed:{[KEY]:JSON.stringify(career)}});try{await seeded.sleep(500);const contracts=seeded.document.querySelector('[data-sm-contract-exposure]');assert(contracts);assert.match(contracts.textContent,/Contract Test • 1 ani • împrumutat, revenire la origine/);assert.match(contracts.textContent,/deja incluse în totalul/);assert.match(contracts.textContent,/nu se ia nicio decizie automat/);assert.deepEqual(seeded.errors,[]);}finally{seeded.close()}

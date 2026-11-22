@@ -1,3 +1,4 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 /** Teste de carieră în DOM: simulare în bloc, final de sezon și demitere. */
 const assert = require('node:assert/strict');
 const { launch } = require('./dom-harness');
@@ -22,7 +23,7 @@ async function simulate(app, button) {
 (async () => {
   let app = await launch();
   try {
-    assert(app.click(/Semnează Contractul/));
+    assert(app.click(/Semnează Contractul/));await resolveSupercup(app);
     await waitUntil(app, () => !!read(app), 'salvare inițială');
     const initial = read(app);
     initial.manager.isRomaniaSelector=true;initial.manager.ntFixtures=[{id:"nt-1",homeId:"romania_nt",awayId:"nt_suedia",played:true,homeGoals:2,awayGoals:1},{id:"nt-2",homeId:"nt_elvetia",awayId:"romania_nt",played:false}];
@@ -63,6 +64,17 @@ async function simulate(app, button) {
     const growthFinal=finalPlayers.find(p=>p.id===growthPlayer.id);assert(growthFinal.ovr<=74);
     assert.match(app.text(), /Final de Sezon/);
     console.log('  ✓ sezonul include faza finală și toate rezultatele');
+    // Scenariu separat: clubul utilizatorului nu participă; trofeul se simulează o singură dată.
+    const aiCase=JSON.parse(JSON.stringify(career)),aiTeams=aiCase.clubs.filter(c=>c.league==='RO'&&c.id!==aiCase.userClubId).slice(0,2);
+    aiCase.playoffBonusPoints[aiTeams[0].id]={startPts:1000,roundedUp:false,group:'playoff'};
+    aiCase.nationalCup.winnerId=aiTeams[1].id;
+    let aiApp=await launch({seed:{[KEY]:JSON.stringify(aiCase)}});
+    try{await waitUntil(aiApp,()=>/Final de Sezon/.test(aiApp.text()),'final pentru Supercupa AI');
+      assert(aiApp.click(/Începe Sezonul Următor/));await waitUntil(aiApp,()=>read(aiApp)?.season!==aiCase.season,'Supercupa AI');await aiApp.sleep(300);
+      const nextAI=read(aiApp),sc=nextAI.supercupa;assert.deepEqual([sc.homeId,sc.awayId],aiTeams.map(c=>c.id));assert(sc.played&&sc.winnerId);assert(sc.scheduledDate);assert(![sc.homeId,sc.awayId].includes(nextAI.userClubId));
+      assert(nextAI.clubs.find(c=>c.id===sc.homeId).players.some(p=>p.competitionStats?.[nextAI.season]?.Supercupa));assert.deepEqual(aiApp.errors,[]);
+    }finally{aiApp.close()}
+    console.log('  ✓ Supercupa fără clubul utilizatorului se simulează și salvează statisticile AI');
     const aiStar=career.clubs.find(c=>c.id!==career.userClubId).players[0];Object.assign(aiStar,{age:31,ovr:85,contractYears:1});
     app.close();app=await launch({seed:{[KEY]:JSON.stringify(career)}});await waitUntil(app,()=>/Final de Sezon/.test(app.text()),'final pentru expirări');app.window.Math.random=()=>.8;
     assert(app.click(/Începe Sezonul Următor/));

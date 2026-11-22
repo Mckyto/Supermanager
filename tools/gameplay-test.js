@@ -1,10 +1,11 @@
+const resolveSupercup=require('./resolve-supercup-fixture');
 /** Meciuri complete ale motorului real în DOM; nu înlocuiește verificarea graficii 3D. */
 const assert = require('node:assert/strict');
 const { launch } = require('./dom-harness');
 (async () => {
   const app = await launch();
   try {
-    assert(app.click(/Semnează Contractul/));
+    assert(app.click(/Semnează Contractul/));await resolveSupercup(app);
     assert(await app.waitFor(/Intră în Meci/, 10000));
     assert(app.click(/Intră în Meci/));
     assert(await app.waitFor(/Adrenalină pe Gazon|LIVE/, 10000));
