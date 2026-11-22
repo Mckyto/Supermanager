@@ -68,10 +68,12 @@ async function simulate(app, button) {
     const aiCase=JSON.parse(JSON.stringify(career)),aiTeams=aiCase.clubs.filter(c=>c.league==='RO'&&c.id!==aiCase.userClubId).slice(0,2);
     aiCase.playoffBonusPoints[aiTeams[0].id]={startPts:1000,roundedUp:false,group:'playoff'};
     aiCase.nationalCup.winnerId=aiTeams[1].id;
+    const aiUser=aiCase.clubs.find(c=>c.id===aiCase.userClubId),sample=aiUser.players[0];aiUser.players.push({...sample,id:'test-released-veteran',name:'Veteran fictiv',age:31,isU21:false,contractYears:1,generatedFreeAgent:{sourceId:'test-released-veteran',lastSeason:aiCase.season}});aiCase.marketPool.push({...sample,id:'test-retired-veteran',name:'Veteran pensionat (fictiv)',age:37,freeAgent:true,category:'free',contractYears:0,generatedFreeAgent:{sourceId:'test-retired-veteran',lastSeason:aiCase.season}});
     let aiApp=await launch({seed:{[KEY]:JSON.stringify(aiCase)}});
     try{await waitUntil(aiApp,()=>/Final de Sezon/.test(aiApp.text()),'final pentru Supercupa AI');
       assert(aiApp.click(/Începe Sezonul Următor/));await waitUntil(aiApp,()=>read(aiApp)?.season!==aiCase.season,'Supercupa AI');await aiApp.sleep(300);
       const nextAI=read(aiApp),sc=nextAI.supercupa;assert.deepEqual([sc.homeId,sc.awayId],aiTeams.map(c=>c.id));assert(sc.played&&sc.winnerId);assert(sc.scheduledDate);assert(![sc.homeId,sc.awayId].includes(nextAI.userClubId));
+      const released=[...nextAI.marketPool,...nextAI.clubs.flatMap(c=>c.players)].find(p=>p.generatedFreeAgent?.sourceId==='test-released-veteran');assert(released);assert.equal(released.age,32,'un jucător eliberat nu îmbătrânește de două ori');assert(!nextAI.marketPool.some(p=>p.id==='test-retired-veteran'));assert(nextAI.newsFeed.some(n=>n.text.includes('Veteran pensionat')&&n.text.includes('s-a retras')));
       assert(nextAI.clubs.find(c=>c.id===sc.homeId).players.some(p=>p.competitionStats?.[nextAI.season]?.Supercupa));assert.deepEqual(aiApp.errors,[]);
     }finally{aiApp.close()}
     console.log('  ✓ Supercupa fără clubul utilizatorului se simulează și salvează statisticile AI');
