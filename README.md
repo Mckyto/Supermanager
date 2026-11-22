@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.88)
+# SuperManager 26/27 — Ediția Supremă (v10.55.89)
+
+**v10.55.89:** Piața primește veterani fictivi, marcați explicit, cu vârste de 31–36 ani și maximum 80 OVR. Numărul adăugat este limitat, iar cei rămași liberi îmbătrânesc și se pot retrage; jucătorii existenți nu sunt rescriși. La semnarea de către AI, liberii primesc statutul de club și o cotă calculată.
 
 **v10.55.88:** Programările personale noi iau în calcul și deplasările datate din cupă, Europa, Supercupă și națională asociate etapei; pragul de energie se reevaluează la confirmare. Programările existente își păstrează regula, iar datele lipsă nu sunt presupuse.
 
