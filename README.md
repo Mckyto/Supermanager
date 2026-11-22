@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.87)
+# SuperManager 26/27 — Ediția Supremă (v10.55.88)
+
+**v10.55.88:** Programările personale noi iau în calcul și deplasările datate din cupă, Europa, Supercupă și națională asociate etapei; pragul de energie se reevaluează la confirmare. Programările existente își păstrează regula, iar datele lipsă nu sunt presupuse.
 
 **v10.55.87:** Pentru eliminările noi, Europa continuă cu semifinale și finală simulate la etapele programate, cu rezultate, premii și statistici pentru cluburile cu lot persistent. Arhiva păstrează și rezultatele europene disponibile ale altor echipe; istoricul vechi nu este reconstruit.
 
