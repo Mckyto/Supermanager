@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.91)
+# SuperManager 26/27 — Ediția Supremă (v10.55.92)
+
+**v10.55.92:** Negocierile compară oferta curentă cu ultimul refuz salvat pentru același club și jucător, fără a prezice acceptarea sau a schimba cererile.
 
 **v10.55.91:** După trei etape consecutive de campionat fără gol primit, este disponibilă o activitate opțională cu suporterii, cu cost și efect afișate; se folosesc doar rezultate valide înregistrate.
 
