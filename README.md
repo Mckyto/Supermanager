@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.99)
+# SuperManager 26/27 — Ediția Supremă (v10.55.100)
+
+**v10.55.100:** Monitorizarea revenirii poate include un program opțional de condiție: 12.000 € nerambursabili și +3 condiție după fiecare dintre maximum două etape eligibile fără accidentare. Nu modifică riscul de recidivă.
 
 **v10.55.99:** Naționala păstrează separat titularizările comune din propriile meciuri live sau simulate și le folosește în chimia naționalei. Istoricul traversează sezoanele, fără a reconstrui meciurile vechi.
 
