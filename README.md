@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.90)
+# SuperManager 26/27 — Ediția Supremă (v10.55.91)
+
+**v10.55.91:** După trei etape consecutive de campionat fără gol primit, este disponibilă o activitate opțională cu suporterii, cu cost și efect afișate; se folosesc doar rezultate valide înregistrate.
 
 **v10.55.90:** Scoutingul preliminar afișează estimări stabile, dar posibil greșite, cu intervale mai înguste la niveluri mai bune. Sortarea OVR și a cotei folosește estimările pentru jucătorii neobservați; rapoartele deja deblocate rămân exacte. Negocierile și limitele folosesc valorile reale.
 
