@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.98)
+# SuperManager 26/27 — Ediția Supremă (v10.55.99)
+
+**v10.55.99:** Naționala păstrează separat titularizările comune din propriile meciuri live sau simulate și le folosește în chimia naționalei. Istoricul traversează sezoanele, fără a reconstrui meciurile vechi.
 
 **v10.55.98:** Naționala folosește în meciurile live chimia propriilor titulari apți, nu parteneriatele sau mentoratul clubului; selecția automată folosește aceeași regulă.
 
