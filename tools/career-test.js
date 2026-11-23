@@ -89,7 +89,7 @@ async function simulate(app, button) {
     const renewed=career.clubs.flatMap(c=>c.players).find(p=>p.id===aiStar.id);assert(renewed);assert(renewed.contractYears>=2);assert(!career.marketPool.some(p=>p.id===aiStar.id),'starul AI rămâne sub contract');
     assert.equal(career.calendar.length, 30);
     assert(!career.playoffSplitDone);
-    const other=career.clubs.find(c=>c.id===otherClub.id),returned=other.players.find(p=>p.id==='test-loan-return');assert(returned);assert.equal(returned.contractYears,2);assert.equal(returned.onLoan,false);assert(!career.clubs.find(c=>c.id===career.userClubId).players.some(p=>p.id==='test-loan-return'));assert(!career.lineupIds.bench.includes('test-loan-return'));assert(career.marketPool.some(p=>p.id==='test-loan-expire'&&p.freeAgent));assert.equal(career.loanedOutPlayers.length,0);
+    const other=career.clubs.find(c=>c.id===otherClub.id),returned=other.players.find(p=>p.id==='test-loan-return');assert(returned);assert.equal(returned.contractYears,2);assert.equal(returned.onLoan,false);assert(!career.clubs.find(c=>c.id===career.userClubId).players.some(p=>p.id==='test-loan-return'));assert(!career.lineupIds.bench.includes('test-loan-return'));assert(career.marketPool.some(p=>p.id==='test-loan-expire'&&p.freeAgent));assert.equal(career.loanedOutPlayers.length,0);assert.equal(career.outgoingLoanHistory.find(x=>x.playerId==='test-loan-return').outcome,'returned');assert.equal(career.outgoingLoanHistory.find(x=>x.playerId==='test-loan-expire').outcome,'free');
     assert.equal(career.seasonArchive.length,1);
     const archive=career.seasonArchive[0];assert(archive.matchHistory.every(m=>m.scheduledDate), "datele programate sunt arhivate");assert.equal(archive.season,initial.season);assert.equal(archive.clubId,initial.userClubId);assert.equal(archive.standings.length,16);assert.deepEqual(archive.squad.map(p=>({id:p.id,name:p.name,ovr:p.ovr})),finalPlayers);
 
@@ -99,7 +99,7 @@ async function simulate(app, button) {
     await waitUntil(app, () => /Centru Comandă/.test(app.text()), 'reîncărcare sezon nou');
     assert.equal(read(app).season, career.season);
     assert.equal(read(app).currentRound, 1);
-    const archivePanel=app.document.querySelector('[data-sm-season-archive]');assert(archivePanel);archivePanel.querySelector('summary').click();assert.match(archivePanel.textContent,/Clasament final/);assert.match(archivePanel.textContent,/Lot la finalul sezonului/);assert.match(archivePanel.textContent,/2026\/2027/);assert.equal(read(app).seasonArchive.length,1);
+    const archivePanel=app.document.querySelector('[data-sm-season-archive]');assert(archivePanel);archivePanel.querySelector('summary').click();assert.match(archivePanel.textContent,/Clasament final/);assert.match(archivePanel.textContent,/Lot la finalul sezonului/);assert.match(archivePanel.textContent,/2026\/2027/);assert.equal(read(app).seasonArchive.length,1);assert.equal(read(app).outgoingLoanHistory.length,2);assert.match(app.document.querySelector('[data-sm-loan-history]').textContent,/Împrumut Altfel/);assert.match(app.document.querySelector('[data-sm-loan-history]').textContent,/Contract Expirat/);
 
     console.log('  ✓ tranziția și reîncărcarea carierei funcționează');
     const comparisonState=read(app);comparisonState.seasonArchive.unshift({...comparisonState.seasonArchive[0],season:'2025/2026'});

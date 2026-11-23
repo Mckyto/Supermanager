@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.93)
+# SuperManager 26/27 — Ediția Supremă (v10.55.94)
+
+**v10.55.94:** Împrumuturile încheiate la tranziția sezonului păstrează un istoric limitat al revenirii sau expirării contractului și al evoluției OVR. Nu sunt simulate prestații și nu se reconstruiesc încheierile vechi.
 
 **v10.55.93:** Obiectivele noi de minute pot include opțional simulările rapide de campionat, cu 90 de minute simulate pentru titulari. Obiectivele existente continuă să numere doar meciurile live.
 
