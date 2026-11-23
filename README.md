@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.94)
+# SuperManager 26/27 — Ediția Supremă (v10.55.95)
+
+**v10.55.95:** O conferință ulterioară poate aminti ultima opțiune de presă înregistrată pentru același club și sezon și rezultatul din calendar, dacă este disponibil, fără a pretinde o legătură cauzală.
 
 **v10.55.94:** Împrumuturile încheiate la tranziția sezonului păstrează un istoric limitat al revenirii sau expirării contractului și al evoluției OVR. Nu sunt simulate prestații și nu se reconstruiesc încheierile vechi.
 
