@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.97)
+# SuperManager 26/27 — Ediția Supremă (v10.55.98)
+
+**v10.55.98:** Naționala folosește în meciurile live chimia propriilor titulari apți, nu parteneriatele sau mentoratul clubului; selecția automată folosește aceeași regulă.
 
 **v10.55.97:** Parteneriatele titularilor selectați influențează și simularea rapidă de campionat, printr-un bonus de putere de maximum 0,6, fără garantarea rezultatului.
 
