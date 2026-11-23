@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.100)
+# SuperManager 26/27 — Ediția Supremă (v10.55.101)
+
+**v10.55.101:** Programul medical accelerat, ales opțional la pornire, oferă +6 condiție per etapă eligibilă, dar adaugă un risc simulat de recidivă de 5% după fiecare meci eligibil. Programele prudente existente rămân neschimbate.
 
 **v10.55.100:** Monitorizarea revenirii poate include un program opțional de condiție: 12.000 € nerambursabili și +3 condiție după fiecare dintre maximum două etape eligibile fără accidentare. Nu modifică riscul de recidivă.
 
