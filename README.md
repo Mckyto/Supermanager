@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.96)
+# SuperManager 26/27 — Ediția Supremă (v10.55.97)
+
+**v10.55.97:** Parteneriatele titularilor selectați influențează și simularea rapidă de campionat, printr-un bonus de putere de maximum 0,6, fără garantarea rezultatului.
 
 **v10.55.96:** Titularizările comune de campionat ale jucătorilor sunt înregistrate și pot întări legăturile apropiate din chimia meciurilor live. Simularea rapidă contribuie cu titularii selectați, dar nu folosește bonusul; datele vechi nu sunt reconstruite.
 
