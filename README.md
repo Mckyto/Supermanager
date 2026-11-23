@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.89)
+# SuperManager 26/27 — Ediția Supremă (v10.55.90)
+
+**v10.55.90:** Scoutingul preliminar afișează estimări stabile, dar posibil greșite, cu intervale mai înguste la niveluri mai bune. Sortarea OVR și a cotei folosește estimările pentru jucătorii neobservați; rapoartele deja deblocate rămân exacte. Negocierile și limitele folosesc valorile reale.
 
 **v10.55.89:** Piața primește veterani fictivi, marcați explicit, cu vârste de 31–36 ani și maximum 80 OVR. Numărul adăugat este limitat, iar cei rămași liberi îmbătrânesc și se pot retrage; jucătorii existenți nu sunt rescriși. La semnarea de către AI, liberii primesc statutul de club și o cotă calculată.
 
