@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.95)
+# SuperManager 26/27 — Ediția Supremă (v10.55.96)
+
+**v10.55.96:** Titularizările comune de campionat ale jucătorilor sunt înregistrate și pot întări legăturile apropiate din chimia meciurilor live. Simularea rapidă contribuie cu titularii selectați, dar nu folosește bonusul; datele vechi nu sunt reconstruite.
 
 **v10.55.95:** O conferință ulterioară poate aminti ultima opțiune de presă înregistrată pentru același club și sezon și rezultatul din calendar, dacă este disponibil, fără a pretinde o legătură cauzală.
 
