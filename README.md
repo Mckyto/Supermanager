@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.92)
+# SuperManager 26/27 — Ediția Supremă (v10.55.93)
+
+**v10.55.93:** Obiectivele noi de minute pot include opțional simulările rapide de campionat, cu 90 de minute simulate pentru titulari. Obiectivele existente continuă să numere doar meciurile live.
 
 **v10.55.92:** Negocierile compară oferta curentă cu ultimul refuz salvat pentru același club și jucător, fără a prezice acceptarea sau a schimba cererile.
 
