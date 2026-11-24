@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.107)
+# SuperManager 26/27 — Ediția Supremă (v10.55.108)
+
+**v10.55.108:** Opțional, stafful poate recomanda automat regimul după meciurile de campionat. Se activează explicit pentru club și sezon și se oprește la schimbarea manuală a regimului.
 
 **v10.55.107:** Poți delega punctual alegerea regimului de antrenament către un profil prudent sau tactic; recomandarea folosește condiția titularilor și se aplică numai după confirmare.
 
