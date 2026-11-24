@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.121)
+# SuperManager 26/27 — Ediția Supremă (v10.55.122)
+
+**v10.55.122:** Concurența din lot afișează separat alternativele cu postul secundar potrivit și semnalează eventualul conflict U21, fără schimbări automate.
 
 **v10.55.121:** Jurnalul și notificările urmăresc misiunea de scouting și oferă acces la raportul disponibil sau la eliminarea misiunii.
 
