@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.123)
+# SuperManager 26/27 — Ediția Supremă (v10.55.124)
+
+**v10.55.124:** Fiecare raport disponibil afișează intervalele golurilor primite, fără a reconstrui datele vechi.
 
 **v10.55.123:** Rapoartele noi ale golurilor primite în campionatul live păstrează minutele grupate în intervale, cu datele lipsă marcate necunoscute.
 
