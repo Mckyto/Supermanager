@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.105)
+# SuperManager 26/27 — Ediția Supremă (v10.55.106)
+
+**v10.55.106:** Confruntările directe exclud și semnalează rezultatele arhivate incomplete sau ambigue, inclusiv etapele și sezoanele duplicate.
 
 **v10.55.105:** Atmosfera adaugă un bonus limitat echipei proprii acasă în campionat: +0,2 putere la sprijin 40–69%, +0,4 la 70–100%, în live și simulare rapidă. Nu garantează rezultatul și nu se aplică în cupe sau la națională.
 
