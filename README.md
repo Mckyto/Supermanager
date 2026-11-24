@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.108)
+# SuperManager 26/27 — Ediția Supremă (v10.55.109)
+
+**v10.55.109:** Jurnalul și notificările afișează delegarea activă către staff, cu acces direct la controale; jurnalul arată și deciziile recente înregistrate.
 
 **v10.55.108:** Opțional, stafful poate recomanda automat regimul după meciurile de campionat. Se activează explicit pentru club și sezon și se oprește la schimbarea manuală a regimului.
 
