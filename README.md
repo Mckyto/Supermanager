@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.106)
+# SuperManager 26/27 — Ediția Supremă (v10.55.107)
+
+**v10.55.107:** Poți delega punctual alegerea regimului de antrenament către un profil prudent sau tactic; recomandarea folosește condiția titularilor și se aplică numai după confirmare.
 
 **v10.55.106:** Confruntările directe exclud și semnalează rezultatele arhivate incomplete sau ambigue, inclusiv etapele și sezoanele duplicate.
 
