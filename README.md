@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.101)
+# SuperManager 26/27 — Ediția Supremă (v10.55.102)
+
+**v10.55.102:** Cronica afișează cele mai lungi serii observate de victorii și fără înfrângere, pe baza etapelor consecutive cu rezultate valide și unice din arhivă.
 
 **v10.55.101:** Programul medical accelerat, ales opțional la pornire, oferă +6 condiție per etapă eligibilă, dar adaugă un risc simulat de recidivă de 5% după fiecare meci eligibil. Programele prudente existente rămân neschimbate.
 
