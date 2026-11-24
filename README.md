@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.115)
+# SuperManager 26/27 — Ediția Supremă (v10.55.116)
+
+**v10.55.116:** Rezervările de deplasare noi se pot anula înaintea etapei cu rambursare de 50%; rezervările anterioare își păstrează condițiile nerambursabile.
 
 **v10.55.115:** Pentru o deplasare de campionat cu dată validă se poate înregistra opțional transport și cazare simulate, cu cost nerambursabil din bugetul clubului; nu afectează meciul sau oboseala.
 
