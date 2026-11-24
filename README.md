@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.118)
+# SuperManager 26/27 — Ediția Supremă (v10.55.119)
+
+**v10.55.119:** Cronica de sezon arată cele mai lungi serii observate de meciuri cu gol marcat și fără gol primit, pe baza rezultatelor eligibile din arhivă.
 
 **v10.55.118:** Jurnalul urmărește rezervările active de deplasare, iar notificările semnalează programele schimbate sau ambigue, cu acces la planificare.
 
