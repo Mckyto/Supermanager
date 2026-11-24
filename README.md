@@ -569,5 +569,3 @@ Scenă raportată: în meci se vedea bara de scor și comentariul, dar terenul r
 - **Capetele au mai puține segmente**: 18×14 în loc de 22×18 (~−36% triunghiuri pe cap), invizibil la distanța camerei de meci.
 - Euristica e evaluată o singură dată, la pornire: desktop cu multe nuclee și DPR mic păstrează texturile la rezoluție maximă.
 
-
-Fluxul Pages așteaptă până la 110 secunde ca artefactul încărcat să fie vizibil și unic în API-ul Actions înainte de deploy; o eroare a serviciului de deploy este în continuare raportată explicit, nu ascunsă.
