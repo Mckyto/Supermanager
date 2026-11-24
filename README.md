@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.125)
+# SuperManager 26/27 — Ediția Supremă (v10.55.126)
+
+**v10.55.126:** În meciurile live, adversarul poate reacționa la linia sau presingul ridicat cu pase directe după cinci minute, anunțând schimbarea în comentariu.
 
 **v10.55.125:** Rapoartele golurilor primite pot fi filtrate după sezonul curent sau toate sezoanele disponibile; totalurile folosesc rapoartele afișate.
 
