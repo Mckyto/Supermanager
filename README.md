@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.119)
+# SuperManager 26/27 — Ediția Supremă (v10.55.120)
+
+**v10.55.120:** Poți trimite opțional un observator pentru un jucător neobservat sub contract: raportul exact costă 6.000 € și se colectează după avansarea unei etape, dacă jucătorul rămâne la clubul său.
 
 **v10.55.119:** Cronica de sezon arată cele mai lungi serii observate de meciuri cu gol marcat și fără gol primit, pe baza rezultatelor eligibile din arhivă.
 
