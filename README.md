@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.114)
+# SuperManager 26/27 — Ediția Supremă (v10.55.115)
+
+**v10.55.115:** Pentru o deplasare de campionat cu dată validă se poate înregistra opțional transport și cazare simulate, cu cost nerambursabil din bugetul clubului; nu afectează meciul sau oboseala.
 
 **v10.55.114:** Situația clubului listează până la cinci deplasări viitoare de campionat din calendarul generat, fără rezervări sau costuri simulate.
 
