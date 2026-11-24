@@ -575,3 +575,5 @@ Scenă raportată: în meci se vedea bara de scor și comentariul, dar terenul r
 - **Capetele au mai puține segmente**: 18×14 în loc de 22×18 (~−36% triunghiuri pe cap), invizibil la distanța camerei de meci.
 - Euristica e evaluată o singură dată, la pornire: desktop cu multe nuclee și DPR mic păstrează texturile la rezoluție maximă.
 
+
+Fluxul Pages testează și încarcă artefactul într-un job separat, apoi publică și verifică site-ul într-un job dependent. Separarea reduce riscul întârzierii de vizibilitate a artefactului, dar nu garantează disponibilitatea serviciului GitHub.
