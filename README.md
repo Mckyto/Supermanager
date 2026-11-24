@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.117)
+# SuperManager 26/27 — Ediția Supremă (v10.55.118)
+
+**v10.55.118:** Jurnalul urmărește rezervările active de deplasare, iar notificările semnalează programele schimbate sau ambigue, cu acces la planificare.
 
 **v10.55.117:** Lista rezervărilor active verifică programul curent și semnalează schimbările sau datele ambigue, inclusiv când deplasarea nu mai apare în următoarele cinci meciuri.
 
