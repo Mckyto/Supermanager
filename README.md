@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.126)
+# SuperManager 26/27 — Ediția Supremă (v10.55.127)
+
+**v10.55.127:** Adversarul poate răspunde și trecerii la joc larg în meciurile live, cu așezare largă anunțată în comentariu.
 
 **v10.55.126:** În meciurile live, adversarul poate reacționa la linia sau presingul ridicat cu pase directe după cinci minute, anunțând schimbarea în comentariu.
 
