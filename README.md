@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.109)
+# SuperManager 26/27 — Ediția Supremă (v10.55.110)
+
+**v10.55.110:** Pentru un împrumut trimis poți înregistra un club de urmărit din aceeași ligă și consulta rezultatele lui din etapa aleasă. Este doar o evidență: jucătorul nu este adăugat în lotul acelui club.
 
 **v10.55.109:** Jurnalul și notificările afișează delegarea activă către staff, cu acces direct la controale; jurnalul arată și deciziile recente înregistrate.
 
