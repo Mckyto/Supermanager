@@ -1,6 +1,12 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.113)
+# SuperManager 26/27 — Ediția Supremă (v10.55.114)
 
-**v10.55.113:** La înregistrarea clubului urmărit poți opta pentru participări și minute fictive, calculate separat din rezultatele disponibile; ele nu modifică meciurile sau statisticile oficiale.
+**v10.55.114:** Situația clubului listează până la cinci deplasări viitoare de campionat din calendarul generat, fără rezervări sau costuri simulate.
+
+**v10.55.113:** O întâlnire opțională cu suporterii devine disponibilă după o victorie care urmează două înfrângeri consecutive.
+
+**v10.55.112:** Un scenariu financiar informativ cumulează până la trei regularizări viitoare la valorile recurente actuale, fără a prezice bugetul.
+
+**v10.55.111:** La înregistrarea clubului urmărit poți opta pentru participări și minute fictive, calculate separat din rezultatele disponibile; ele nu modifică meciurile sau statisticile oficiale.
 
 **v10.55.110:** Pentru un împrumut trimis poți înregistra un club de urmărit din aceeași ligă și consulta rezultatele lui din etapa aleasă. Este doar o evidență: jucătorul nu este adăugat în lotul acelui club.
 
