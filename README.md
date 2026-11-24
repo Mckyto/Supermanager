@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.122)
+# SuperManager 26/27 — Ediția Supremă (v10.55.123)
+
+**v10.55.123:** Rapoartele noi ale golurilor primite în campionatul live păstrează minutele grupate în intervale, cu datele lipsă marcate necunoscute.
 
 **v10.55.122:** Concurența din lot afișează separat alternativele cu postul secundar potrivit și semnalează eventualul conflict U21, fără schimbări automate.
 
