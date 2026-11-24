@@ -1,6 +1,8 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.104)
+# SuperManager 26/27 — Ediția Supremă (v10.55.105)
 
-**v10.55.104:** În contextul premeci de campionat este afișat un indicator informativ de atmosferă, cu locul meciului, rivalul desemnat și sprijinul suporterilor proprii; nu adaugă bonusuri simulării.
+**v10.55.105:** Atmosfera adaugă un bonus limitat echipei proprii acasă în campionat: +0,2 putere la sprijin 40–69%, +0,4 la 70–100%, în live și simulare rapidă. Nu garantează rezultatul și nu se aplică în cupe sau la națională.
+
+**v10.55.104:** În contextul premeci de campionat este afișat un indicator informativ de atmosferă, cu locul meciului, rivalul desemnat și sprijinul suporterilor proprii; inițial fără bonusuri suplimentare.
 
 **v10.55.103:** Arhiva compară bilanțul acasă și în deplasare al ultimelor două sezoane disponibile, folosind rezultate valide și etape unice; punctele sunt calculate pe teren.
 

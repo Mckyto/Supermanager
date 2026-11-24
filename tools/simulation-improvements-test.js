@@ -13,7 +13,7 @@ const fit=(p,role)=>p.pos===role?'primary':'out';
 const style=()=>({tactics:{mentality:'balanced',pressing:'medium',defLine:'normal',passing:'mixed',width:'normal'}});
 const Nx=(club,bonus=0)=>club.players.slice(0,11).reduce((s,p)=>s+p.ovr,0)/Math.max(1,Math.min(11,club.players.length))+bonus;
 let seed=123;const math=Object.create(Math);math.random=()=>((seed=Math.imul(seed,1664525)+1013904223>>>0)/4294967296);
-const api=new Function('Qi','Fn','Zi','_smPositionFit','_smOpponentStyle','_smPreparedOpponent','Nx','Math','_smQuickPartnershipBonus',extract('function _smQuickTeam(', 'function J2(')+';return {team:_smQuickTeam,context:_smQuickContext,rates:_smQuickRates,match:_smQuickMatch}') (Qi,Fn,Zi,fit,style,style,Nx,math,()=>0);
+const api=new Function('Qi','Fn','Zi','_smPositionFit','_smOpponentStyle','_smPreparedOpponent','Nx','Math','_smQuickPartnershipBonus',extract('function _smHomeAtmosphereBonus(', 'function J2(')+';return {team:_smQuickTeam,context:_smQuickContext,rates:_smQuickRates,match:_smQuickMatch}') (Qi,Fn,Zi,fit,style,style,Nx,math,()=>0);
 const club=(id,ovr)=>({id,league:'EU',preferredFormation:'4-3-3',players:[...slots,'ST'].map((pos,i)=>({id:id+i,name:id+i,pos,ovr:i===11?ovr-15:ovr,fitness:90,morale:80,linePos:pos==='GK'?'GK':'FW'}))});
 const home=club('h',75),away=club('a',75),career={userClubId:'h',formation:'4-3-3',lineupIds:{starters:home.players.slice(0,11).map(p=>p.id)},tactics:{mentality:'balanced'}};
 const before=JSON.stringify(home);const first=api.context(career,home,away);assert.equal(first.home.selectedIds.length,11);assert.equal(first.home.misfit,0);assert.equal(JSON.stringify(home),before);
