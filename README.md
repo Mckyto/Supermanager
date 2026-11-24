@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.124)
+# SuperManager 26/27 — Ediția Supremă (v10.55.125)
+
+**v10.55.125:** Rapoartele golurilor primite pot fi filtrate după sezonul curent sau toate sezoanele disponibile; totalurile folosesc rapoartele afișate.
 
 **v10.55.124:** Fiecare raport disponibil afișează intervalele golurilor primite, fără a reconstrui datele vechi.
 
