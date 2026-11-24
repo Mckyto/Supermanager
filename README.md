@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.102)
+# SuperManager 26/27 — Ediția Supremă (v10.55.103)
+
+**v10.55.103:** Arhiva compară bilanțul acasă și în deplasare al ultimelor două sezoane disponibile, folosind rezultate valide și etape unice; punctele sunt calculate pe teren.
 
 **v10.55.102:** Cronica afișează cele mai lungi serii observate de victorii și fără înfrângere, pe baza etapelor consecutive cu rezultate valide și unice din arhivă.
 
