@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.116)
+# SuperManager 26/27 — Ediția Supremă (v10.55.117)
+
+**v10.55.117:** Lista rezervărilor active verifică programul curent și semnalează schimbările sau datele ambigue, inclusiv când deplasarea nu mai apare în următoarele cinci meciuri.
 
 **v10.55.116:** Rezervările de deplasare noi se pot anula înaintea etapei cu rambursare de 50%; rezervările anterioare își păstrează condițiile nerambursabile.
 
