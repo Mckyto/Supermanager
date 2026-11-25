@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.134)
+# SuperManager 26/27 — Ediția Supremă (v10.55.135)
+
+**v10.55.135:** Misiunile de scouting indisponibile indică, când datele permit, dacă identificatorul apare în alt lot, pe piața liberă sau de mai multe ori.
 
 **v10.55.134:** Jurnalul și notificările urmăresc pregătirea premeci curentă și semnalează programele schimbate sau indisponibile.
 
