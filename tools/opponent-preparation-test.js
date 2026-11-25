@@ -11,7 +11,7 @@ console.log('  ✓ pregătirea e deterministă, nu modifică tactica managerului
 const KEY='sm2627_career_slot_1';
 (async()=>{let app=await launch();try{
  assert(app.click(/Semnează Contractul/));await resolveSupercup(app);await app.sleep(800);const career=JSON.parse(app.window.localStorage.getItem(KEY));career.tactics={...career.tactics,...tactic};
- app.close();app=await launch({seed:{[KEY]:JSON.stringify(career)}});await app.sleep(500);const panel=app.document.querySelector('[data-sm-opponent-profile]');assert(panel);assert.match(panel.textContent,/pase directe/);assert.match(panel.textContent,/linie retrasă/);assert.match(panel.textContent,/nu urmărește schimbările live/);
+ app.close();app=await launch({seed:{[KEY]:JSON.stringify(career)}});await app.sleep(500);const panel=app.document.querySelector('[data-sm-opponent-profile]');assert(panel);assert.match(panel.textContent,/pase directe/);assert.match(panel.textContent,/linie retrasă/);assert.match(panel.textContent,/poate reacționa limitat la unele schimbări/);
  assert(app.click(/Intră în Meci/));assert(await app.waitFor(/Adrenalină pe Gazon|LIVE/,10000));const engine=app.window.__smEngine,enemy=engine.userSide==='home'?engine.awayTactics:engine.homeTactics;assert.equal(enemy.passing,'direct');assert.equal(enemy.width,'wide');assert.equal(enemy.mentality,'defensive');assert.equal(enemy.defLine,'deep');assert.deepEqual(app.errors,[]);
  console.log('  ✓ pregătirea anunțată premeci este folosită de motorul live');
  }finally{app.close()}})().then(()=>process.exit(0),e=>{console.error(e);process.exit(1)});
