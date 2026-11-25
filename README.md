@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.135)
+# SuperManager 26/27 — Ediția Supremă (v10.55.136)
+
+**v10.55.136:** Misiunile de scouting indisponibile oferă căutarea numelui în piață, fără identificare garantată sau reluare automată.
 
 **v10.55.135:** Misiunile de scouting indisponibile indică, când datele permit, dacă identificatorul apare în alt lot, pe piața liberă sau de mai multe ori.
 
