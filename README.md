@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.132)
+# SuperManager 26/27 — Ediția Supremă (v10.55.133)
+
+**v10.55.133:** Pentru un meci de campionat cu adversar apropiat în clasament poți plăti opțional pregătire premeci, cu bonus limitat și cost nerambursabil.
 
 **v10.55.132:** Momentele personale menționează o promisiune sau cerere de întâlnire activă, fără a o îndeplini sau modifica.
 
