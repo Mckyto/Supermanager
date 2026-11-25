@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.139)
+# SuperManager 26/27 — Ediția Supremă (v10.55.140)
+
+**v10.55.140:** Lotul afișează informativ sosirile noi în primele trei etape ale aceluiași sezon, fără a măsura integrarea sau a modifica performanța.
 
 **v10.55.139:** Probele pentru jucători liberi verifică identitatea în piață și loturi și explică indisponibilitatea înainte de plată.
 
