@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.130)
+# SuperManager 26/27 — Ediția Supremă (v10.55.131)
+
+**v10.55.131:** Profilul fizic opțional al staffului poate recomanda pregătire intensă la condiție medie ridicată, cu avertizare asupra riscului existent.
 
 **v10.55.130:** Cronica compară seriile observate în ultimele două sezoane arhivate ale clubului și ligii actuale, fără a reconstrui datele lipsă.
 
