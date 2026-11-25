@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.131)
+# SuperManager 26/27 — Ediția Supremă (v10.55.132)
+
+**v10.55.132:** Momentele personale menționează o promisiune sau cerere de întâlnire activă, fără a o îndeplini sau modifica.
 
 **v10.55.131:** Profilul fizic opțional al staffului poate recomanda pregătire intensă la condiție medie ridicată, cu avertizare asupra riscului existent.
 
