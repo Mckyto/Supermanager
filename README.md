@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.136)
+# SuperManager 26/27 — Ediția Supremă (v10.55.137)
+
+**v10.55.137:** Scoutingul programat nu pornește și nu eliberează rapoarte dacă loturile sau piața au date incomplete care împiedică verificarea unicității.
 
 **v10.55.136:** Misiunile de scouting indisponibile oferă căutarea numelui în piață, fără identificare garantată sau reluare automată.
 

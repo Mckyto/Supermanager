@@ -5429,13 +5429,18 @@ function _smTrialStart(career,playerId){
 function _smTrialCollect(career){const view=_smTrialView(career);if(view?.status!=="ready")return career;const ids=Array.isArray(career.scoutedIds)?career.scoutedIds:[];return {...career,scoutedIds:ids.includes(view.trial.playerId)?ids:[...ids,view.trial.playerId],freeAgentTrial:null}}
 function _smTrialCancel(career){return _smTrialView(career)?{...career,freeAgentTrial:null}:career}
 const _SM_SCOUT_ASSIGNMENT_COST=6000;
+function _smScoutAssignmentDataComplete(career){
+ const validId=id=>typeof id==="string"&&!!id.trim()||typeof id==="number"&&Number.isFinite(id),clubs=career?.clubs,market=career?.marketPool;
+ if(!Array.isArray(clubs)||!Array.isArray(market)||Array.from(clubs).some(c=>!c||!validId(c.id)||!Array.isArray(c.players))||new Set(clubs.map(c=>c.id)).size!==clubs.length)return false;
+ return Array.from(market).every(p=>p&&validId(p.id))&&clubs.every(c=>Array.from(c.players).every(p=>p&&validId(p.id)));
+}
 function _smScoutAssignmentTarget(career,clubId,playerId){
- if(!clubId||!Array.isArray(career?.clubs))return null;const sellers=career.clubs.filter(c=>c?.id===clubId);if(sellers.length!==1||clubId===career.userClubId||!Array.isArray(sellers[0].players))return null;
+ if(!clubId||!_smScoutAssignmentDataComplete(career))return null;const sellers=career.clubs.filter(c=>c?.id===clubId);if(sellers.length!==1||clubId===career.userClubId||!Array.isArray(sellers[0].players))return null;
  const all=career.clubs.flatMap(c=>Array.isArray(c?.players)?c.players:[]).concat(Array.isArray(career.marketPool)?career.marketPool:[]).filter(p=>p?.id===playerId),matches=sellers[0].players.filter(p=>p?.id===playerId);return all.length===1&&matches.length===1?matches[0]:null;
 }
 function _smScoutAssignmentKnown(career,player){const level=Number(career?.staffLevels?.scouting)||1;return (Array.isArray(career?.scoutedIds)&&career.scoutedIds.includes(player?.id))||level>=4||level>=3&&player?.nationality==="ROU"}
 function _smScoutAssignmentUnavailable(career,job){
- const clubs=career?.clubs;if(!Array.isArray(clubs)||!Array.isArray(career?.marketPool)||clubs.some(c=>!c?.id||!Array.isArray(c.players))||new Set(clubs.map(c=>c.id)).size!==clubs.length)return "Datele loturilor sau ale pieței sunt incomplete ori ambigue; raportul nu poate fi colectat.";
+ const clubs=career?.clubs;if(!_smScoutAssignmentDataComplete(career))return "Datele loturilor sau ale pieței sunt incomplete ori ambigue; raportul nu poate fi colectat.";
  const found=clubs.flatMap(club=>club.players.filter(player=>player?.id===job.playerId).map(()=>club)),free=career.marketPool.filter(player=>player?.id===job.playerId),count=found.length+free.length;
  if(count>1)return "Identificatorul apare de mai multe ori în loturile sau piața disponibile; raportul nu poate fi colectat.";
  if(count===0)return "Identificatorul nu mai apare în loturile sau piața disponibile; raportul nu poate fi colectat.";
