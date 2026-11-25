@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.133)
+# SuperManager 26/27 — Ediția Supremă (v10.55.134)
+
+**v10.55.134:** Jurnalul și notificările urmăresc pregătirea premeci curentă și semnalează programele schimbate sau indisponibile.
 
 **v10.55.133:** Pentru un meci de campionat cu adversar apropiat în clasament poți plăti opțional pregătire premeci, cu bonus limitat și cost nerambursabil.
 
