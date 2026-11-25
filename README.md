@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.137)
+# SuperManager 26/27 — Ediția Supremă (v10.55.138)
+
+**v10.55.138:** Piața explică de ce o misiune de scouting este indisponibilă înainte de confirmare, inclusiv pentru date ambigue, buget sau o misiune existentă.
 
 **v10.55.137:** Scoutingul programat nu pornește și nu eliberează rapoarte dacă loturile sau piața au date incomplete care împiedică verificarea unicității.
 
