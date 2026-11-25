@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.128)
+# SuperManager 26/27 — Ediția Supremă (v10.55.129)
+
+**v10.55.129:** O nouă schemă de corner permite o centrare joasă spre zona centrală în meciurile live.
 
 **v10.55.128:** Adversarul poate coborî linia defensivă ca răspuns la mentalitatea ultraofensivă menținută în meciul live.
 
