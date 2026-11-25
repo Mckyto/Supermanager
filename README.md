@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.127)
+# SuperManager 26/27 — Ediția Supremă (v10.55.128)
+
+**v10.55.128:** Adversarul poate coborî linia defensivă ca răspuns la mentalitatea ultraofensivă menținută în meciul live.
 
 **v10.55.127:** Adversarul poate răspunde și trecerii la joc larg în meciurile live, cu așezare largă anunțată în comentariu.
 
