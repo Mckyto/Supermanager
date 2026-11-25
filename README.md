@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.129)
+# SuperManager 26/27 — Ediția Supremă (v10.55.130)
+
+**v10.55.130:** Cronica compară seriile observate în ultimele două sezoane arhivate ale clubului și ligii actuale, fără a reconstrui datele lipsă.
 
 **v10.55.129:** O nouă schemă de corner permite o centrare joasă spre zona centrală în meciurile live.
 
