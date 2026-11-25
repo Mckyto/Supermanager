@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.138)
+# SuperManager 26/27 — Ediția Supremă (v10.55.139)
+
+**v10.55.139:** Probele pentru jucători liberi verifică identitatea în piață și loturi și explică indisponibilitatea înainte de plată.
 
 **v10.55.138:** Piața explică de ce o misiune de scouting este indisponibilă înainte de confirmare, inclusiv pentru date ambigue, buget sau o misiune existentă.
 
