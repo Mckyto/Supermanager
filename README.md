@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.145)
+# SuperManager 26/27 — Ediția Supremă (v10.55.146)
+
+**v10.55.146:** Forma recentă a clubului folosește aceleași verificări ca forma adversarului și semnalează etapele ambigue sau incomplete.
 
 **v10.55.145:** Contextul premeci prezintă până la cinci rezultate eligibile de campionat ale adversarului, fără predicții sau efecte asupra simulării.
 
