@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.153)
+# SuperManager 26/27 — Ediția Supremă (v10.55.154)
+
+**v10.55.154:** Acoperirea rapoartelor explică prima problemă identificată la asocierea cu un rezultat recent.
 
 **v10.55.153:** Rezultatele recente de campionat indică dacă există un raport live corespunzător, lipsă sau ambiguu.
 
