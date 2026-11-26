@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.152)
+# SuperManager 26/27 — Ediția Supremă (v10.55.153)
+
+**v10.55.153:** Rezultatele recente de campionat indică dacă există un raport live corespunzător, lipsă sau ambiguu.
 
 **v10.55.152:** Comparația rapoartelor include diferențele pe intervale de minute când datele de timp sunt coerente.
 
