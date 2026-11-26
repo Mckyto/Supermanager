@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.147)
+# SuperManager 26/27 — Ediția Supremă (v10.55.148)
+
+**v10.55.148:** Proiectul sportiv detaliază scorul și contribuția fiecărui meci identificat unic; datele ambigue nu sunt numărate.
 
 **v10.55.147:** Un control de accesibilitate permite trei dimensiuni pentru cea mai mare parte a textului, salvate în browser separat de carieră; grafica și dimensiunile fixe pot rămâne neschimbate.
 
