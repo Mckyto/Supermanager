@@ -983,5 +983,10 @@
     "version": "10.55.161",
     "description": "Jurnalul de versiuni este disponibil în joc, cu căutare și ordine cronologică, folosind istoricul documentat al proiectului.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.162",
+    "description": "Accesibilitatea oferă contrast sporit pentru unele panouri și reducerea opțională a animațiilor CSS, cu preferințe locale.",
+    "source": "Documentația versiunii"
   }
 ]
