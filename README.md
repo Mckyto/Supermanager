@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.146)
+# SuperManager 26/27 — Ediția Supremă (v10.55.147)
+
+**v10.55.147:** Un control de accesibilitate permite trei dimensiuni pentru cea mai mare parte a textului, salvate în browser separat de carieră; grafica și dimensiunile fixe pot rămâne neschimbate.
 
 **v10.55.146:** Forma recentă a clubului folosește aceleași verificări ca forma adversarului și semnalează etapele ambigue sau incomplete.
 
