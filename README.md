@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.156)
+# SuperManager 26/27 — Ediția Supremă (v10.55.157)
+
+**v10.55.157:** Istoricul semnalează înregistrările care nu pot fi încadrate sigur în filtrul ales și formatul invalid.
 
 **v10.55.156:** Rapoartele fără surse sunt păstrate vizibile; câmpurile incomplete sunt marcate indisponibile.
 
