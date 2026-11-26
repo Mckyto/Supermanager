@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.150)
+# SuperManager 26/27 — Ediția Supremă (v10.55.151)
+
+**v10.55.151:** Comparația rapoartelor explică motivul ambiguității identității sau ordinii, fără a modifica salvarea.
 
 **v10.55.150:** Istoricul golurilor primite compară descriptiv ultimele două rapoarte live afișate din același sezon, fără a deduce cauze.
 
