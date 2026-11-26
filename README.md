@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.160)
+# SuperManager 26/27 — Ediția Supremă (v10.55.161)
+
+**v10.55.161:** Jurnalul de versiuni din joc permite căutarea și ordonarea istoricului documentat, disponibil offline.
 
 **v10.55.160:** Rapoartele afișate cu identificatori sau etape duplicate sunt excluse din totalurile surselor și minutelor.
 
@@ -213,6 +215,10 @@ tools/
   coach-library.json     ← specificația celor 24 de portrete de antrenor
   build-icons.sh        ← regenerează iconițele din assets/icon-source.png
 ```
+
+## Jurnalul de versiuni
+
+Deschide „Jurnal de versiuni” din partea de sus a jocului, inclusiv înainte de a începe o carieră. Intrările pot fi căutate și ordonate, funcționează offline și nu schimbă salvarea. Istoricul începe cu v10.37.0, prima versiune a jocului disponibilă în Git; unele versiuni și detalii nu au documentație disponibilă. Descrierile sunt istorice și pot fi depășite de modificări ulterioare. Datele sursă sunt în `docs/istoric-versiuni.json`, incluse și în HTML pentru utilizare offline; după actualizarea JSON-ului, rulează `node tools/sync-release-log.js` pentru sincronizarea HTML-ului; verificarea este inclusă în teste.
 
 ## Centrul de notificări
 
