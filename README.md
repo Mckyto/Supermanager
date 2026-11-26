@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.149)
+# SuperManager 26/27 — Ediția Supremă (v10.55.150)
+
+**v10.55.150:** Istoricul golurilor primite compară descriptiv ultimele două rapoarte live afișate din același sezon, fără a deduce cauze.
 
 **v10.55.149:** Proiectele sportive afișează un calcul aritmetic optimist al țintei, fără predicții; pentru goluri nu se presupune un plafon pe meci.
 
