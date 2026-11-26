@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.158)
+# SuperManager 26/27 — Ediția Supremă (v10.55.159)
+
+**v10.55.159:** Un raport existent pentru aceeași etapă, club, ligă și sezon nu este duplicat sau înlocuit dacă identificatorul meciului se schimbă.
 
 **v10.55.158:** Istoricul live cu format invalid este păstrat neschimbat; rapoartele noi nu sunt salvate peste el.
 
