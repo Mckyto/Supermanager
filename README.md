@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.142)
+# SuperManager 26/27 — Ediția Supremă (v10.55.143)
+
+**v10.55.143:** Sosirile recente afișează și promisiunile curente de titularizare salvate pentru fiecare jucător, fără a le îndeplini automat.
 
 **v10.55.142:** Sosirile recente detaliază etapele participărilor înregistrate, cu distincție între live și simulare rapidă; datele contradictorii nu sunt prezentate ca certe.
 
