@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.144)
+# SuperManager 26/27 — Ediția Supremă (v10.55.145)
+
+**v10.55.145:** Contextul premeci prezintă până la cinci rezultate eligibile de campionat ale adversarului, fără predicții sau efecte asupra simulării.
 
 **v10.55.144:** Sosirile recente arată starea curentă a accidentărilor, suspendărilor și condiției, fără a garanta selecția.
 
