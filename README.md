@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.151)
+# SuperManager 26/27 — Ediția Supremă (v10.55.152)
+
+**v10.55.152:** Comparația rapoartelor include diferențele pe intervale de minute când datele de timp sunt coerente.
 
 **v10.55.151:** Comparația rapoartelor explică motivul ambiguității identității sau ordinii, fără a modifica salvarea.
 
