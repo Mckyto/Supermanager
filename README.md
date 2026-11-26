@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.154)
+# SuperManager 26/27 — Ediția Supremă (v10.55.155)
+
+**v10.55.155:** Fiecare raport afișează sursele doar când totalurile sunt coerente, fără valori parțiale pentru date invalide.
 
 **v10.55.154:** Acoperirea rapoartelor explică prima problemă identificată la asocierea cu un rezultat recent.
 
