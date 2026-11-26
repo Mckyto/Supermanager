@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.143)
+# SuperManager 26/27 — Ediția Supremă (v10.55.144)
+
+**v10.55.144:** Sosirile recente arată starea curentă a accidentărilor, suspendărilor și condiției, fără a garanta selecția.
 
 **v10.55.143:** Sosirile recente afișează și promisiunile curente de titularizare salvate pentru fiecare jucător, fără a le îndeplini automat.
 
