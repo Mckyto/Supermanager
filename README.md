@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.141)
+# SuperManager 26/27 — Ediția Supremă (v10.55.142)
+
+**v10.55.142:** Sosirile recente detaliază etapele participărilor înregistrate, cu distincție între live și simulare rapidă; datele contradictorii nu sunt prezentate ca certe.
 
 **v10.55.141:** Sosirile recente afișează participările de campionat înregistrate din rapoartele live și simulate disponibile, fără istoric reconstruit.
 
