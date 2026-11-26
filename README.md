@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.157)
+# SuperManager 26/27 — Ediția Supremă (v10.55.158)
+
+**v10.55.158:** Istoricul live cu format invalid este păstrat neschimbat; rapoartele noi nu sunt salvate peste el.
 
 **v10.55.157:** Istoricul semnalează înregistrările care nu pot fi încadrate sigur în filtrul ales și formatul invalid.
 
