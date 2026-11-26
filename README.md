@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.162)
+# SuperManager 26/27 — Ediția Supremă (v10.55.163)
+
+**v10.55.163:** Academia permite scouting regional țintit pe post, la costul afișat; este corectată deducerea costului din buget.
 
 **v10.55.162:** Accesibilitatea oferă contrast sporit pentru unele panouri și reducerea opțională a animațiilor CSS, cu preferințe locale.
 

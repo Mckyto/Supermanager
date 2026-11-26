@@ -988,5 +988,10 @@
     "version": "10.55.162",
     "description": "Accesibilitatea oferă contrast sporit pentru unele panouri și reducerea opțională a animațiilor CSS, cu preferințe locale.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.163",
+    "description": "Academia permite scouting regional țintit pe post, la costul afișat; este corectată deducerea costului din buget.",
+    "source": "Documentația versiunii"
   }
 ]
