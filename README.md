@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.148)
+# SuperManager 26/27 — Ediția Supremă (v10.55.149)
+
+**v10.55.149:** Proiectele sportive afișează un calcul aritmetic optimist al țintei, fără predicții; pentru goluri nu se presupune un plafon pe meci.
 
 **v10.55.148:** Proiectul sportiv detaliază scorul și contribuția fiecărui meci identificat unic; datele ambigue nu sunt numărate.
 
