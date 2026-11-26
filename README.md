@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.161)
+# SuperManager 26/27 — Ediția Supremă (v10.55.162)
+
+**v10.55.162:** Accesibilitatea oferă contrast sporit pentru unele panouri și reducerea opțională a animațiilor CSS, cu preferințe locale.
 
 **v10.55.161:** Jurnalul de versiuni din joc permite căutarea și ordonarea istoricului documentat, disponibil offline.
 
