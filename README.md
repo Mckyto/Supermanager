@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.155)
+# SuperManager 26/27 — Ediția Supremă (v10.55.156)
+
+**v10.55.156:** Rapoartele fără surse sunt păstrate vizibile; câmpurile incomplete sunt marcate indisponibile.
 
 **v10.55.155:** Fiecare raport afișează sursele doar când totalurile sunt coerente, fără valori parțiale pentru date invalide.
 
