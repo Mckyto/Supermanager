@@ -7,7 +7,7 @@
  *
  * La fiecare versiune nouă de joc, crește CACHE_VERSION.
  */
-const CACHE_VERSION = 'sm2627-v10.55.155';
+const CACHE_VERSION = 'sm2627-v10.55.156';
 const PRECACHE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', (event) => {
