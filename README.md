@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.159)
+# SuperManager 26/27 — Ediția Supremă (v10.55.160)
+
+**v10.55.160:** Rapoartele afișate cu identificatori sau etape duplicate sunt excluse din totalurile surselor și minutelor.
 
 **v10.55.159:** Un raport existent pentru aceeași etapă, club, ligă și sezon nu este duplicat sau înlocuit dacă identificatorul meciului se schimbă.
 
