@@ -1033,5 +1033,10 @@
     "version": "10.55.171",
     "description": "Împrumuturile afișează o proiecție condiționată a revenirii, contractului și OVR în limita anuală existentă, fără efect din minutele fictive. Identitățile duplicate, cluburile sau loturile ambigue blochează atribuirea și revenirea automată; formatele invalide sunt păstrate fără procesare.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.172",
+    "description": "Negocierea vânzării explică decontul clauzelor de revânzare existente, taxa brută și venitul net. Datele invalide sau ambigue blochează tranzacțiile în loc să rescrie registrul; cumpărătorul care este și beneficiar primește corect plata. Nu sunt simulate automat revânzările cluburilor AI.",
+    "source": "Documentația versiunii"
   }
 ]
