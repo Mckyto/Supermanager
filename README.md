@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.173)
+# SuperManager 26/27 — Ediția Supremă (v10.55.174)
 
-**v10.55.173:** Clauza de revânzare la cumpărare este păstrată pentru cluburile externe identificabile; sursele ambigue permit negocieri fără clauză.
+**v10.55.174:** Mercato prezintă clauzele de revânzare înregistrate, separate pe obligații și încasări posibile, cu exemple ipotetice.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
