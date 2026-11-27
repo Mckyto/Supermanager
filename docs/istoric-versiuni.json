@@ -1013,5 +1013,10 @@
     "version": "10.55.167",
     "description": "Mentoratul verifică eligibilitatea la creare și aplicarea efectelor, fără a șterge perechile inactive. Interfața explică șansa de creștere la victorie, condițiile chimiei și limitele lotului; înregistrările inactive sunt vizibile și se pot elimina.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.168",
+    "description": "Parteneriatele exclud din bonusuri înregistrările invalide sau duplicate și păstrează fără actualizare istoricul ambiguu. Interfața avertizează; clubul, titularii și rapoartele duplicate sunt verificate înainte de contorizare.",
+    "source": "Documentația versiunii"
   }
 ]
