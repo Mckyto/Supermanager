@@ -1038,5 +1038,10 @@
     "version": "10.55.172",
     "description": "Negocierea vânzării explică decontul clauzelor de revânzare existente, taxa brută și venitul net. Datele invalide sau ambigue blochează tranzacțiile în loc să rescrie registrul; cumpărătorul care este și beneficiar primește corect plata. Nu sunt simulate automat revânzările cluburilor AI.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.173",
+    "description": "Clauzele de revânzare negociate la cumpărare sunt păstrate și pentru cluburile externe adăugate în carieră odată cu transferul. Dacă vânzătorul sau jucătorul nu poate fi identificat unic, opțiunile cu procent sunt dezactivate; se poate negocia fără clauză.",
+    "source": "Documentația versiunii"
   }
 ]

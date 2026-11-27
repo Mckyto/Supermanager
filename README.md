@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.172)
+# SuperManager 26/27 — Ediția Supremă (v10.55.173)
 
-**v10.55.172:** Negocierile de vânzare afișează decontarea clauzelor existente și protejează tranzacțiile de date ambigue.
+**v10.55.173:** Clauza de revânzare la cumpărare este păstrată pentru cluburile externe identificabile; sursele ambigue permit negocieri fără clauză.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
