@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.167)
+# SuperManager 26/27 — Ediția Supremă (v10.55.168)
 
-**v10.55.167:** Mentoratul verifică eligibilitatea și prezintă corect efectele; perechile inactive rămân vizibile și pot fi eliminate.
+**v10.55.168:** Istoricul parteneriatelor este protejat când conține înregistrări invalide sau duplicate; bonusurile ambigue sunt excluse.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
