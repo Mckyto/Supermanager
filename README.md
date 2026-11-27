@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.171)
+# SuperManager 26/27 — Ediția Supremă (v10.55.172)
 
-**v10.55.171:** Împrumuturile afișează o proiecție de revenire și protejează înregistrările cu identitate sau lot ambiguu.
+**v10.55.172:** Negocierile de vânzare afișează decontarea clauzelor existente și protejează tranzacțiile de date ambigue.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
