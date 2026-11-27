@@ -1063,5 +1063,10 @@
     "version": "10.55.177",
     "description": "La tranziția de sezon, clauzele identificabile ale jucătorilor cu contract expirat sau retrași sunt încheiate fără plată și arhivate separat. Datele ambigue și împrumuturile nu sunt închise automat; istoricul vechi nu este reconstruit.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.178",
+    "description": "Plățile efective ale clauzelor din transferurile clubului și cele AI simulate sunt arhivate cu taxa, beneficiarul și suma achitată, fără reconstruirea plăților vechi. Un istoric invalid sau o clauză deja arhivată blochează decontarea respectivă fără rescriere.",
+    "source": "Documentația versiunii"
   }
 ]

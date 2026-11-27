@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.177)
+# SuperManager 26/27 — Ediția Supremă (v10.55.178)
 
-**v10.55.177:** Clauzele identificabile se încheie fără plată la expirarea contractului sau retragerea confirmată la tranziția de sezon.
+**v10.55.178:** Plățile de clauze din transferurile clubului și AI sunt arhivate, cu protecție la istorice invalide sau duplicate.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
