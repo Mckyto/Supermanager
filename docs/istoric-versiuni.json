@@ -1018,5 +1018,10 @@
     "version": "10.55.168",
     "description": "Parteneriatele exclud din bonusuri înregistrările invalide sau duplicate și păstrează fără actualizare istoricul ambiguu. Interfața avertizează; clubul, titularii și rapoartele duplicate sunt verificate înainte de contorizare.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.169",
+    "description": "Istoricul separat al parteneriatelor naționalei și cheile de meci invalide sau duplicate sunt păstrate fără actualizare; perechile ambigue și jucătorii neidentificabili unic nu primesc bonus. Rapoartele duplicate nu sunt contorizate, iar interfața explică limitările.",
+    "source": "Documentația versiunii"
   }
 ]

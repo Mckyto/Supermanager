@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.168)
+# SuperManager 26/27 — Ediția Supremă (v10.55.169)
 
-**v10.55.168:** Istoricul parteneriatelor este protejat când conține înregistrări invalide sau duplicate; bonusurile ambigue sunt excluse.
+**v10.55.169:** Parteneriatele naționalei protejează istoricul ambiguu și verifică identitatea titularilor înaintea bonusurilor și contorizării.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
