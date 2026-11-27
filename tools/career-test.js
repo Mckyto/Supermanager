@@ -29,6 +29,7 @@ async function simulate(app, button) {
     initial.manager.isRomaniaSelector=true;initial.manager.ntFixtures=[{id:"nt-1",homeId:"romania_nt",awayId:"nt_suedia",played:true,homeGoals:2,awayGoals:1},{id:"nt-2",homeId:"nt_elvetia",awayId:"romania_nt",played:false}];
     initial.manager.clubSharesPct = 100; // pragul de demitere de 8, fără a dezactiva mecanica
     initial.difficulty = "normal";
+    initial.transferClausePaymentHistory=[{clauseId:'payment-old',playerId:'payment-player',debtorClubId:initial.userClubId,buyerClubId:'buyer-test',beneficiaryClubId:'beneficiary-test',percentage:20,fee:100,amount:20,season:initial.season,round:1,source:'user'}];
     initial.calendarDomesticCup = false; // Acest test acoperă simularea campionatului fără opriri de cupă.
     initial.ntPartnerships=[{key:'test-nt-pair',playerIds:['test-a','test-b'],matches:4}];initial.ntPartnershipMatchKeys=['2026/2027|nt|test'];const otherClub=initial.clubs.find(c=>c.id!==initial.userClubId);initial.loanedOutPlayers=[{id:'test-loan-return',name:'Împrumut Altfel',age:20,isU21:true,ovr:70,contractYears:0,loanOriginalContractYears:3,onLoan:true,originClubId:otherClub.id,loanFromClubId:otherClub.id},{id:'test-loan-expire',name:'Contract Expirat',age:25,ovr:75,contractYears:0,loanOriginalContractYears:1,onLoan:true,originClubId:initial.userClubId,loanFromClubId:initial.userClubId}];
     initial.clubs.forEach(c => c.players.forEach(p => { p.ovr = c.id === initial.userClubId ? 99 : 30; }));
@@ -85,6 +86,7 @@ async function simulate(app, button) {
     await app.sleep(500);
     career = read(app);
     assert.equal(career.currentRound, 1);
+    assert.deepEqual(career.transferClausePaymentHistory,initial.transferClausePaymentHistory);
     assert.equal(career.manager.ntFixtures.length,4);assert(career.manager.ntFixtures.every(f=>!f.played));assert.equal(career.ntSeasonHistory.length,1);assert.equal(career.ntSeasonHistory[0].season,initial.season);assert.equal(career.ntSeasonHistory[0].matches.length,1);assert.equal(career.ntSeasonHistory[0].matches[0].homeGoals,2);assert.equal(career.ntSeasonHistory[0].matches[0].played,true);
     const growthNext=career.clubs.find(c=>c.id===career.userClubId).players.find(p=>p.id===growthPlayer.id);assert(growthNext);assert(growthNext.ovr<=74,'tranziția nu depășește limita sezonului precedent');
     const renewed=career.clubs.flatMap(c=>c.players).find(p=>p.id===aiStar.id);assert(renewed);assert(renewed.contractYears>=2);assert(!career.marketPool.some(p=>p.id===aiStar.id),'starul AI rămâne sub contract');
