@@ -1028,5 +1028,10 @@
     "version": "10.55.170",
     "description": "Sosirile recente arată rolul în formula afișată și până la trei colegi cu post compatibil și OVR apropiat, inclusiv disponibilitatea cunoscută. Este o comparație informativă, fără predicții sau efecte asupra selecției, moralului și performanței.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.171",
+    "description": "Împrumuturile afișează o proiecție condiționată a revenirii, contractului și OVR în limita anuală existentă, fără efect din minutele fictive. Identitățile duplicate, cluburile sau loturile ambigue blochează atribuirea și revenirea automată; formatele invalide sunt păstrate fără procesare.",
+    "source": "Documentația versiunii"
   }
 ]
