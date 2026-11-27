@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.165)
+# SuperManager 26/27 — Ediția Supremă (v10.55.166)
 
-**v10.55.165:** Fiecare club poate alege profilul academiei, cu bonusuri de atribute pentru juniorii recrutați ulterior.
+**v10.55.166:** Promovarea juniorilor cere confirmare și verifică identitatea, loturile și contractul; progresul se păstrează.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
