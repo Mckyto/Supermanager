@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.169)
+# SuperManager 26/27 — Ediția Supremă (v10.55.170)
 
-**v10.55.169:** Parteneriatele naționalei protejează istoricul ambiguu și verifică identitatea titularilor înaintea bonusurilor și contorizării.
+**v10.55.170:** Sosirile recente arată contextul formulei și până la trei colegi comparabili pe post, fără efect mecanic.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
