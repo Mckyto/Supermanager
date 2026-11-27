@@ -993,5 +993,10 @@
     "version": "10.55.163",
     "description": "Academia permite scouting regional țintit pe post, la costul afișat; este corectată deducerea costului din buget.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.164",
+    "description": "Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.",
+    "source": "Documentația versiunii"
   }
 ]

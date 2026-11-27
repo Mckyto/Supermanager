@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.163)
+# SuperManager 26/27 — Ediția Supremă (v10.55.164)
+
+**v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
 **v10.55.163:** Academia permite scouting regional țintit pe post, la costul afișat; este corectată deducerea costului din buget.
 
