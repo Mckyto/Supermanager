@@ -4,6 +4,15 @@ const html=fs.readFileSync('public/index.html','utf8'),a=html.indexOf('function 
 const api=new Function(html.slice(a,b)+';return {list:_smMinuteGoals,add:_smMinuteGoalAdd,remove:_smMinuteGoalRemove}')();
 const state={userClubId:'a',season:'2026/2027',clubs:[{id:'a',players:[{id:1,name:'Alex',verifiedLiveMinutesThisSeason:23}]}]},before=JSON.stringify(state);
 assert.equal(api.add(state,1,0),state);assert.equal(api.add(state,1,1.2),state);assert.equal(api.add(state,1,3601),state);assert.equal(api.add(state,1,90,'bad'),state);const simGoal=api.add({...state,clubs:[{id:'a',players:[{id:1,name:'Alex',verifiedLeagueMinutesThisSeason:45}]}]},1,90,'league');assert.equal(simGoal.minuteGoals[0].mode,'league');assert.equal(simGoal.minuteGoals[0].baseline,45);let result=api.add(state,'1',90);assert.equal(JSON.stringify(state),before);assert.equal(result.minuteGoals[0].baseline,23);assert.equal(api.add(result,1,90),result);assert.equal(api.list({...result,season:'new'}).length,0);assert.equal(api.list(api.remove(result,1)).length,0);
+const progressStart=html.indexOf('function _smIndividualGoalProgress('),progressEnd=html.indexOf('function _SmMinuteGoals(',progressStart);
+const progress=new Function(html.slice(progressStart,progressEnd)+';return _smIndividualGoalProgress')();
+assert.equal(progress([{id:1,verifiedLiveMinutesThisSeason:100}],{playerId:1,baseline:10,target:90},'verifiedLiveMinutesThisSeason'),90);
+for(const players of [[{id:1,verifiedLiveMinutesThisSeason:-1}],[{id:1,verifiedLiveMinutesThisSeason:5}],[{id:1},{id:'1'}],[]])assert.equal(progress(players,{playerId:1,baseline:10,target:90},'verifiedLiveMinutesThisSeason'),null);
+assert.equal(progress([{id:1}],{playerId:1,baseline:0,target:90},'verifiedLiveMinutesThisSeason'),0);
+assert.equal(api.add({...state,minuteGoals:{}},1,90).minuteGoals.constructor,Object);
+assert.equal(api.add({...state,clubs:[{id:'a',players:[{id:1,verifiedLiveMinutesThisSeason:-1}]}]},1,90).minuteGoals,undefined);
+assert.equal(api.add({...state,clubs:[{id:'a',players:[{id:1},{id:'1'}]}]},1,90).minuteGoals,undefined);
+assert.equal(api.add({...state,minuteGoals:[{clubId:'a',season:state.season,playerId:'1'}]},1,90).minuteGoals.length,1);
 console.log('  ✓ obiective de minute: validare, bază și izolare club/sezon');
 const KEY='sm2627_career_slot_1',read=app=>JSON.parse(app.window.localStorage.getItem(KEY)||'null');
 (async()=>{let app=await launch();try{assert(app.click(/Semnează Contractul/));await resolveSupercup(app);await app.sleep(800);const career=read(app),club=career.clubs.find(c=>c.id===career.userClubId),player=club.players.find(p=>p.id===career.lineupIds.starters[1]);assert(player);player.verifiedLiveMinutesThisSeason=10;career.manager.clubSharesPct=100;career.calendarDomesticCup=false;career.boardConfidence=100;app.close();app=await launch({seed:{[KEY]:JSON.stringify(career)}});await app.sleep(500);app.window.Math.random=()=>.8;

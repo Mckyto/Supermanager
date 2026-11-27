@@ -5,6 +5,10 @@ const {list,add,remove}=new Function(html.slice(start,end)+';return {list:_smTra
 const players=[{id:1,name:'Alex',age:23,ovr:75,individualTrainingImprovements:2},{id:2,name:'Veteran',age:32,ovr:80},{id:3,name:'Elită',age:24,ovr:95},{id:4,name:'Limită',age:24,ovr:75,individualTrainingSessions:32}];
 const state={userClubId:'a',season:'2026/2027',clubs:[{id:'a',players}]},before=JSON.stringify(state);
 assert.equal(add(state,2,1),state);assert.equal(add(state,3,1),state);assert.equal(add(state,4,1),state);assert.equal(add(state,1,0),state);assert.equal(add(state,1,1.5),state);const next=add(state,'1',3);assert.equal(JSON.stringify(state),before);assert.equal(list(next)[0].baseline,2);assert.equal(add(next,1,1),next);assert.equal(list({...next,season:'2027/2028'}).length,0);assert.equal(list(remove(next,1)).length,0);assert.equal(list(next).length,1);
+assert.equal(add({...state,trainingGoals:{}},1,1).trainingGoals.constructor,Object);
+assert.equal(add({...state,clubs:[{id:'a',players:[{...players[0],individualTrainingImprovements:-1}]}]},1,1).trainingGoals,undefined);
+assert.equal(add({...state,clubs:[{id:'a',players:[players[0],{...players[0],id:'1'}]}]},1,1).trainingGoals,undefined);
+assert.equal(add({...state,trainingGoals:[{clubId:'a',season:state.season,playerId:'1'}]},1,1).trainingGoals.length,1);
 console.log('  ✓ obiectivele individuale au bază sezonieră, validare și nu modifică lotul');
 const {launch}=require('./dom-harness'),KEY='sm2627_career_slot_1';
 (async()=>{let app=await launch();try{

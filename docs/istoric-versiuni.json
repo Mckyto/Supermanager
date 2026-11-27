@@ -1068,5 +1068,10 @@
     "version": "10.55.178",
     "description": "Plățile efective ale clauzelor din transferurile clubului și cele AI simulate sunt arhivate cu taxa, beneficiarul și suma achitată, fără reconstruirea plăților vechi. Un istoric invalid sau o clauză deja arhivată blochează decontarea respectivă fără rescriere.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.179",
+    "description": "Obiectivele de minute și antrenament verifică identitatea unică și contoarele înainte de creare; registrele invalide nu sunt rescrise. Progresul cu date invalide, contor regresat sau identitate ambiguă este indisponibil, nu zero. Contoarele urmăresc jucătorul și pot include activitatea la alt club dacă pleacă și revine în același sezon; istoricul nu este reconstruit.",
+    "source": "Documentația versiunii"
   }
 ]
