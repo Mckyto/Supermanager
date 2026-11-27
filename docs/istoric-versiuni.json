@@ -998,5 +998,10 @@
     "version": "10.55.164",
     "description": "Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.165",
+    "description": "Fiecare club poate alege profilul academiei, cu bonusuri de atribute pentru juniorii recrutați ulterior.",
+    "source": "Documentația versiunii"
   }
 ]
