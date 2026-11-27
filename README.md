@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.174)
+# SuperManager 26/27 — Ediția Supremă (v10.55.175)
 
-**v10.55.174:** Mercato prezintă clauzele de revânzare înregistrate, separate pe obligații și încasări posibile, cu exemple ipotetice.
+**v10.55.175:** Clarificare: unele transferuri AI sunt simulate, dar nu decontează automat clauzele de revânzare.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 

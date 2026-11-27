@@ -1036,7 +1036,7 @@
   },
   {
     "version": "10.55.172",
-    "description": "Negocierea vânzării explică decontul clauzelor de revânzare existente, taxa brută și venitul net. Datele invalide sau ambigue blochează tranzacțiile în loc să rescrie registrul; cumpărătorul care este și beneficiar primește corect plata. Nu sunt simulate automat revânzările cluburilor AI.",
+    "description": "Negocierea vânzării explică decontul clauzelor de revânzare existente, taxa brută și venitul net. Datele invalide sau ambigue blochează tranzacțiile în loc să rescrie registrul; cumpărătorul care este și beneficiar primește corect plata. Unele transferuri între cluburile AI sunt simulate, dar clauzele nu sunt decontate automat.",
     "source": "Documentația versiunii"
   },
   {
@@ -1046,7 +1046,12 @@
   },
   {
     "version": "10.55.174",
-    "description": "Mercato afișează clauzele de revânzare înregistrate ca obligații sau încasări posibile, cu avertizări pentru date neconfirmate. O taxă ipotetică oferă exemple separate, nu prognoze sau bani deja datorați; revânzările AI nu sunt simulate automat.",
+    "description": "Mercato afișează clauzele de revânzare înregistrate ca obligații sau încasări posibile, cu avertizări pentru date neconfirmate. O taxă ipotetică oferă exemple separate, nu prognoze sau bani deja datorați; unele transferuri AI sunt simulate, dar clauzele nu sunt decontate automat.",
+    "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.175",
+    "description": "Corectare de transparență: jocul simulează unele transferuri între cluburi AI, însă clauzele de revânzare nu sunt decontate automat pentru acestea. Nu a fost adăugată decontarea AI.",
     "source": "Documentația versiunii"
   }
 ]
