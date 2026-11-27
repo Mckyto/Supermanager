@@ -1053,5 +1053,10 @@
     "version": "10.55.175",
     "description": "Corectare de transparență: jocul simulează unele transferuri între cluburi AI, însă clauzele de revânzare nu sunt decontate automat pentru acestea. Nu a fost adăugată decontarea AI.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.176",
+    "description": "Transferurile dintre cluburile AI simulate la început de sezon și în etapa de mercato de iarnă decontează clauzele valide din taxa transferului, creditează beneficiarii și elimină clauzele plătite. Identitățile, bugetele sau clauzele ambigue împiedică transferul; tranzacțiile anterioare nu sunt reconstruite.",
+    "source": "Documentația versiunii"
   }
 ]
