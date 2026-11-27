@@ -1008,5 +1008,10 @@
     "version": "10.55.166",
     "description": "Promovarea juniorilor cere confirmare și verifică la aplicare identitatea unică, loturile, atributele și contractul. Datele incomplete sau duplicate blochează operația fără modificări; profilul și pregătirea se păstrează.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.167",
+    "description": "Mentoratul verifică eligibilitatea la creare și aplicarea efectelor, fără a șterge perechile inactive. Interfața explică șansa de creștere la victorie, condițiile chimiei și limitele lotului; înregistrările inactive sunt vizibile și se pot elimina.",
+    "source": "Documentația versiunii"
   }
 ]
