@@ -1058,5 +1058,10 @@
     "version": "10.55.176",
     "description": "Transferurile dintre cluburile AI simulate la început de sezon și în etapa de mercato de iarnă decontează clauzele valide din taxa transferului, creditează beneficiarii și elimină clauzele plătite. Identitățile, bugetele sau clauzele ambigue împiedică transferul; tranzacțiile anterioare nu sunt reconstruite.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.177",
+    "description": "La tranziția de sezon, clauzele identificabile ale jucătorilor cu contract expirat sau retrași sunt încheiate fără plată și arhivate separat. Datele ambigue și împrumuturile nu sunt închise automat; istoricul vechi nu este reconstruit.",
+    "source": "Documentația versiunii"
   }
 ]

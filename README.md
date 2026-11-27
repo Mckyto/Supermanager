@@ -1,6 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.176)
+# SuperManager 26/27 — Ediția Supremă (v10.55.177)
 
-**v10.55.176:** Transferurile AI simulate vara și iarna decontează clauzele valide din taxa reală și păstrează datele ambigue.
+**v10.55.177:** Clauzele identificabile se încheie fără plată la expirarea contractului sau retragerea confirmată la tranziția de sezon.
 
 **v10.55.164:** Juniorii U19 pot urma pregătire individuală plătită: trei programe, două atribute și limită de o sesiune la patru etape.
 
