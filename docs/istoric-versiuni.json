@@ -1023,5 +1023,10 @@
     "version": "10.55.169",
     "description": "Istoricul separat al parteneriatelor naționalei și cheile de meci invalide sau duplicate sunt păstrate fără actualizare; perechile ambigue și jucătorii neidentificabili unic nu primesc bonus. Rapoartele duplicate nu sunt contorizate, iar interfața explică limitările.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.170",
+    "description": "Sosirile recente arată rolul în formula afișată și până la trei colegi cu post compatibil și OVR apropiat, inclusiv disponibilitatea cunoscută. Este o comparație informativă, fără predicții sau efecte asupra selecției, moralului și performanței.",
+    "source": "Documentația versiunii"
   }
 ]
