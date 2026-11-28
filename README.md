@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.192)
+# SuperManager 26/27 — Ediția Supremă (v10.55.193)
+
+**v10.55.193:** Promisiunile jucătorilor evaluate de acum înainte sunt păstrate într-un istoric al clubului.
 
 **v10.55.192:** La vânzările noi, clauza opțională de revânzare reduce oferta inițială a cumpărătorului, cu respectarea taxei minime.
 
