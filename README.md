@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.202)
+# SuperManager 26/27 — Ediția Supremă (v10.55.203)
+
+**v10.55.203:** Biroul nu mai suprascrie o promisiune activă când este propusă o titularizare nouă.
 
 **v10.55.202:** Biroul jucătorului afișează contextul evaluărilor de promisiuni păstrate pentru clubul actual.
 
