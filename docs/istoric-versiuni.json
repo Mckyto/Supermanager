@@ -1188,5 +1188,10 @@
     "version": "10.55.202",
     "description": "Biroul 1-la-1 afișează informativ numărul de evaluări păstrate și ultima evaluare înregistrată a promisiunilor jucătorului la clubul actual, cu sezon, etapă, tip și sursă live sau simulată. Istoricul invalid ori identitățile duplicate sau indisponibile nu sunt folosite; nu se afișează evaluări viitoare din sezonul curent. Ordinea este a înregistrării, nu o comparație între sezoane. Istoricul este limitat la 100 de evaluări noi, nu reconstruiește date vechi și nu modifică moralul, selecția sau promisiunile.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.203",
+    "description": "În biroul 1-la-1, promisiunea nouă de titularizare este dezactivată dacă jucătorul are deja o promisiune activă sau registrul conține intrări invalide; verificarea este repetată la aplicare, fără a suprascrie angajamentul sau a consuma discuția blocată. Alte discuții rămân disponibile. Interfața spune explicit că se promite titularizarea în următoarele două etape și nu garantează rezultatul. Protecția se aplică biroului, nu schimbă celelalte surse de promisiuni și nu repară retroactiv datele.",
+    "source": "Documentația versiunii"
   }
 ]
