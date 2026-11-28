@@ -1128,5 +1128,10 @@
     "version": "10.55.190",
     "description": "Planificarea deplasărilor semnalează și dezactivează anularea când rezervarea nu poate fi anulată din cauza datelor ambigue sau invalide. Verificarea folosește aceleași reguli ca operația efectivă, fără modificarea bugetului sau a rezervărilor la afișare; schimbarea calendarului nu împiedică prin ea însăși anularea eligibilă.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.191",
+    "description": "Negocierea la cumpărare oferă și clauze de revânzare de 5% și 15%, pe lângă 0%, 10% și 20%. Acestea reduc cererea calculată a clubului cu 3% și 9% înaintea limitei minime a taxei, iar clauzele alese sunt decontate după regulile existente la o revânzare eligibilă. Refuzurile noi pot păstra prima oferită și durata contractului, afișate și comparate cu oferta curentă; istoricul vechi nu este completat retroactiv. Comparația este informativă și nu garantează acceptarea; contractele existente rămân neschimbate.",
+    "source": "Documentația versiunii"
   }
 ]
