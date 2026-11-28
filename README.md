@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.201)
+# SuperManager 26/27 — Ediția Supremă (v10.55.202)
+
+**v10.55.202:** Biroul jucătorului afișează contextul evaluărilor de promisiuni păstrate pentru clubul actual.
 
 **v10.55.201:** Proiectele sportive noi pot include un acord opțional cu conducerea, evaluat pe rezultate validate.
 
