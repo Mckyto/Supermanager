@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.186)
+# SuperManager 26/27 — Ediția Supremă (v10.55.187)
+
+**v10.55.187:** Accidentările live ale naționalei sunt păstrate și recuperate pentru jucătorii identificați unic ai cluburilor AI și pentru liberi.
 
 **v10.55.186:** Accidentările live ale naționalei sunt păstrate pentru jucătorii identificați unic ai clubului utilizatorului.
 
