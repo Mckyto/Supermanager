@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.194)
+# SuperManager 26/27 — Ediția Supremă (v10.55.195)
+
+**v10.55.195:** În meciurile live este disponibilă o schemă de corner scurt, selectabilă pe fiecare margine.
 
 **v10.55.194:** Mentorii activi pot întâmpina opțional sosirile noi U21, cu un mic plus de moral.
 
