@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.180)
+# SuperManager 26/27 — Ediția Supremă (v10.55.181)
+
+**v10.55.181:** Sosirile recente afișează minutele și titularizarea din noile rapoarte de campionat, fără a reconstrui detaliile vechi.
 
 **v10.55.180:** Promisiunile din vestiar folosesc rapoarte de participare confirmate; identitățile sau rapoartele ambigue nu produc consecințe în etapa afectată.
 
