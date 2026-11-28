@@ -1178,5 +1178,10 @@
     "version": "10.55.200",
     "description": "Arhiva afișează cele mai lungi serii observate de victorii, fără înfrângere, cu gol marcat și fără gol primit, cu sezoanele la egalitate, pentru clubul și liga actuale. Sunt folosite numai rezultate eligibile din maximum 10 sezoane păstrate; sezoanele duplicate, indisponibile sau fără rezultate eligibile sunt excluse, iar rezultatele invalide și etapele duplicate întrerup seriile. Nu reprezintă istoria completă sau exclusiv mandatul managerului; în România pot fi incluse ambele faze.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.201",
+    "description": "La pornirea unui proiect sportiv nou poate fi ales opțional un acord cu conducerea: după toate cele trei sau cinci meciuri de campionat fixate și validate, ținta atinsă aduce +4 încredere, iar eșecul −4, plafonate la 0–100. Efectul se aplică o singură dată, poate influența demiterea și este consemnat în știri; acordul în curs nu poate fi eliminat. Datele lipsă, ambigue sau invalide amână evaluarea; acordul este legat de club și sezon. La alt club sau sezon, un nou proiect poate înlocui acordul inactiv fără efect, cu avertizare; un acord curent cu date invalide nu este rescris. Proiectele existente rămân fără acord și fără efecte retroactive.",
+    "source": "Documentația versiunii"
   }
 ]

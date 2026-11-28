@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.200)
+# SuperManager 26/27 — Ediția Supremă (v10.55.201)
+
+**v10.55.201:** Proiectele sportive noi pot include un acord opțional cu conducerea, evaluat pe rezultate validate.
 
 **v10.55.200:** Arhiva compară cele mai lungi serii observate în sezoanele eligibile ale clubului și ligii actuale.
 
