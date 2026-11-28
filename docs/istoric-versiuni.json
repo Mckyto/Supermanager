@@ -1113,5 +1113,10 @@
     "version": "10.55.187",
     "description": "Accidentările live noi ale naționalei se înregistrează și pentru jucători identificați unic în cluburile AI sau pe piața liberă, cu durată simulată 1–3 etape. Doar aceste accidentări noi poartă un marcaj de recuperare: sunt reduse la etapele carierei utilizatorului, nu după calendarele nesimulate ale altor ligi. La transfer sunt urmărite în continuare; dacă jucătorul intră în clubul utilizatorului, recuperarea normală a clubului preia contorul fără dublare. La sezon nou jucătorii AI resetați de joc își pierd marcajul, iar liberi încă accidentați își continuă recuperarea. Datele ambigue sau contradictorii sunt păstrate fără modificare; accidentările vechi nu sunt reconstruite.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.188",
+    "description": "La atribuirea statisticilor din meciurile speciale, un raport duplicat sau o identitate prezentă în mai multe loturi ori în piață este exclusă, fără a modifica jucătorii ambigui. Rapoartele altor jucători identificați unic continuă să fie aplicate. Rapoartele de club simulat cer un club și un jucător identificați unic în acel lot. Datele incomplete sunt păstrate fără reconstruire; această protecție nu acoperă toate căile statisticilor de campionat.",
+    "source": "Documentația versiunii"
   }
 ]

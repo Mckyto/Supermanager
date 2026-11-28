@@ -1,7 +1,7 @@
 const resolveSupercup=require('./resolve-supercup-fixture');
 const assert=require('node:assert/strict'),fs=require('node:fs');
 const html=fs.readFileSync('public/index.html','utf8'),start=html.indexOf('function _smOvrGrowth('),end=html.indexOf('function _smResetSeasonPlayer(',start);
-const {record,apply,quick}=new Function(html.slice(start,end)+';return {record:_smRecordPlayerCompetition,apply:_smApplyPlayerReports,quick:_smQuickPlayerReport}')();
+const {record,apply,club,quick}=new Function(html.slice(start,end)+';return {record:_smRecordPlayerCompetition,apply:_smApplyPlayerReports,club:_smApplyClubCompetition,quick:_smQuickPlayerReport}')();
 let p={id:'a',ovr:70,age:24};
 const report={id:'a',minutesPlayed:90,goals:1,assists:2,matchRating:8,source:'live'};
 for(let i=0;i<5;i++)p=record(p,2026,'Campionat',report,true);
@@ -9,6 +9,11 @@ assert.equal(p.ovr,71);assert.deepEqual(p.competitionStats[2026].Campionat,{apps
 p=record(p,2026,'Cupă',{...report,minutesPlayed:30,matchRating:6},true);assert.equal(p.competitionStats[2026]['Cupă'].cleanSheets,0);assert.equal(p.competitionStats[2026].Campionat.apps,5);
 assert.equal(record(p,2026,'Cupă',{minutesPlayed:0}),p);
 let state=apply({clubs:[{players:[p]}],marketPool:[],u21Squad:[]},2027,'Campionat',[report],false);assert.equal(state.clubs[0].players[0].competitionStats[2027].Campionat.apps,1);assert.equal(p.competitionStats[2027],undefined);
+// Raportul nu trebuie atribuit în mai multe loturi sau ales arbitrar dintre duplicate.
+const one={id:1,ovr:70},two={id:2,ovr:70},r1={id:1,minutesPlayed:90,source:'live'},r2={id:2,minutesPlayed:90,source:'live'},ambiguous={clubs:[{id:'a',players:[one,two]},{id:'b',players:[{...one,id:'1'}]}],marketPool:[],u21Squad:[]},snapshot=JSON.stringify(ambiguous),safe=apply(ambiguous,'s','Cupă',[r1,r2],false);assert.equal(JSON.stringify(ambiguous),snapshot);assert.equal(safe.clubs[0].players[0].competitionStats,undefined);assert.equal(safe.clubs[1].players[0].competitionStats,undefined);assert.equal(safe.clubs[0].players[1].competitionStats.s['Cupă'].apps,1);
+for(const bad of [{clubs:[{players:[one]}],marketPool:[one]},{clubs:[{players:[one]}],u21Squad:[one]},{clubs:[{players:[one]}],marketPool:{}},{clubs:[{players:null}]}])assert.equal(apply(bad,'s','Cupă',[r1],false),bad);
+const duplicatedReports={clubs:[{id:'a',players:[one,two]}],marketPool:[],u21Squad:[]},duplicateResult=apply(duplicatedReports,'s','Cupă',[r1,{...r1,id:'1'},r2],false);assert.equal(duplicateResult.clubs[0].players[0].competitionStats,undefined);assert.equal(duplicateResult.clubs[0].players[1].competitionStats.s['Cupă'].apps,1);
+const ambiguousClub=[{id:'a',players:[one,{...one,id:'1'},two]}],clubResult=club(ambiguousClub,'a','s','Cupă',[r1,r2],false);assert.equal(clubResult[0].players[0].competitionStats,undefined);assert.equal(clubResult[0].players[2].competitionStats.s['Cupă'].apps,1);const duplicateClubs=[...ambiguousClub,...ambiguousClub];assert.equal(club(duplicateClubs,'a','s','Cupă',[r2],false),duplicateClubs);const typeClubs=[{id:1,players:[one]},{id:'1',players:[two]}];assert.equal(club(typeClubs,1,'s','Cupă',[r1],false),typeClubs);const reportsClubs=[{id:'a',players:[one,two]}],filtered=club(reportsClubs,'a','s','Cupă',[r1,{...r1,id:'1'},r2],false);assert.equal(filtered[0].players[0].competitionStats,undefined);assert.equal(filtered[0].players[1].competitionStats.s['Cupă'].apps,1);
 let declining={id:'d',age:29,ovr:70};for(let i=0;i<5;i++)declining=record(declining,2026,'Cupă',{minutesPlayed:90,matchRating:5},false);assert.equal(declining.ovr,69);
 let capped={id:'c',age:29,ovr:72,ovrGrowth:{season:2026,limit:2,gained:2}};for(let i=0;i<5;i++)capped=record(capped,2026,'Cupă',{minutesPlayed:90,matchRating:9},false);assert.equal(capped.ovr,72);
 let unrated={id:'u',age:25,ovr:70};for(let i=0;i<5;i++)unrated=record(unrated,2026,'Cupă',{minutesPlayed:90},false);assert.equal(unrated.ovr,70);assert.equal(unrated.competitionStats[2026]['Cupă'].rated,0);
