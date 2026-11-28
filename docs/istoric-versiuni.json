@@ -1098,5 +1098,10 @@
     "version": "10.55.184",
     "description": "Încărcarea mentală simulată ia în calcul de acum înainte și participările confirmate la meciurile de cupă internă și Europa, live sau simulate: +16 la minimum 60 minute și +8 la 1–59 minute, cu plafon 100. Absența din aceste meciuri nu aduce refacere; aceasta se aplică doar la etapa de campionat. Media titularilor reduce bonusul echipei cu maximum 0,8 și în cupă și Europa. Simularea rapidă atribuie 90 minute titularilor fără schimbări; Supercupa și naționala rămân excluse. Identitățile, rapoartele și verificările meciurilor sunt validate, fără reconstruirea istoricului sau reevaluarea unui meci înregistrat.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.185",
+    "description": "Accidentările confirmate în rapoartele live ale jucătorilor clubului din cupa internă, Europa și Supercupă sunt păstrate la încheiere, cu știre și durată simulată de 1–3 etape, folosind reducerea medicală existentă. Un jucător deja accidentat sau o identitate ori raport ambiguu nu este rescris; verificările noilor meciuri previn înregistrarea repetată. O accidentare din meci nu primește și recidiva opțională pentru aceeași participare. Simulările rapide și naționala nu generează aceste accidentări din raport, iar istoricul vechi nu este reconstruit.",
+    "source": "Documentația versiunii"
   }
 ]
