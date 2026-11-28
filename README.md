@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.181)
+# SuperManager 26/27 — Ediția Supremă (v10.55.182)
+
+**v10.55.182:** Încărcare mentală simulată, separată de condiția fizică, cu refacere și efect limitat în campionat.
 
 **v10.55.181:** Sosirile recente afișează minutele și titularizarea din noile rapoarte de campionat, fără a reconstrui detaliile vechi.
 
