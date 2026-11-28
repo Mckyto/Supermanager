@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.193)
+# SuperManager 26/27 — Ediția Supremă (v10.55.194)
+
+**v10.55.194:** Mentorii activi pot întâmpina opțional sosirile noi U21, cu un mic plus de moral.
 
 **v10.55.193:** Promisiunile jucătorilor evaluate de acum înainte sunt păstrate într-un istoric al clubului.
 
