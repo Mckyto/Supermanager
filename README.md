@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.190)
+# SuperManager 26/27 — Ediția Supremă (v10.55.191)
+
+**v10.55.191:** Negocierile permit clauze de revânzare de 5% și 15%, iar refuzurile noi păstrează prima și durata ofertei.
 
 **v10.55.190:** Anulările rezervărilor ambigue sunt semnalate și dezactivate în planificare.
 
