@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.179)
+# SuperManager 26/27 — Ediția Supremă (v10.55.180)
+
+**v10.55.180:** Promisiunile din vestiar folosesc rapoarte de participare confirmate; identitățile sau rapoartele ambigue nu produc consecințe în etapa afectată.
 
 **v10.55.179:** Obiectivele de minute și antrenament protejează identitățile și contoarele neconfirmate; progresul indisponibil nu este prezentat ca zero.
 
