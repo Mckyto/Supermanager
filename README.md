@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.195)
+# SuperManager 26/27 — Ediția Supremă (v10.55.196)
+
+**v10.55.196:** Adversarul live poate răspunde trecerii la pase scurte prin presing ridicat.
 
 **v10.55.195:** În meciurile live este disponibilă o schemă de corner scurt, selectabilă pe fiecare margine.
 

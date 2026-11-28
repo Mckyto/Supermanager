@@ -1153,5 +1153,10 @@
     "version": "10.55.195",
     "description": "O schemă opțională de corner scurt poate fi selectată general sau pe fiecare margine pentru utilizator în meciul live. Un coechipier de câmp se apropie, iar mingea este trimisă pe jos către zonă; posesia și finalizarea nu sunt garantate, iar pasa nu este înregistrată ca șut sau ocazie. Adversarul și simularea rapidă nu folosesc această schemă. Setările vechi rămân neschimbate.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.196",
+    "description": "În meciul live, trecerea utilizatorului la pase scurte poate declanșa presing ridicat al adversarului după cinci minute dacă setarea persistă. Reacția este anunțată și folosește tactica existentă, fără bonus ascuns; împarte limita de două reacții și distanța de 15 minute, după celelalte trei reacții în ordinea de prioritate. Planul de scor are prioritate, pauza reia numărătoarea, iar schimbarea paselor anulează așteptarea. Nu se aplică simulării rapide.",
+    "source": "Documentația versiunii"
   }
 ]
