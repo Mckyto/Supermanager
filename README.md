@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.196)
+# SuperManager 26/27 — Ediția Supremă (v10.55.197)
+
+**v10.55.197:** Programările personale noi verifică unicitatea și completitudinea meciului de campionat.
 
 **v10.55.196:** Adversarul live poate răspunde trecerii la pase scurte prin presing ridicat.
 
