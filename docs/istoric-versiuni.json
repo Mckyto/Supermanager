@@ -1173,5 +1173,10 @@
     "version": "10.55.199",
     "description": "După victoria confirmată în campionat împotriva rivalului desemnat se poate organiza opțional o sărbătoare cu suporterii: 10.000 € din bugetul clubului și +2 suporteri, plafonat la 100%, cu aceeași limită comună de o activitate la patru etape. Rezultatul, clubul și rivalul trebuie identificate unic. Activitățile nu sunt înregistrate dacă datele clubului sau ale registrului comunității sunt invalide ori ambigue; acestea sunt păstrate fără rescriere.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.200",
+    "description": "Arhiva afișează cele mai lungi serii observate de victorii, fără înfrângere, cu gol marcat și fără gol primit, cu sezoanele la egalitate, pentru clubul și liga actuale. Sunt folosite numai rezultate eligibile din maximum 10 sezoane păstrate; sezoanele duplicate, indisponibile sau fără rezultate eligibile sunt excluse, iar rezultatele invalide și etapele duplicate întrerup seriile. Nu reprezintă istoria completă sau exclusiv mandatul managerului; în România pot fi incluse ambele faze.",
+    "source": "Documentația versiunii"
   }
 ]
