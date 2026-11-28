@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.187)
+# SuperManager 26/27 — Ediția Supremă (v10.55.188)
+
+**v10.55.188:** Rapoartele meciurilor speciale nu mai atribuie statistici unor identități sau raportări duplicate.
 
 **v10.55.187:** Accidentările live ale naționalei sunt păstrate și recuperate pentru jucătorii identificați unic ai cluburilor AI și pentru liberi.
 
