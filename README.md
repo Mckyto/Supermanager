@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.178)
+# SuperManager 26/27 — Ediția Supremă (v10.55.179)
+
+**v10.55.179:** Obiectivele de minute și antrenament protejează identitățile și contoarele neconfirmate; progresul indisponibil nu este prezentat ca zero.
 
 **v10.55.178:** Plățile de clauze din transferurile clubului și AI sunt arhivate, cu protecție la istorice invalide sau duplicate.
 
