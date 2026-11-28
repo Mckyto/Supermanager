@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.182)
+# SuperManager 26/27 — Ediția Supremă (v10.55.183)
+
+**v10.55.183:** Programele accelerate noi pot include opțional riscul de recidivă și în cupa internă și Europa, fără schimbarea programelor existente.
 
 **v10.55.182:** Încărcare mentală simulată, separată de condiția fizică, cu refacere și efect limitat în campionat.
 

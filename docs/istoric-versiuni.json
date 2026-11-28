@@ -1088,5 +1088,10 @@
     "version": "10.55.182",
     "description": "Încărcare mentală simulată distinctă de condiția fizică, nu evaluare medicală. De acum înainte în campionat, minimum 60 minute adaugă 16 puncte, 1–59 minute adaugă 8, iar fără minute scad 10, cu plafon 0–100. Media celor 11 titulari reduce bonusul echipei cu maximum 0,8 în meciul live și simularea rapidă, la începutul meciului. Simularea atribuie 90 minute titularilor, fără schimbări; cupele și naționala nu sunt urmărite. Evidența este separată per club și sezon; jucătorii plecați nu se refac în absență, iar istoricul nu este reconstruit. Rapoartele neconfirmate și registrele invalide blochează actualizarea; registrele invalide nu sunt rescrise.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.183",
+    "description": "La pornirea unui program medical accelerat nou se poate alege explicit extinderea riscului simulat de recidivă de 5% la fiecare meci eligibil de cupă internă sau Europa, live ori simulat. Participarea și identitatea trebuie confirmate; simularea atribuie 90 de minute titularilor fără schimbări. Recidiva adaugă o etapă de indisponibilitate după meci, fără a modifica scorul. Meciurile de cupă nu adaugă condiție și nu avansează cele două etape ale programului; Supercupa și naționala nu sunt incluse. Programele existente rămân neschimbate. Evaluările noi sunt păstrate pentru a evita repetarea, fără reconstruirea istoricului.",
+    "source": "Documentația versiunii"
   }
 ]
