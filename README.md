@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.184)
+# SuperManager 26/27 — Ediția Supremă (v10.55.185)
+
+**v10.55.185:** Accidentările live confirmate ale clubului persistă după meciurile de cupă, Europa și Supercupă.
 
 **v10.55.184:** Încărcarea mentală simulată urmărește și cupa internă și Europa, live sau rapid, cu efect plafonat.
 
