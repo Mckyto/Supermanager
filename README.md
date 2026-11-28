@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.183)
+# SuperManager 26/27 — Ediția Supremă (v10.55.184)
+
+**v10.55.184:** Încărcarea mentală simulată urmărește și cupa internă și Europa, live sau rapid, cu efect plafonat.
 
 **v10.55.183:** Programele accelerate noi pot include opțional riscul de recidivă și în cupa internă și Europa, fără schimbarea programelor existente.
 
