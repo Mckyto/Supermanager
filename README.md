@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.197)
+# SuperManager 26/27 — Ediția Supremă (v10.55.198)
+
+**v10.55.198:** Programările personale noi semnalează și meciurile speciale datate cu adversar lipsă sau date contradictorii.
 
 **v10.55.197:** Programările personale noi verifică unicitatea și completitudinea meciului de campionat.
 

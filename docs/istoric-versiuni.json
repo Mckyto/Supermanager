@@ -1163,5 +1163,10 @@
     "version": "10.55.197",
     "description": "Programările personale noi cer o etapă de campionat unică și un singur meci complet, cu rezultat de jucare explicit, pentru stabilirea locului. La confirmare, datele sunt reverificate și programarea rămâne în așteptare dacă devin ambigue; nu se presupune o locație lipsă. Programările vechi își păstrează verificarea inițială, fără modificare retroactivă.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.198",
+    "description": "Pentru programările personale noi, un meci special datat asociat etapei, cu adversar lipsă sau identificator comun și date contradictorii, blochează confirmarea până la clarificare și este semnalat în calendar. Nu se presupune deplasarea dintr-un adversar lipsă; meciurile fără dată nu sunt deduse. Programările vechi păstrează verificarea existentă.",
+    "source": "Documentația versiunii"
   }
 ]
