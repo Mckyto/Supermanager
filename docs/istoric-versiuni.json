@@ -1138,5 +1138,10 @@
     "version": "10.55.192",
     "description": "La negocierile noi de vânzare, clauza de revânzare este implicit 0% și poate fi aleasă între 0% și 25% în pași de 5%. Pentru fiecare 5% solicitat, oferta inițială a cumpărătorului scade cu 3%, dar nu sub taxa minimă deja aplicabilă. Procentul este fixat după prima contraofertă; schimbarea cumpărătorului reîncepe negocierea. Oferta nu garantează acceptarea jucătorului, iar clauzele și contractele existente nu sunt modificate.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.193",
+    "description": "Promisiunile jucătorilor evaluate de acum înainte în campionat sunt arhivate ca respectate, încălcate sau încheiate fără penalizare, cu clubul, sezonul, etapa, tipul și participarea confirmată. Sunt păstrate maximum 100, iar jurnalul arată ultimele 10 pentru clubul actual. Simularea rapidă atribuie titularilor 90 de minute. Datele ambigue nu sunt arhivate; istoricul invalid sau duplicat nu este rescris și nu blochează evaluarea ori consecințele existente. Promisiunile vechi nu sunt reconstruite.",
+    "source": "Documentația versiunii"
   }
 ]
