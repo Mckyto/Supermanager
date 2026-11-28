@@ -1083,5 +1083,10 @@
     "version": "10.55.181",
     "description": "Participările de campionat înregistrate de acum înainte pentru sosirile recente păstrează și afișează minutele și statutul de titular dacă raportul conține date valide. Simularea rapidă atribuie 90 de minute titularilor selectați, fără înlocuiri. Detaliile vechi sau invalide sunt marcate indisponibile, nu sunt reconstruite; afișarea nu măsoară integrarea și nu schimbă moralul sau performanța.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.182",
+    "description": "Încărcare mentală simulată distinctă de condiția fizică, nu evaluare medicală. De acum înainte în campionat, minimum 60 minute adaugă 16 puncte, 1–59 minute adaugă 8, iar fără minute scad 10, cu plafon 0–100. Media celor 11 titulari reduce bonusul echipei cu maximum 0,8 în meciul live și simularea rapidă, la începutul meciului. Simularea atribuie 90 minute titularilor, fără schimbări; cupele și naționala nu sunt urmărite. Evidența este separată per club și sezon; jucătorii plecați nu se refac în absență, iar istoricul nu este reconstruit. Rapoartele neconfirmate și registrele invalide blochează actualizarea; registrele invalide nu sunt rescrise.",
+    "source": "Documentația versiunii"
   }
 ]
