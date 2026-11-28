@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.198)
+# SuperManager 26/27 — Ediția Supremă (v10.55.199)
+
+**v10.55.199:** Suporterii pot sărbători opțional victoria confirmată împotriva rivalului desemnat.
 
 **v10.55.198:** Programările personale noi semnalează și meciurile speciale datate cu adversar lipsă sau date contradictorii.
 
