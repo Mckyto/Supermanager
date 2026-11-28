@@ -1103,5 +1103,10 @@
     "version": "10.55.185",
     "description": "Accidentările confirmate în rapoartele live ale jucătorilor clubului din cupa internă, Europa și Supercupă sunt păstrate la încheiere, cu știre și durată simulată de 1–3 etape, folosind reducerea medicală existentă. Un jucător deja accidentat sau o identitate ori raport ambiguu nu este rescris; verificările noilor meciuri previn înregistrarea repetată. O accidentare din meci nu primește și recidiva opțională pentru aceeași participare. Simulările rapide și naționala nu generează aceste accidentări din raport, iar istoricul vechi nu este reconstruit.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.186",
+    "description": "Accidentările confirmate live la națională sunt păstrate pentru jucătorii identificați unic ai clubului utilizatorului, cu durată simulată de 1–3 etape, reducerea medicală existentă și știre. Jucătorii cluburilor AI și cei liberi sunt excluși deoarece recuperarea lor pe etape nu este urmărită. Identitățile duplicate, loturile neconfirmate, datele invalide și meciurile deja înregistrate nu produc modificări. Simulările rapide nu generează aceste accidentări, iar istoricul vechi nu este reconstruit.",
+    "source": "Documentația versiunii"
   }
 ]

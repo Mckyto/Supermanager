@@ -85,7 +85,8 @@ const { launch } = require('./dom-harness');
       }
       assert(halftime && match.phase === 'FULLTIME', `meciul ${i+1} se încheie în ${ticks} pași`);
       assert.equal(match.half,2);
-      const goals = match.events.filter(e => e.type === 'goal');
+      // Fluxul de evenimente este limitat; registrul golurilor păstrează toate golurile validate.
+      const goals = match.goalLedger;
       assert.equal(goals.filter(e => e.side === 'home').length, match.score.home);
       assert.equal(goals.filter(e => e.side === 'away').length, match.score.away);
       const snap = match.getSnapshot();
