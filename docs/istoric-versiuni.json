@@ -1198,5 +1198,10 @@
     "version": "10.55.204",
     "description": "Răspunsurile din telefon care promit minute sunt dezactivate când jucătorul are deja o promisiune activă, registrul este invalid sau identitatea nu este unică în cluburi; verificarea se repetă la aplicare și nu se acordă efectele unui răspuns blocat. Pentru răspunsurile acceptate, registrul este citit din starea curentă, astfel încât celelalte promisiuni nu sunt suprascrise de date vechi. Mesajele și promisiunile existente nu sunt schimbate retroactiv; alte surse, inclusiv transferurile, nu sunt acoperite de această protecție.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.205",
+    "description": "O ofertă nouă de transfer cu rol de titular este blocată fără consumarea răbdării când jucătorul are deja o promisiune activă sub identitatea sa de piață sau registrul promisiunilor este invalid; condiția este reverificată la aplicare și identitatea nou generată nu poate duplica un jucător sau o promisiune existentă. Alte roluri nu creează o promisiune de titularizare și registrul existent este păstrat. Nu sunt reconstruite sau modificate angajamentele vechi; verificarea nu rezolvă toate conflictele de identitate din mercato.",
+    "source": "Documentația versiunii"
   }
 ]

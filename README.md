@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.204)
+# SuperManager 26/27 — Ediția Supremă (v10.55.205)
+
+**v10.55.205:** Oferta de semnare cu rol de titular verifică registrul promisiunilor înainte de angajare.
 
 **v10.55.204:** Răspunsurile din telefon care promit minute verifică promisiunile și identitatea jucătorului.
 
