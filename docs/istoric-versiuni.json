@@ -1143,5 +1143,10 @@
     "version": "10.55.193",
     "description": "Promisiunile jucătorilor evaluate de acum înainte în campionat sunt arhivate ca respectate, încălcate sau încheiate fără penalizare, cu clubul, sezonul, etapa, tipul și participarea confirmată. Sunt păstrate maximum 100, iar jurnalul arată ultimele 10 pentru clubul actual. Simularea rapidă atribuie titularilor 90 de minute. Datele ambigue nu sunt arhivate; istoricul invalid sau duplicat nu este rescris și nu blochează evaluarea ori consecințele existente. Promisiunile vechi nu sunt reconstruite.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.194",
+    "description": "Pentru semnările noi U21, un mentor activ al primei echipe poate întâmpina opțional sosirea o singură dată, în etapa semnării sau următoarele două, pentru +3 moral plafonat la 100, fără cost. Acțiunea cere confirmare, o pereche și identități unice, cu date complete, și este salvată; nu presupune minute jucate. Semnările vechi nu sunt activate retroactiv și mentoratul nu este creat automat.",
+    "source": "Documentația versiunii"
   }
 ]
