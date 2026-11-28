@@ -1158,5 +1158,10 @@
     "version": "10.55.196",
     "description": "În meciul live, trecerea utilizatorului la pase scurte poate declanșa presing ridicat al adversarului după cinci minute dacă setarea persistă. Reacția este anunțată și folosește tactica existentă, fără bonus ascuns; împarte limita de două reacții și distanța de 15 minute, după celelalte trei reacții în ordinea de prioritate. Planul de scor are prioritate, pauza reia numărătoarea, iar schimbarea paselor anulează așteptarea. Nu se aplică simulării rapide.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.197",
+    "description": "Programările personale noi cer o etapă de campionat unică și un singur meci complet, cu rezultat de jucare explicit, pentru stabilirea locului. La confirmare, datele sunt reverificate și programarea rămâne în așteptare dacă devin ambigue; nu se presupune o locație lipsă. Programările vechi își păstrează verificarea inițială, fără modificare retroactivă.",
+    "source": "Documentația versiunii"
   }
 ]
