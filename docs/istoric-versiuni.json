@@ -1148,5 +1148,10 @@
     "version": "10.55.194",
     "description": "Pentru semnările noi U21, un mentor activ al primei echipe poate întâmpina opțional sosirea o singură dată, în etapa semnării sau următoarele două, pentru +3 moral plafonat la 100, fără cost. Acțiunea cere confirmare, o pereche și identități unice, cu date complete, și este salvată; nu presupune minute jucate. Semnările vechi nu sunt activate retroactiv și mentoratul nu este creat automat.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.195",
+    "description": "O schemă opțională de corner scurt poate fi selectată general sau pe fiecare margine pentru utilizator în meciul live. Un coechipier de câmp se apropie, iar mingea este trimisă pe jos către zonă; posesia și finalizarea nu sunt garantate, iar pasa nu este înregistrată ca șut sau ocazie. Adversarul și simularea rapidă nu folosesc această schemă. Setările vechi rămân neschimbate.",
+    "source": "Documentația versiunii"
   }
 ]
