@@ -1193,5 +1193,10 @@
     "version": "10.55.203",
     "description": "În biroul 1-la-1, promisiunea nouă de titularizare este dezactivată dacă jucătorul are deja o promisiune activă sau registrul conține intrări invalide; verificarea este repetată la aplicare, fără a suprascrie angajamentul sau a consuma discuția blocată. Alte discuții rămân disponibile. Interfața spune explicit că se promite titularizarea în următoarele două etape și nu garantează rezultatul. Protecția se aplică biroului, nu schimbă celelalte surse de promisiuni și nu repară retroactiv datele.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.204",
+    "description": "Răspunsurile din telefon care promit minute sunt dezactivate când jucătorul are deja o promisiune activă, registrul este invalid sau identitatea nu este unică în cluburi; verificarea se repetă la aplicare și nu se acordă efectele unui răspuns blocat. Pentru răspunsurile acceptate, registrul este citit din starea curentă, astfel încât celelalte promisiuni nu sunt suprascrise de date vechi. Mesajele și promisiunile existente nu sunt schimbate retroactiv; alte surse, inclusiv transferurile, nu sunt acoperite de această protecție.",
+    "source": "Documentația versiunii"
   }
 ]
