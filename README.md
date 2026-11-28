@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.203)
+# SuperManager 26/27 — Ediția Supremă (v10.55.204)
+
+**v10.55.204:** Răspunsurile din telefon care promit minute verifică promisiunile și identitatea jucătorului.
 
 **v10.55.203:** Biroul nu mai suprascrie o promisiune activă când este propusă o titularizare nouă.
 
