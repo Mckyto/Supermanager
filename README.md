@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.191)
+# SuperManager 26/27 — Ediția Supremă (v10.55.192)
+
+**v10.55.192:** La vânzările noi, clauza opțională de revânzare reduce oferta inițială a cumpărătorului, cu respectarea taxei minime.
 
 **v10.55.191:** Negocierile permit clauze de revânzare de 5% și 15%, iar refuzurile noi păstrează prima și durata ofertei.
 

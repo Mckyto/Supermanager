@@ -1133,5 +1133,10 @@
     "version": "10.55.191",
     "description": "Negocierea la cumpărare oferă și clauze de revânzare de 5% și 15%, pe lângă 0%, 10% și 20%. Acestea reduc cererea calculată a clubului cu 3% și 9% înaintea limitei minime a taxei, iar clauzele alese sunt decontate după regulile existente la o revânzare eligibilă. Refuzurile noi pot păstra prima oferită și durata contractului, afișate și comparate cu oferta curentă; istoricul vechi nu este completat retroactiv. Comparația este informativă și nu garantează acceptarea; contractele existente rămân neschimbate.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.192",
+    "description": "La negocierile noi de vânzare, clauza de revânzare este implicit 0% și poate fi aleasă între 0% și 25% în pași de 5%. Pentru fiecare 5% solicitat, oferta inițială a cumpărătorului scade cu 3%, dar nu sub taxa minimă deja aplicabilă. Procentul este fixat după prima contraofertă; schimbarea cumpărătorului reîncepe negocierea. Oferta nu garantează acceptarea jucătorului, iar clauzele și contractele existente nu sunt modificate.",
+    "source": "Documentația versiunii"
   }
 ]
