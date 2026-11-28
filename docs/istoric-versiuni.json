@@ -1118,5 +1118,10 @@
     "version": "10.55.188",
     "description": "La atribuirea statisticilor din meciurile speciale, un raport duplicat sau o identitate prezentă în mai multe loturi ori în piață este exclusă, fără a modifica jucătorii ambigui. Rapoartele altor jucători identificați unic continuă să fie aplicate. Rapoartele de club simulat cer un club și un jucător identificați unic în acel lot. Datele incomplete sunt păstrate fără reconstruire; această protecție nu acoperă toate căile statisticilor de campionat.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.189",
+    "description": "Următoarea regularizare financiară informativă folosește aceleași etape eligibile ca scenariul recurent: etapele duplicate, meciurile duplicate, incomplete sau deja jucate sunt excluse. Afișajul nu prezice bugetul și nu modifică regularizările efective.",
+    "source": "Documentația versiunii"
   }
 ]

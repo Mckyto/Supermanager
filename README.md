@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.188)
+# SuperManager 26/27 — Ediția Supremă (v10.55.189)
+
+**v10.55.189:** Următoarea regularizare financiară afișată exclude etapele și meciurile ambigue, la fel ca scenariul recurent.
 
 **v10.55.188:** Rapoartele meciurilor speciale nu mai atribuie statistici unor identități sau raportări duplicate.
 
