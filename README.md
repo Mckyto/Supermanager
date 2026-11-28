@@ -1,4 +1,6 @@
-# SuperManager 26/27 — Ediția Supremă (v10.55.189)
+# SuperManager 26/27 — Ediția Supremă (v10.55.190)
+
+**v10.55.190:** Anulările rezervărilor ambigue sunt semnalate și dezactivate în planificare.
 
 **v10.55.189:** Următoarea regularizare financiară afișată exclude etapele și meciurile ambigue, la fel ca scenariul recurent.
 

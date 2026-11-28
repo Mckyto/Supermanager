@@ -1123,5 +1123,10 @@
     "version": "10.55.189",
     "description": "Următoarea regularizare financiară informativă folosește aceleași etape eligibile ca scenariul recurent: etapele duplicate, meciurile duplicate, incomplete sau deja jucate sunt excluse. Afișajul nu prezice bugetul și nu modifică regularizările efective.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.190",
+    "description": "Planificarea deplasărilor semnalează și dezactivează anularea când rezervarea nu poate fi anulată din cauza datelor ambigue sau invalide. Verificarea folosește aceleași reguli ca operația efectivă, fără modificarea bugetului sau a rezervărilor la afișare; schimbarea calendarului nu împiedică prin ea însăși anularea eligibilă.",
+    "source": "Documentația versiunii"
   }
 ]
