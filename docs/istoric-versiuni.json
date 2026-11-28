@@ -1093,5 +1093,10 @@
     "version": "10.55.183",
     "description": "La pornirea unui program medical accelerat nou se poate alege explicit extinderea riscului simulat de recidivă de 5% la fiecare meci eligibil de cupă internă sau Europa, live ori simulat. Participarea și identitatea trebuie confirmate; simularea atribuie 90 de minute titularilor fără schimbări. Recidiva adaugă o etapă de indisponibilitate după meci, fără a modifica scorul. Meciurile de cupă nu adaugă condiție și nu avansează cele două etape ale programului; Supercupa și naționala nu sunt incluse. Programele existente rămân neschimbate. Evaluările noi sunt păstrate pentru a evita repetarea, fără reconstruirea istoricului.",
     "source": "Documentația versiunii"
+  },
+  {
+    "version": "10.55.184",
+    "description": "Încărcarea mentală simulată ia în calcul de acum înainte și participările confirmate la meciurile de cupă internă și Europa, live sau simulate: +16 la minimum 60 minute și +8 la 1–59 minute, cu plafon 100. Absența din aceste meciuri nu aduce refacere; aceasta se aplică doar la etapa de campionat. Media titularilor reduce bonusul echipei cu maximum 0,8 și în cupă și Europa. Simularea rapidă atribuie 90 minute titularilor fără schimbări; Supercupa și naționala rămân excluse. Identitățile, rapoartele și verificările meciurilor sunt validate, fără reconstruirea istoricului sau reevaluarea unui meci înregistrat.",
+    "source": "Documentația versiunii"
   }
 ]
